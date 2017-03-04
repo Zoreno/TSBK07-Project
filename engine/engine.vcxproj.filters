@@ -1,0 +1,191 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\OpenGL">
+      <UniqueIdentifier>{b002b700-9c5d-4384-9677-024c36c033e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\OpenAL">
+      <UniqueIdentifier>{b9abec2a-9067-489e-b7dc-a83c5b954346}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\File Formats">
+      <UniqueIdentifier>{4f3f4576-8dc0-44e3-8ed7-f1cdd83fdf55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS">
+      <UniqueIdentifier>{198ca307-37cd-4fdd-886f-c8325666943b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utils">
+      <UniqueIdentifier>{d68ccfe1-7fa8-4301-928c-63710613d642}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Inline Files">
+      <UniqueIdentifier>{c3783d80-2c40-4e24-9636-7dcd5e371f80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\File Formats">
+      <UniqueIdentifier>{b15e0ffa-b994-45e0-8ac4-e9d1a65db61d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ECS">
+      <UniqueIdentifier>{a4ea25f4-d7ed-4858-9455-77502013484f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utils">
+      <UniqueIdentifier>{b33f06e0-a2d6-4c7b-bdef-1d86657a51fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\OpenAL">
+      <UniqueIdentifier>{713ec667-d590-4208-b26b-8fc37727b516}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\OpenGL">
+      <UniqueIdentifier>{cc3af4af-0358-407a-a7ba-4308618c8339}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine">
+      <UniqueIdentifier>{9e18df8f-7739-406e-95c8-fb6d17ed7295}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine">
+      <UniqueIdentifier>{1f16d21b-3c41-446c-80ea-20cda864aa03}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Utils.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSource.cpp">
+      <Filter>Source Files\OpenAL</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioBuffer.cpp">
+      <Filter>Source Files\OpenAL</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioListener.cpp">
+      <Filter>Source Files\OpenAL</Filter>
+    </ClCompile>
+    <ClCompile Include="BMP.cpp">
+      <Filter>Source Files\File Formats</Filter>
+    </ClCompile>
+    <ClCompile Include="Collada.cpp">
+      <Filter>Source Files\File Formats</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigFile.cpp">
+      <Filter>Source Files\File Formats</Filter>
+    </ClCompile>
+    <ClCompile Include="loadobj.cpp">
+      <Filter>Source Files\File Formats</Filter>
+    </ClCompile>
+    <ClCompile Include="TGA.cpp">
+      <Filter>Source Files\File Formats</Filter>
+    </ClCompile>
+    <ClCompile Include="WaveFile.cpp">
+      <Filter>Source Files\File Formats</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Source Files\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="RawModel.cpp">
+      <Filter>Source Files\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderProgram.cpp">
+      <Filter>Source Files\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture2D.cpp">
+      <Filter>Source Files\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexArrayObject.cpp">
+      <Filter>Source Files\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexBufferObject.cpp">
+      <Filter>Source Files\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source Files\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AudioBuffer.h">
+      <Filter>Header Files\OpenAL</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioException.h">
+      <Filter>Header Files\OpenAL</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioListener.h">
+      <Filter>Header Files\OpenAL</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSource.h">
+      <Filter>Header Files\OpenAL</Filter>
+    </ClInclude>
+    <ClInclude Include="BMP.h">
+      <Filter>Header Files\File Formats</Filter>
+    </ClInclude>
+    <ClInclude Include="Collada.h">
+      <Filter>Header Files\File Formats</Filter>
+    </ClInclude>
+    <ClInclude Include="PixelInfo.h">
+      <Filter>Header Files\File Formats</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureFile.h">
+      <Filter>Header Files\File Formats</Filter>
+    </ClInclude>
+    <ClInclude Include="TGA.h">
+      <Filter>Header Files\File Formats</Filter>
+    </ClInclude>
+    <ClInclude Include="WaveFile.h">
+      <Filter>Header Files\File Formats</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigFile.h">
+      <Filter>Header Files\File Formats</Filter>
+    </ClInclude>
+    <ClInclude Include="loadobj.h">
+      <Filter>Header Files\File Formats</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Header Files\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="RawModel.h">
+      <Filter>Header Files\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderProgram.h">
+      <Filter>Header Files\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture2D.h">
+      <Filter>Header Files\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexArrayObject.h">
+      <Filter>Header Files\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexBufferObject.h">
+      <Filter>Header Files\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Header Files\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineDLL.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ConfigFile.inl">
+      <Filter>Inline Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>
