@@ -7,6 +7,13 @@
 
 #pragma once
 
+
+// Usage:
+// 
+// class ENGINE_API MyClass { ...
+//
+// void ENGINE_API myfunc(...
+
 #ifdef _ENGINE_EXPORTS
 #define ENGINE_API __declspec(dllexport)
 #else

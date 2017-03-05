@@ -10,11 +10,11 @@ Texture2D::Texture2D()
 	:width{ 0 }, height{ 0 }, textureID{ 0 } {}
 
 Texture2D::Texture2D(
-	const char* filePath, 
-	TEXTURE2DWRAP sWrap, 
-	TEXTURE2DWRAP tWrap, 
-	TEXTURE2DFILTERING magFilter, 
-	TEXTURE2DFILTERING minFilter)
+	const char* filePath,
+	TEXTURE_2D_WRAP sWrap,
+	TEXTURE_2D_WRAP tWrap,
+	TEXTURE_2D_FILTERING magFilter,
+	TEXTURE_2D_FILTERING minFilter)
 {
 	// TODO: Better way of detecting file format.
 
@@ -53,16 +53,16 @@ Texture2D::Texture2D(
 	// Setup S coordinate wrap
 	switch (sWrap)
 	{
-	case REPEAT:
+	case TEXTURE_2D_WRAP::REPEAT:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		break;
-	case MIRRORED_REPEAT:
+	case TEXTURE_2D_WRAP::MIRRORED_REPEAT:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
 		break;
-	case CLAMP_TO_EDGE:
+	case TEXTURE_2D_WRAP::CLAMP_TO_EDGE:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		break;
-	case CLAMP_TO_BORDER:
+	case TEXTURE_2D_WRAP::CLAMP_TO_BORDER:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 		break;
 	}
@@ -70,26 +70,26 @@ Texture2D::Texture2D(
 	// Setup T coordinate wrap
 	switch (tWrap)
 	{
-	case REPEAT:
+	case TEXTURE_2D_WRAP::REPEAT:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		break;
-	case MIRRORED_REPEAT:
+	case TEXTURE_2D_WRAP::MIRRORED_REPEAT:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 		break;
-	case CLAMP_TO_EDGE:
+	case TEXTURE_2D_WRAP::CLAMP_TO_EDGE:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		break;
-	case CLAMP_TO_BORDER:
+	case TEXTURE_2D_WRAP::CLAMP_TO_BORDER:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 	}
 
 
 	switch (magFilter)
 	{
-	case NEAREST:
+	case TEXTURE_2D_FILTERING::NEAREST:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		break;
-	case LINEAR:
+	case TEXTURE_2D_FILTERING::LINEAR:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		break;
 	default:
@@ -99,22 +99,22 @@ Texture2D::Texture2D(
 
 	switch (minFilter)
 	{
-	case NEAREST:
+	case TEXTURE_2D_FILTERING::NEAREST:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		break;
-	case LINEAR:
+	case TEXTURE_2D_FILTERING::LINEAR:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		break;
-	case NEAREST_MIPMAP_NEAREST:
+	case TEXTURE_2D_FILTERING::NEAREST_MIPMAP_NEAREST:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
 		break;
-	case LINEAR_MIPMAP_NEAREST:
+	case TEXTURE_2D_FILTERING::LINEAR_MIPMAP_NEAREST:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 		break;
-	case NEAREST_MIPMAP_LINEAR:
+	case TEXTURE_2D_FILTERING::NEAREST_MIPMAP_LINEAR:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 		break;
-	case LINEAR_MIPMAP_LINEAR:
+	case TEXTURE_2D_FILTERING::LINEAR_MIPMAP_LINEAR:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		break;
 	}
@@ -139,12 +139,12 @@ Texture2D::Texture2D(Texture2D&& other) noexcept
 	swap(*this, other);
 }
 
-uint32_t Texture2D::getWidth() const
+GLuint Texture2D::getWidth() const
 {
 	return width;
 }
 
-uint32_t Texture2D::getHeight() const
+GLuint Texture2D::getHeight() const
 {
 	return height;
 }
@@ -152,6 +152,534 @@ uint32_t Texture2D::getHeight() const
 GLuint Texture2D::getHandle() const
 {
 	return textureID;
+}
+
+void Texture2D::setDepthStencilTextureMode(TEXTURE_2D_TEXTURE_MODE mode)
+{
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	switch (mode)
+	{
+	case TEXTURE_2D_TEXTURE_MODE::DEPTH_COMPONENT:
+		glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_STENCIL_TEXTURE_MODE, GL_DEPTH_COMPONENT);
+		break;
+	case TEXTURE_2D_TEXTURE_MODE::STENCIL_INDEX:
+		// OBS Fel i OpenGL-manualen. Detta är rätt, inte GL_STENCIL_COMPONENT. 
+		// Ref: http://stackoverflow.com/questions/31449740/how-to-utilize-gl-arb-stencil-texturing
+		glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_STENCIL_TEXTURE_MODE, GL_STENCIL_INDEX);
+		break;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+}
+
+void Texture2D::setTextureBorderColor(Color color)
+{
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	// Detta är hax men fungerar p.g.a att färgerna ligger i rgba-ordning i color.
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, &color.r);
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+}
+
+void Texture2D::setTextureBaseLevel(GLint baseLevel)
+{
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, baseLevel);
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+}
+
+void Texture2D::setTextureMaxLevel(GLint maxLevel)
+{
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, maxLevel);
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+}
+
+void Texture2D::setTextureCompareFunc(TEXTURE_2D_COMPARE_FUNC func)
+{
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	switch(func)
+	{
+	case TEXTURE_2D_COMPARE_FUNC::LESS_EQUAL:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+		break;
+	case TEXTURE_2D_COMPARE_FUNC::GREATER_EQUAL:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_GEQUAL);
+		break;
+	case TEXTURE_2D_COMPARE_FUNC::LESS:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LESS);
+		break;
+	case TEXTURE_2D_COMPARE_FUNC::GREATER:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_GREATER);
+		break;
+	case TEXTURE_2D_COMPARE_FUNC::EQUAL:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_EQUAL);
+		break;
+	case TEXTURE_2D_COMPARE_FUNC::NOT_EQUAL:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_NOTEQUAL);
+		break;
+	case TEXTURE_2D_COMPARE_FUNC::ALWAYS:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_ALWAYS);
+		break;
+	case TEXTURE_2D_COMPARE_FUNC::NEVER:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_NEVER);
+		break;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+}
+
+void Texture2D::setTextureWrapS(TEXTURE_2D_WRAP sWrap)
+{
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	switch (sWrap)
+	{
+	case TEXTURE_2D_WRAP::REPEAT:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		break;
+	case TEXTURE_2D_WRAP::MIRRORED_REPEAT:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+		break;
+	case TEXTURE_2D_WRAP::CLAMP_TO_EDGE:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		break;
+	case TEXTURE_2D_WRAP::CLAMP_TO_BORDER:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		break;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+}
+
+void Texture2D::setTextureWrapT(TEXTURE_2D_WRAP tWrap)
+{
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	switch (tWrap)
+	{
+	case TEXTURE_2D_WRAP::REPEAT:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		break;
+	case TEXTURE_2D_WRAP::MIRRORED_REPEAT:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+		break;
+	case TEXTURE_2D_WRAP::CLAMP_TO_EDGE:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		break;
+	case TEXTURE_2D_WRAP::CLAMP_TO_BORDER:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	}
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+}
+
+void Texture2D::setTextureWrapR(TEXTURE_2D_WRAP rWrap)
+{
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	switch (rWrap)
+	{
+	case TEXTURE_2D_WRAP::REPEAT:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		break;
+	case TEXTURE_2D_WRAP::MIRRORED_REPEAT:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+		break;
+	case TEXTURE_2D_WRAP::CLAMP_TO_EDGE:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		break;
+	case TEXTURE_2D_WRAP::CLAMP_TO_BORDER:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	}
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+}
+
+void Texture2D::setTextureMagFilter(TEXTURE_2D_FILTERING magFilter)
+{
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	switch (magFilter)
+	{
+	case TEXTURE_2D_FILTERING::NEAREST:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		break;
+	case TEXTURE_2D_FILTERING::LINEAR:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		break;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+}
+
+void Texture2D::setTextureMinFilter(TEXTURE_2D_FILTERING minFilter)
+{
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	switch (minFilter)
+	{
+	case TEXTURE_2D_FILTERING::NEAREST:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		break;
+	case TEXTURE_2D_FILTERING::LINEAR:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		break;
+	case TEXTURE_2D_FILTERING::NEAREST_MIPMAP_NEAREST:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+		break;
+	case TEXTURE_2D_FILTERING::LINEAR_MIPMAP_NEAREST:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+		break;
+	case TEXTURE_2D_FILTERING::NEAREST_MIPMAP_LINEAR:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+		break;
+	case TEXTURE_2D_FILTERING::LINEAR_MIPMAP_LINEAR:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		break;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+}
+
+TEXTURE_2D_TEXTURE_MODE Texture2D::getDepthStencilTextureMode() const
+{
+	GLint mode;
+	TEXTURE_2D_TEXTURE_MODE returnVal;
+	GLint currentTexture;
+
+	// Save the currently bound texture
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glGetTexParameteriv(GL_TEXTURE_2D, GL_DEPTH_STENCIL_TEXTURE_MODE, &mode);
+
+	switch (static_cast<GLuint>(mode))
+	{
+	case GL_DEPTH_COMPONENT:
+		returnVal = TEXTURE_2D_TEXTURE_MODE::DEPTH_COMPONENT;
+		break;
+	case GL_STENCIL_INDEX:
+		returnVal = TEXTURE_2D_TEXTURE_MODE::STENCIL_INDEX;
+		break;
+	default:
+		returnVal = TEXTURE_2D_TEXTURE_MODE::INVALID_VALUE;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+
+	return returnVal;
+}
+
+Color Texture2D::getTextureBorderColor() const
+{
+	float color[4];
+	Color returnVal;
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glGetTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
+
+	returnVal = Color(color);
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+
+	return returnVal;
+}
+
+GLint Texture2D::getTextureBaseLevel() const
+{
+	GLint returnVal;
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, &returnVal);
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+
+	return returnVal;
+}
+
+GLint Texture2D::getTextureMaxLevel() const
+{
+	GLint returnVal;
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, &returnVal);
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+
+	return returnVal;
+}
+
+TEXTURE_2D_COMPARE_FUNC Texture2D::getTextureCompareFunc() const
+{
+	GLint compareFunc;
+	TEXTURE_2D_COMPARE_FUNC returnVal;
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, &compareFunc);
+
+	switch(compareFunc)
+	{
+	case GL_LEQUAL:
+		returnVal = TEXTURE_2D_COMPARE_FUNC::LESS_EQUAL;
+		break;
+	case GL_GEQUAL:
+		returnVal = TEXTURE_2D_COMPARE_FUNC::GREATER_EQUAL;
+		break;
+	case GL_LESS:
+		returnVal = TEXTURE_2D_COMPARE_FUNC::LESS;
+		break;
+	case GL_GREATER:
+		returnVal = TEXTURE_2D_COMPARE_FUNC::GREATER;
+		break;
+	case GL_EQUAL:
+		returnVal = TEXTURE_2D_COMPARE_FUNC::EQUAL;
+		break;
+	case GL_NOTEQUAL:
+		returnVal = TEXTURE_2D_COMPARE_FUNC::NOT_EQUAL;
+		break;
+	case GL_ALWAYS:
+		returnVal = TEXTURE_2D_COMPARE_FUNC::ALWAYS;
+		break;
+	case GL_NEVER:
+		returnVal = TEXTURE_2D_COMPARE_FUNC::NEVER;
+		break;
+	default:
+		returnVal = TEXTURE_2D_COMPARE_FUNC::INVALID_VALUE;
+	}
+	
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+
+	return returnVal;
+}
+
+TEXTURE_2D_WRAP Texture2D::getTextureWrapS() const
+{
+	GLint sWrap;
+	TEXTURE_2D_WRAP returnVal;
+	GLint currentTexture;
+
+	// Save the currently bound texture
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, &sWrap);
+
+	switch (static_cast<GLuint>(sWrap))
+	{
+	case GL_REPEAT:
+		returnVal = TEXTURE_2D_WRAP::REPEAT;
+		break;
+	case GL_MIRRORED_REPEAT:
+		returnVal = TEXTURE_2D_WRAP::MIRRORED_REPEAT;
+		break;
+	case GL_CLAMP_TO_EDGE:
+		returnVal = TEXTURE_2D_WRAP::CLAMP_TO_EDGE;
+		break;
+	case GL_CLAMP_TO_BORDER:
+		returnVal = TEXTURE_2D_WRAP::CLAMP_TO_BORDER;
+		break;
+	default:
+		returnVal = TEXTURE_2D_WRAP::INVALID_VALUE;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+
+	return returnVal;
+}
+
+TEXTURE_2D_WRAP Texture2D::getTextureWrapT() const
+{
+	GLint tWrap;
+	TEXTURE_2D_WRAP returnVal;
+	GLint currentTexture;
+
+	// Save the currently bound texture
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, &tWrap);
+
+	switch (static_cast<GLuint>(tWrap))
+	{
+	case GL_REPEAT:
+		returnVal = TEXTURE_2D_WRAP::REPEAT;
+		break;
+	case GL_MIRRORED_REPEAT:
+		returnVal = TEXTURE_2D_WRAP::MIRRORED_REPEAT;
+		break;
+	case GL_CLAMP_TO_EDGE:
+		returnVal = TEXTURE_2D_WRAP::CLAMP_TO_EDGE;
+		break;
+	case GL_CLAMP_TO_BORDER:
+		returnVal = TEXTURE_2D_WRAP::CLAMP_TO_BORDER;
+		break;
+	default:
+		return TEXTURE_2D_WRAP::INVALID_VALUE;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+
+	return returnVal;
+}
+
+TEXTURE_2D_WRAP Texture2D::getTextureWrapR() const
+{
+	GLint rWrap;
+	TEXTURE_2D_WRAP returnVal;
+	GLint currentTexture;
+
+	// Save the currently bound texture
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, &rWrap);
+
+	switch (static_cast<GLuint>(rWrap))
+	{
+	case GL_REPEAT:
+		returnVal = TEXTURE_2D_WRAP::REPEAT;
+		break;
+	case GL_MIRRORED_REPEAT:
+		returnVal = TEXTURE_2D_WRAP::MIRRORED_REPEAT;
+		break;
+	case GL_CLAMP_TO_EDGE:
+		returnVal = TEXTURE_2D_WRAP::CLAMP_TO_EDGE;
+		break;
+	case GL_CLAMP_TO_BORDER:
+		returnVal = TEXTURE_2D_WRAP::CLAMP_TO_BORDER;
+		break;
+	default:
+		return TEXTURE_2D_WRAP::INVALID_VALUE;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+
+	return returnVal;
+}
+
+TEXTURE_2D_FILTERING Texture2D::getTextureMagFilter() const
+{
+	GLint magFilter;
+	TEXTURE_2D_FILTERING returnVal;
+	GLint currentTexture;
+
+	// Save the currently bound texture
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, &magFilter);
+
+	switch (static_cast<GLuint>(magFilter))
+	{
+	case GL_NEAREST:
+		returnVal = TEXTURE_2D_FILTERING::NEAREST;
+		break;
+	case GL_LINEAR:
+		returnVal = TEXTURE_2D_FILTERING::LINEAR;
+		break;
+	default:
+		returnVal = TEXTURE_2D_FILTERING::INVALID_VALUE;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+
+	return returnVal;
+}
+
+TEXTURE_2D_FILTERING Texture2D::getTextureMinFilter() const
+{
+	GLint minFilter;
+	TEXTURE_2D_FILTERING returnVal;
+	GLint currentTexture;
+
+	// Save the currently bound texture
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, &minFilter);
+
+	switch (static_cast<GLuint>(minFilter))
+	{
+	case GL_NEAREST:
+		returnVal = TEXTURE_2D_FILTERING::NEAREST;
+		break;
+	case GL_LINEAR:
+		returnVal = TEXTURE_2D_FILTERING::LINEAR;
+		break;
+	case GL_NEAREST_MIPMAP_NEAREST:
+		returnVal = TEXTURE_2D_FILTERING::NEAREST_MIPMAP_NEAREST;
+		break;
+	case GL_LINEAR_MIPMAP_NEAREST:
+		returnVal = TEXTURE_2D_FILTERING::LINEAR_MIPMAP_NEAREST;
+		break;
+	case GL_NEAREST_MIPMAP_LINEAR:
+		returnVal = TEXTURE_2D_FILTERING::NEAREST_MIPMAP_LINEAR;
+		break;
+	case GL_LINEAR_MIPMAP_LINEAR:
+		returnVal = TEXTURE_2D_FILTERING::LINEAR_MIPMAP_LINEAR;
+		break;
+	default:
+		returnVal = TEXTURE_2D_FILTERING::INVALID_VALUE;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+
+	return returnVal;
 }
 
 void Texture2D::bind() const
@@ -165,13 +693,13 @@ void Texture2D::bind(GLuint texUnit) const
 
 	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &numTextureUnits);
 
-	if(texUnit >= numTextureUnits)
+	if (texUnit >= numTextureUnits)
 	{
 		throw std::invalid_argument("Requested texture unit larger than supported");
 	}
 
 	glActiveTexture(GL_TEXTURE0 + texUnit);
-	glBindTexture(GL_TEXTURE_2D, textureID);	
+	glBindTexture(GL_TEXTURE_2D, textureID);
 }
 
 void swap(Texture2D& first, Texture2D& second) noexcept

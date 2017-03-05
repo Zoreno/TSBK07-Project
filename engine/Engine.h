@@ -4,6 +4,8 @@
 
 #include "Window.h"
 
+#include "Color.h"
+
 namespace engine
 {
 	class ENGINE_API Engine

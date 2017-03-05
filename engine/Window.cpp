@@ -123,8 +123,8 @@ WindowSettings getDefaultWindowSettings()
 	settings.samples = 4;
 	settings.vSync = GLFW_TRUE;
 
-	settings.version_major = 3;
-	settings.version_minor = 3;
+	settings.version_major = 4;
+	settings.version_minor = 5;
 
 	return settings;
 }

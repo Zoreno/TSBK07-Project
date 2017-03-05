@@ -1,6 +1,4 @@
-#include "Engine.h"
-
-#include "Window.h"
+#include <Engine.h>
 
 int main()
 {
