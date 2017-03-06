@@ -10,7 +10,6 @@
 
 #include <memory>
 #include <map>
-#include "Component.h"
 #include "EngineDLL.h"
 
 class Component;

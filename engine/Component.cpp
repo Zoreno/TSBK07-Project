@@ -6,7 +6,7 @@
 */
 
 #include "Component.h"
-
+#include "Entity.h"
 
 Component::Component(std::shared_ptr<Entity> entHand) :
 	entityHandle{entHand} 
