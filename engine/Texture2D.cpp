@@ -251,6 +251,62 @@ void Texture2D::setTextureCompareFunc(TEXTURE_2D_COMPARE_FUNC func)
 	glBindTexture(GL_TEXTURE_2D, currentTexture);
 }
 
+void Texture2D::setTextureCompareMode(TEXTURE_2D_COMPARE_MODE mode)
+{
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	switch(mode)
+	{
+	case TEXTURE_2D_COMPARE_MODE::COMPARE_REF_TO_TEXTURE: 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+		break;
+	case TEXTURE_2D_COMPARE_MODE::NONE: 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_NONE);
+		break;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+}
+
+void Texture2D::setTextureLODBias(GLint LODBias)
+{
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, LODBias);
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+}
+
+void Texture2D::setTextureMinLOD(GLint minLOD)
+{
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, minLOD);
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+}
+
+void Texture2D::setTextureMaxLOD(GLint maxLOD)
+{
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, maxLOD);
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+}
+
 void Texture2D::setTextureWrapS(TEXTURE_2D_WRAP sWrap)
 {
 	GLint currentTexture;
@@ -502,6 +558,79 @@ TEXTURE_2D_COMPARE_FUNC Texture2D::getTextureCompareFunc() const
 		returnVal = TEXTURE_2D_COMPARE_FUNC::INVALID_VALUE;
 	}
 	
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+
+	return returnVal;
+}
+
+TEXTURE_2D_COMPARE_MODE Texture2D::getTextureCompareMode() const
+{
+	GLint mode;
+	TEXTURE_2D_COMPARE_MODE returnVal;
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, &mode);
+
+	switch(mode)
+	{
+	case GL_COMPARE_REF_TO_TEXTURE:
+		returnVal = TEXTURE_2D_COMPARE_MODE::COMPARE_REF_TO_TEXTURE;
+		break;
+	case GL_NONE:
+		returnVal = TEXTURE_2D_COMPARE_MODE::NONE;
+		break;
+	default:
+		returnVal = TEXTURE_2D_COMPARE_MODE::INVALID_VALUE;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+
+	return returnVal;
+}
+
+GLint Texture2D::getTextureLODBias() const
+{
+	GLint returnVal;
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, &returnVal);
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+
+	return returnVal;
+}
+
+GLint Texture2D::getTextureMinLOD() const
+{
+	GLint returnVal;
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, &returnVal);
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+
+	return returnVal;
+}
+
+GLint Texture2D::getTextureMaxLOD() const
+{
+	GLint returnVal;
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, &returnVal);
+
 	glBindTexture(GL_TEXTURE_2D, currentTexture);
 
 	return returnVal;

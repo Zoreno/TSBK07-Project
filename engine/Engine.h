@@ -6,6 +6,8 @@
 
 #include "Color.h"
 
+#include <iostream>
+
 namespace engine
 {
 	class ENGINE_API Engine
@@ -18,6 +20,8 @@ namespace engine
 		void cleanup();
 
 	private:
+
+		void dumpInfo(std::ostream& stream);
 
 		Window* window{ nullptr };
 	};
