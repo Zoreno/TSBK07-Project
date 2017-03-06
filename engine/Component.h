@@ -8,11 +8,11 @@
 
 #include <memory>
 #include "Entity.h"
+#include "EngineDLL.h"
 
-//Denna behövs här av någon anledning?!?!
 class Entity;
 
-class Component
+class ENGINE_API Component
 {
 public:
 	// Constructors, Destructors
@@ -22,6 +22,9 @@ public:
 
 	// pub functions
 	virtual void update() = 0;
+
+	// Include this in case of needed physics and such
+	//virtual void fixedUpdate() = 0;
 
 	// pub variables (should be none)
 protected:

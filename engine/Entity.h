@@ -11,11 +11,11 @@
 #include <memory>
 #include <map>
 #include "Component.h"
+#include "EngineDLL.h"
 
-// Denna behövs här av någon anledning?!?!
 class Component;
 
-class Entity
+class ENGINE_API Entity
 {
 public:
 	// Constructors, Destructors
