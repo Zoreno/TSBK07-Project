@@ -20,11 +20,12 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
+#include "EngineDLL.h"
 
 /**
   * @brief Exception thrown when runtime errors occur.
   */
-class WindowRuntimeException : std::runtime_error
+class ENGINE_API WindowRuntimeException : std::runtime_error
 {
 public:
 	using std::runtime_error::runtime_error;
@@ -33,7 +34,7 @@ public:
 /**
 * @brief Exception thrown when logic errors occur.
 */
-class WindowLogicException : std::logic_error
+class ENGINE_API WindowLogicException : std::logic_error
 {
 public:
 	using std::logic_error::logic_error;
@@ -326,7 +327,7 @@ enum class CursorMode
 /**
  * @brief List of cursors mapped to a string.
  */
-class CursorList : std::map<std::string, GLFWcursor*>
+class ENGINE_API CursorList : std::map<std::string, GLFWcursor*>
 {
 public:
 	/**
@@ -475,7 +476,7 @@ WindowSettings getDefaultWindowSettings();
 /**
  * @brief Representation of a window
  */
-class Window
+class ENGINE_API Window
 {
 public:
 

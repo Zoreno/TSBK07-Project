@@ -148,14 +148,44 @@ enum class TEXTURE_2D_COMPARE_MODE
 	INVALID_VALUE
 };
 
+/**
+ * @brief Texture 2D color swizzling components. 
+ */
 enum class TEXTURE_2D_SWIZZLE_COMPONENT
 {
+	/**
+	 * @brief Red channel
+	 */
 	RED,
+	
+	/**
+	 * @brief Green channel
+	 */
 	GREEN,
+	
+	/**
+	 * @brief Blue channel
+	 */
 	BLUE,
+	
+	/**
+	 * @brief Alpha channel
+	 */
 	ALPHA,
+	
+	/**
+	 * @brief Always zero.
+	 */
 	ZERO,
+	
+	/**
+	 * @brief Always one.
+	 */
 	ONE,
+	
+	/**
+	 * @brief Invalide value.
+	 */
 	INVALID_VALUE
 };
 
@@ -430,6 +460,30 @@ public:
 	void setTextureMinFilter(TEXTURE_2D_FILTERING minFilter);
 
 	/**
+	 * @brief Set swizzle component for first channel. 
+	 * @param comp Component to use.
+	 */
+	void setTextureSwizzleR(TEXTURE_2D_SWIZZLE_COMPONENT comp);
+
+	/**
+	* @brief Set swizzle component for second channel.
+	* @param comp Component to use.
+	*/
+	void setTextureSwizzleG(TEXTURE_2D_SWIZZLE_COMPONENT comp);
+
+	/**
+	* @brief Set swizzle component for third channel.
+	* @param comp Component to use.
+	*/
+	void setTextureSwizzleB(TEXTURE_2D_SWIZZLE_COMPONENT comp);
+
+	/**
+	* @brief Set swizzle component for fourth channel.
+	* @param comp Component to use.
+	*/
+	void setTextureSwizzleA(TEXTURE_2D_SWIZZLE_COMPONENT comp);
+
+	/**
 	* @brief Gets Depth-stencil format texture read mode.
 	* @return Current Mode.
 	*/
@@ -473,6 +527,13 @@ public:
 
 	TEXTURE_2D_FILTERING getTextureMinFilter() const;
 
+	TEXTURE_2D_SWIZZLE_COMPONENT getTextureSwizzleR() const;
+
+	TEXTURE_2D_SWIZZLE_COMPONENT getTextureSwizzleG() const;
+	
+	TEXTURE_2D_SWIZZLE_COMPONENT getTextureSwizzleB() const;
+	
+	TEXTURE_2D_SWIZZLE_COMPONENT getTextureSwizzleA() const;
 	
 	/**
 	 * @brief Bind texture to current unit.

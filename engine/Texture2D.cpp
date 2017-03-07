@@ -440,6 +440,138 @@ void Texture2D::setTextureMinFilter(TEXTURE_2D_FILTERING minFilter)
 	glBindTexture(GL_TEXTURE_2D, currentTexture);
 }
 
+void Texture2D::setTextureSwizzleR(TEXTURE_2D_SWIZZLE_COMPONENT comp)
+{
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	switch(comp)
+	{
+	case TEXTURE_2D_SWIZZLE_COMPONENT::RED: 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_RED);
+		break;
+	case TEXTURE_2D_SWIZZLE_COMPONENT::GREEN: 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_GREEN);
+		break;
+	case TEXTURE_2D_SWIZZLE_COMPONENT::BLUE: 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_BLUE);
+		break;
+	case TEXTURE_2D_SWIZZLE_COMPONENT::ALPHA: 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_ALPHA);
+		break;
+	case TEXTURE_2D_SWIZZLE_COMPONENT::ZERO: 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_ZERO);
+		break;
+	case TEXTURE_2D_SWIZZLE_COMPONENT::ONE: 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_ONE);
+		break;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+}
+
+void Texture2D::setTextureSwizzleG(TEXTURE_2D_SWIZZLE_COMPONENT comp)
+{
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	switch (comp)
+	{
+	case TEXTURE_2D_SWIZZLE_COMPONENT::RED:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_RED);
+		break;
+	case TEXTURE_2D_SWIZZLE_COMPONENT::GREEN:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_GREEN);
+		break;
+	case TEXTURE_2D_SWIZZLE_COMPONENT::BLUE:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_BLUE);
+		break;
+	case TEXTURE_2D_SWIZZLE_COMPONENT::ALPHA:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_ALPHA);
+		break;
+	case TEXTURE_2D_SWIZZLE_COMPONENT::ZERO:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_ZERO);
+		break;
+	case TEXTURE_2D_SWIZZLE_COMPONENT::ONE:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_ONE);
+		break;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+}
+
+void Texture2D::setTextureSwizzleB(TEXTURE_2D_SWIZZLE_COMPONENT comp)
+{
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	switch (comp)
+	{
+	case TEXTURE_2D_SWIZZLE_COMPONENT::RED:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_RED);
+		break;
+	case TEXTURE_2D_SWIZZLE_COMPONENT::GREEN:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_GREEN);
+		break;
+	case TEXTURE_2D_SWIZZLE_COMPONENT::BLUE:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_BLUE);
+		break;
+	case TEXTURE_2D_SWIZZLE_COMPONENT::ALPHA:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_ALPHA);
+		break;
+	case TEXTURE_2D_SWIZZLE_COMPONENT::ZERO:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_ZERO);
+		break;
+	case TEXTURE_2D_SWIZZLE_COMPONENT::ONE:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_ONE);
+		break;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+}
+
+void Texture2D::setTextureSwizzleA(TEXTURE_2D_SWIZZLE_COMPONENT comp)
+{
+	GLint currentTexture;
+
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	switch (comp)
+	{
+	case TEXTURE_2D_SWIZZLE_COMPONENT::RED:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_RED);
+		break;
+	case TEXTURE_2D_SWIZZLE_COMPONENT::GREEN:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_GREEN);
+		break;
+	case TEXTURE_2D_SWIZZLE_COMPONENT::BLUE:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_BLUE);
+		break;
+	case TEXTURE_2D_SWIZZLE_COMPONENT::ALPHA:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_ALPHA);
+		break;
+	case TEXTURE_2D_SWIZZLE_COMPONENT::ZERO:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_ZERO);
+		break;
+	case TEXTURE_2D_SWIZZLE_COMPONENT::ONE:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_ONE);
+		break;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+}
+
 TEXTURE_2D_TEXTURE_MODE Texture2D::getDepthStencilTextureMode() const
 {
 	GLint mode;
@@ -804,6 +936,170 @@ TEXTURE_2D_FILTERING Texture2D::getTextureMinFilter() const
 		break;
 	default:
 		returnVal = TEXTURE_2D_FILTERING::INVALID_VALUE;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+
+	return returnVal;
+}
+
+TEXTURE_2D_SWIZZLE_COMPONENT Texture2D::getTextureSwizzleR() const
+{
+	GLint comp;
+	TEXTURE_2D_SWIZZLE_COMPONENT returnVal;
+	GLint currentTexture;
+
+	// Save the currently bound texture
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, &comp);
+	
+	switch(comp)
+	{
+	case GL_RED:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::RED;
+		break;
+	case GL_GREEN:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::GREEN;
+		break;
+	case GL_BLUE:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::BLUE;
+		break;
+	case GL_ALPHA:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::ALPHA;
+		break;
+	case GL_ZERO:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::ZERO;
+		break;
+	case GL_ONE:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::ONE;
+		break;
+	default:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::INVALID_VALUE;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+
+	return returnVal;
+}
+
+TEXTURE_2D_SWIZZLE_COMPONENT Texture2D::getTextureSwizzleG() const
+{
+	GLint comp;
+	TEXTURE_2D_SWIZZLE_COMPONENT returnVal;
+	GLint currentTexture;
+
+	// Save the currently bound texture
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, &comp);
+
+	switch (comp)
+	{
+	case GL_RED:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::RED;
+		break;
+	case GL_GREEN:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::GREEN;
+		break;
+	case GL_BLUE:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::BLUE;
+		break;
+	case GL_ALPHA:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::ALPHA;
+		break;
+	case GL_ZERO:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::ZERO;
+		break;
+	case GL_ONE:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::ONE;
+		break;
+	default:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::INVALID_VALUE;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+
+	return returnVal;
+}
+
+TEXTURE_2D_SWIZZLE_COMPONENT Texture2D::getTextureSwizzleB() const
+{
+	GLint comp;
+	TEXTURE_2D_SWIZZLE_COMPONENT returnVal;
+	GLint currentTexture;
+
+	// Save the currently bound texture
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, &comp);
+
+	switch (comp)
+	{
+	case GL_RED:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::RED;
+		break;
+	case GL_GREEN:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::GREEN;
+		break;
+	case GL_BLUE:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::BLUE;
+		break;
+	case GL_ALPHA:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::ALPHA;
+		break;
+	case GL_ZERO:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::ZERO;
+		break;
+	case GL_ONE:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::ONE;
+		break;
+	default:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::INVALID_VALUE;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, currentTexture);
+
+	return returnVal;
+}
+
+TEXTURE_2D_SWIZZLE_COMPONENT Texture2D::getTextureSwizzleA() const
+{
+	GLint comp;
+	TEXTURE_2D_SWIZZLE_COMPONENT returnVal;
+	GLint currentTexture;
+
+	// Save the currently bound texture
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, &comp);
+
+	switch (comp)
+	{
+	case GL_RED:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::RED;
+		break;
+	case GL_GREEN:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::GREEN;
+		break;
+	case GL_BLUE:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::BLUE;
+		break;
+	case GL_ALPHA:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::ALPHA;
+		break;
+	case GL_ZERO:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::ZERO;
+		break;
+	case GL_ONE:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::ONE;
+		break;
+	default:
+		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::INVALID_VALUE;
 	}
 
 	glBindTexture(GL_TEXTURE_2D, currentTexture);
