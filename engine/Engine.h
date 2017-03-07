@@ -6,6 +6,8 @@
 
 #include "Color.h"
 
+#include "TransformPipeline3D.h"
+
 #include <iostream>
 
 namespace engine

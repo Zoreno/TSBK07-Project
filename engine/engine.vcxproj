@@ -135,6 +135,7 @@
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="TGA.cpp" />
+    <ClCompile Include="TransformPipeline3D.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="VertexArrayObject.cpp" />
     <ClCompile Include="VertexBufferObject.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="TextureFile.h" />
     <ClInclude Include="TGA.h" />
+    <ClInclude Include="TransformPipeline3D.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="VertexArrayObject.h" />
     <ClInclude Include="VertexBufferObject.h" />

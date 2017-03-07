@@ -1,5 +1,7 @@
 #include "Engine.h"
 
+#include "RawModel.h"
+
 namespace engine
 {
 	void Engine::init()
@@ -7,6 +9,10 @@ namespace engine
 		window = new Window{ 800,600,"MyWindow" };
 
 		dumpInfo(std::cout);
+
+		TransformPipeline3D transform{};
+
+		RawModel model{ "../res/models/groundsphere.obj" };
 	}
 
 	void Engine::run()

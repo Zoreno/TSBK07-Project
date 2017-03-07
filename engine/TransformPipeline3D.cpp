@@ -1,0 +1,45 @@
+/**
+ * @file	TransformPipeline3D.cpp
+ * @Author	Joakim Bertils
+ * @date	2017-03-07
+ * @brief	3D Transformation pipeline to ease transform calculations.
+ */
+
+#include "TransformPipeline3D.h"
+
+#include <glm/gtc/matrix_transform.hpp>
+
+void TransformPipeline3D::translate(glm::vec3 vec)
+{
+	model = glm::translate(model, vec);
+}
+
+void TransformPipeline3D::rotate(float angle, glm::vec3 axis)
+{
+	model = glm::rotate(model, angle, axis);
+}
+
+void TransformPipeline3D::scale(glm::vec3 scale)
+{
+	model = glm::scale(model, scale);
+}
+
+void TransformPipeline3D::setView(glm::mat4 view)
+{
+	this->view = view;
+}
+
+void TransformPipeline3D::setProj(glm::mat4 proj)
+{
+	this->proj = proj;
+}
+
+glm::mat4 TransformPipeline3D::getModelTransform() const
+{
+	return model;
+}
+
+glm::mat4 TransformPipeline3D::getMVP() const
+{
+	return model*view*proj;
+}
