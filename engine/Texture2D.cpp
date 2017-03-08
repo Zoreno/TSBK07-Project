@@ -18,7 +18,7 @@ Texture2D::Texture2D(
 {
 	// TODO: Better way of detecting file format.
 
-	TextureFile* file;
+	TextureFile* file{ nullptr };
 
 	size_t filePathLength = strlen(filePath);
 
@@ -33,6 +33,11 @@ Texture2D::Texture2D(
 	else
 	{
 		throw std::invalid_argument(std::string("Invalid file format. (") + filePath + ")");
+	}
+
+	if (!file)
+	{
+		throw std::invalid_argument(std::string("Invalid file. (") + filePath + ")");
 	}
 
 	glGenTextures(1, &textureID);
@@ -128,6 +133,45 @@ Texture2D::Texture2D(
 	delete file;
 }
 
+Texture2D::Texture2D(GLuint width, GLuint height, TEXTURE_2D_FORMAT format, TEXTURE_2D_DATATYPE type)
+	: width(width), height(height)
+{
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	GLenum f;
+	GLenum t;
+
+	switch(format)
+	{
+	case TEXTURE_2D_FORMAT::DEPTH_COMPONENT:
+		f = GL_DEPTH_COMPONENT;
+		break;
+	default:
+		throw std::invalid_argument(std::string("Invalid format."));
+	}
+
+	switch(type)
+	{
+	case TEXTURE_2D_DATATYPE::FLOAT: 
+		t = GL_FLOAT;
+		break;
+	default:
+		throw std::invalid_argument(std::string("Invalid type."));
+	}
+
+	glTexImage2D(
+		GL_TEXTURE_2D,	// Target
+		0,				// Level
+		f,				// Internal format
+		width,			// Width
+		height,			// Height
+		0,				// Border
+		f,				// Format
+		t,				// Type
+		nullptr			// Data
+	);
+}
+
 Texture2D::~Texture2D()
 {
 	if (textureID != 0)
@@ -220,7 +264,7 @@ void Texture2D::setTextureCompareFunc(TEXTURE_2D_COMPARE_FUNC func)
 	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
-	switch(func)
+	switch (func)
 	{
 	case TEXTURE_2D_COMPARE_FUNC::LESS_EQUAL:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
@@ -258,12 +302,12 @@ void Texture2D::setTextureCompareMode(TEXTURE_2D_COMPARE_MODE mode)
 	glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
-	switch(mode)
+	switch (mode)
 	{
-	case TEXTURE_2D_COMPARE_MODE::COMPARE_REF_TO_TEXTURE: 
+	case TEXTURE_2D_COMPARE_MODE::COMPARE_REF_TO_TEXTURE:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
 		break;
-	case TEXTURE_2D_COMPARE_MODE::NONE: 
+	case TEXTURE_2D_COMPARE_MODE::NONE:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_NONE);
 		break;
 	}
@@ -448,24 +492,24 @@ void Texture2D::setTextureSwizzleR(TEXTURE_2D_SWIZZLE_COMPONENT comp)
 
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
-	switch(comp)
+	switch (comp)
 	{
-	case TEXTURE_2D_SWIZZLE_COMPONENT::RED: 
+	case TEXTURE_2D_SWIZZLE_COMPONENT::RED:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_RED);
 		break;
-	case TEXTURE_2D_SWIZZLE_COMPONENT::GREEN: 
+	case TEXTURE_2D_SWIZZLE_COMPONENT::GREEN:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_GREEN);
 		break;
-	case TEXTURE_2D_SWIZZLE_COMPONENT::BLUE: 
+	case TEXTURE_2D_SWIZZLE_COMPONENT::BLUE:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_BLUE);
 		break;
-	case TEXTURE_2D_SWIZZLE_COMPONENT::ALPHA: 
+	case TEXTURE_2D_SWIZZLE_COMPONENT::ALPHA:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_ALPHA);
 		break;
-	case TEXTURE_2D_SWIZZLE_COMPONENT::ZERO: 
+	case TEXTURE_2D_SWIZZLE_COMPONENT::ZERO:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_ZERO);
 		break;
-	case TEXTURE_2D_SWIZZLE_COMPONENT::ONE: 
+	case TEXTURE_2D_SWIZZLE_COMPONENT::ONE:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_ONE);
 		break;
 	}
@@ -660,7 +704,7 @@ TEXTURE_2D_COMPARE_FUNC Texture2D::getTextureCompareFunc() const
 
 	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, &compareFunc);
 
-	switch(compareFunc)
+	switch (compareFunc)
 	{
 	case GL_LEQUAL:
 		returnVal = TEXTURE_2D_COMPARE_FUNC::LESS_EQUAL;
@@ -689,7 +733,7 @@ TEXTURE_2D_COMPARE_FUNC Texture2D::getTextureCompareFunc() const
 	default:
 		returnVal = TEXTURE_2D_COMPARE_FUNC::INVALID_VALUE;
 	}
-	
+
 	glBindTexture(GL_TEXTURE_2D, currentTexture);
 
 	return returnVal;
@@ -706,7 +750,7 @@ TEXTURE_2D_COMPARE_MODE Texture2D::getTextureCompareMode() const
 
 	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, &mode);
 
-	switch(mode)
+	switch (mode)
 	{
 	case GL_COMPARE_REF_TO_TEXTURE:
 		returnVal = TEXTURE_2D_COMPARE_MODE::COMPARE_REF_TO_TEXTURE;
@@ -954,8 +998,8 @@ TEXTURE_2D_SWIZZLE_COMPONENT Texture2D::getTextureSwizzleR() const
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
 	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, &comp);
-	
-	switch(comp)
+
+	switch (comp)
 	{
 	case GL_RED:
 		returnVal = TEXTURE_2D_SWIZZLE_COMPONENT::RED;

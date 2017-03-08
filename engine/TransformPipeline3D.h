@@ -20,7 +20,7 @@ public:
 	/**
 	 * @brief Default constructor which sets all Matrices to Identity.
 	 */
-	TransformPipeline3D() = default;
+	TransformPipeline3D();
 
 	/**
 	 * @brief Applies a translatation to the model matrix.
@@ -54,14 +54,26 @@ public:
 	void setProj(glm::mat4 proj);
 
 	/**
+	 * @brief Sets the parent transform for this transform.
+	 * @param parent Ptr to parent transform.
+	 */
+	void setParentTransform(TransformPipeline3D* parent);
+
+	/**
 	 * @brief Returns the model transformation.
 	 * @return Model matrix.
 	 */
 	glm::mat4 getModelTransform() const;
 
 	/**
+	 * @brief Returns the local transform.
+	 * @return Local model matrix.
+	 */
+	glm::mat4 getLocalModelTransform() const;
+
+	/**
 	 * @brief Returns the full model-view-projection transformation.
-	 * @return Model Matrix * View Matrix * Projection Matrix.
+	 * @return Projection Matrix * View Matrix * Model Matrix.
 	 */
 	glm::mat4 getMVP() const;
 private:
@@ -80,4 +92,14 @@ private:
 	 * @brief Current projection matrix.
 	 */
 	glm::mat4 proj{ 1.f };
+
+	/**
+	 * @brief Root parent transform. Should be identity transform.
+	 */
+	static TransformPipeline3D origin;
+	
+	/**
+	 * @brief Ptr to parent transform object.
+	 */
+	TransformPipeline3D* parentTransform;
 };

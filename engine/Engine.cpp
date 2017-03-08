@@ -6,13 +6,17 @@ namespace engine
 {
 	void Engine::init()
 	{
-		window = new Window{ 800,600,"MyWindow" };
+		window = new Window{ 800, 600, "MyWindow" };
 
 		dumpInfo(std::cout);
 
 		TransformPipeline3D transform{};
 
 		RawModel model{ "../res/models/groundsphere.obj" };
+
+		TransformPipeline3D transform2{};
+
+		transform2.setParentTransform(&transform);
 	}
 
 	void Engine::run()

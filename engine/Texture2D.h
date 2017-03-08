@@ -302,6 +302,20 @@ enum class TEXTURE_2D_FILTERING
 	INVALID_VALUE
 };
 
+// Fyll på efter behov.
+enum class TEXTURE_2D_FORMAT
+{
+	DEPTH_COMPONENT,
+	INVALID_VALUE
+};
+
+// Fyll på efter behov.
+enum class TEXTURE_2D_DATATYPE
+{
+	FLOAT,
+	INVALID_VALUE
+};
+
 class ENGINE_API Texture2D
 {
 public:
@@ -315,6 +329,9 @@ public:
 
 	/**
 	 * @brief Constructor
+	 * 
+	 * Creates a texture from file. 
+	 * 
 	 * @param filePath Path to texture file.
 	 * @param sWrap Wrapping behaviour in S-direction.
 	 * @param tWrap Wrapping behaviour in T-direction.
@@ -330,12 +347,38 @@ public:
 	);
 
 	/**
+	 * @brief Constructor
+	 * 
+	 * Generates an empty texture
+	 * 
+	 * @param width Width, in pixels.
+	 * @param height Height, in pixels
+	 * @param format Format of the data. 
+	 * @param type Datatype.
+	 */
+	Texture2D(
+		GLuint width, 
+		GLuint height, 
+		TEXTURE_2D_FORMAT format, 
+		TEXTURE_2D_DATATYPE type
+	);
+
+	/**
 	 * @brief Destructor.
 	 */
 	~Texture2D();
 
+	/**
+	 * @brief Copy constructor.
+	 * @note Deleted.
+	 */
 	Texture2D(const Texture2D&) = delete;
 
+	/**
+	 * @brief Copy assignment operator.
+	 * @return Ref to self.
+	 * @note Deleted.
+	 */
 	Texture2D& operator=(const Texture2D&) = delete;
 
 	/**
