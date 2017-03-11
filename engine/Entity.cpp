@@ -8,19 +8,18 @@
 #include "Entity.h"
 #include "Component.h"
 
-Entity::Entity()
+uint32_t getNextHandle()
 {
-}
+	static uint32_t next = 0;
 
+	return next;
+}
 
 Entity::~Entity()
 {
 }
 
-void Entity::update()
+uint32_t Entity::getID() const
 {
-	for (auto i : Components) 
-	{
-		i.second->update();
-	}
+	return handle;
 }

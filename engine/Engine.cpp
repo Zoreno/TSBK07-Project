@@ -2,33 +2,57 @@
 
 #include "RawModel.h"
 
+#include <iostream>
+
+#include "TransformPipeline3D.h"
+
+#include "ComponentContainer.h"
+#include "Entity.h"
+#include "Component.h"
+
 namespace engine
 {
+	class TransformComponent : public Component
+	{
+	public:
+		TransformComponent() {}
+
+		glm::vec3 position;
+	};
+
 	void Engine::init()
 	{
 		window = new Window{ 800, 600, "MyWindow" };
 
 		dumpInfo(std::cout);
 
-		TransformPipeline3D transform{};
+		text = new TextRenderer{ "../res/fonts/arial.ttf" };
 
-		RawModel model{ "../res/models/groundsphere.obj" };
+		Entity ent;
 
-		TransformPipeline3D transform2{};
+		TransformComponent trans{};
 
-		transform2.setParentTransform(&transform);
+		trans.position = glm::vec3{ 4.f,0.f,0.f };
+
+		ComponentContainer::addComponent(ent.getID(), trans);
 	}
 
 	void Engine::run()
 	{
 		while (!window->shouldClose())
 		{
+			text->render("Hello World!", 25.f, 25.f, 0.5f, Color{ 0.5f, 0.8f, 0.2f });
+
 			window->display();
+
+			std::cout << ComponentContainer::getComponent<TransformComponent>(0)->position.x << std::endl;
 		}
 	}
 
 	void Engine::cleanup()
 	{
+		delete text;
+
 		delete window;
 	}
 

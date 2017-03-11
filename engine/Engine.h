@@ -6,9 +6,7 @@
 
 #include "Color.h"
 
-#include "TransformPipeline3D.h"
-
-#include <iostream>
+#include "TextRenderer.h"
 
 namespace engine
 {
@@ -26,5 +24,7 @@ namespace engine
 		void dumpInfo(std::ostream& stream);
 
 		Window* window{ nullptr };
+
+		TextRenderer* text;
 	};
 }

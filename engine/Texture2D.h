@@ -306,6 +306,8 @@ enum class TEXTURE_2D_FILTERING
 enum class TEXTURE_2D_FORMAT
 {
 	DEPTH_COMPONENT,
+	RGB,
+	RED,
 	INVALID_VALUE
 };
 
@@ -313,6 +315,7 @@ enum class TEXTURE_2D_FORMAT
 enum class TEXTURE_2D_DATATYPE
 {
 	FLOAT,
+	UNSIGNED_BYTE,
 	INVALID_VALUE
 };
 
@@ -349,7 +352,7 @@ public:
 	/**
 	 * @brief Constructor
 	 * 
-	 * Generates an empty texture
+	 * Generates an potentially empty texture
 	 * 
 	 * @param width Width, in pixels.
 	 * @param height Height, in pixels
@@ -357,10 +360,11 @@ public:
 	 * @param type Datatype.
 	 */
 	Texture2D(
-		GLuint width, 
-		GLuint height, 
-		TEXTURE_2D_FORMAT format, 
-		TEXTURE_2D_DATATYPE type
+		GLuint width,
+		GLuint height,
+		TEXTURE_2D_FORMAT format,
+		TEXTURE_2D_DATATYPE type,
+		GLvoid* data = NULL
 	);
 
 	/**

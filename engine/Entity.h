@@ -14,15 +14,18 @@
 
 class Component;
 
+uint32_t getNextHandle();
+
 class ENGINE_API Entity
 {
 public:
 	// Constructors, Destructors
-	Entity();
+	Entity() = default;
 	~Entity();
 
 	// pub functions
-	void update();
+
+	uint32_t getID() const;
 
 	// pub variables
 
@@ -30,6 +33,7 @@ private:
 	// priv functions
 
 	// priv variables
-	std::map <uint32_t ,std::shared_ptr<Component>> Components;
+
+	uint32_t handle{ getNextHandle() };
 };
 

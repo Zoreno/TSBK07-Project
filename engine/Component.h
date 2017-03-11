@@ -15,12 +15,10 @@ class ENGINE_API Component
 {
 public:
 	// Constructors, Destructors
-	Component() = delete;
-	explicit Component(std::shared_ptr<Entity> entHand);
-	 ~Component();
+	Component() {}
+	virtual ~Component();
 
 	// pub functions
-	virtual void update() = 0;
 
 	// Include this in case of needed physics and such
 	//virtual void fixedUpdate() = 0;
@@ -30,7 +28,6 @@ protected:
 	// prot functions
 
 	// prot variables
-	std::shared_ptr<Entity> entityHandle;
 private:
 	// priv functions
 

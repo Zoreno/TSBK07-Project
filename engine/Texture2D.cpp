@@ -133,7 +133,7 @@ Texture2D::Texture2D(
 	delete file;
 }
 
-Texture2D::Texture2D(GLuint width, GLuint height, TEXTURE_2D_FORMAT format, TEXTURE_2D_DATATYPE type)
+Texture2D::Texture2D(GLuint width, GLuint height, TEXTURE_2D_FORMAT format, TEXTURE_2D_DATATYPE type, GLvoid* data)
 	: width(width), height(height)
 {
 	glGenTextures(1, &textureID);
@@ -146,6 +146,12 @@ Texture2D::Texture2D(GLuint width, GLuint height, TEXTURE_2D_FORMAT format, TEXT
 	case TEXTURE_2D_FORMAT::DEPTH_COMPONENT:
 		f = GL_DEPTH_COMPONENT;
 		break;
+	case TEXTURE_2D_FORMAT::RGB:
+		f = GL_RGB;
+		break;
+	case TEXTURE_2D_FORMAT::RED:
+		f = GL_RED;
+		break;
 	default:
 		throw std::invalid_argument(std::string("Invalid format."));
 	}
@@ -154,6 +160,9 @@ Texture2D::Texture2D(GLuint width, GLuint height, TEXTURE_2D_FORMAT format, TEXT
 	{
 	case TEXTURE_2D_DATATYPE::FLOAT: 
 		t = GL_FLOAT;
+		break;
+	case TEXTURE_2D_DATATYPE::UNSIGNED_BYTE:
+		t = GL_UNSIGNED_BYTE;
 		break;
 	default:
 		throw std::invalid_argument(std::string("Invalid type."));
@@ -168,7 +177,7 @@ Texture2D::Texture2D(GLuint width, GLuint height, TEXTURE_2D_FORMAT format, TEXT
 		0,				// Border
 		f,				// Format
 		t,				// Type
-		nullptr			// Data
+		data			// Data
 	);
 }
 
