@@ -12,7 +12,7 @@ uint32_t getNextHandle()
 {
 	static uint32_t next = 0;
 
-	return next;
+	return next++;
 }
 
 Entity::~Entity()
@@ -21,5 +21,5 @@ Entity::~Entity()
 
 uint32_t Entity::getID() const
 {
-	return handle;
+	return _handle;
 }

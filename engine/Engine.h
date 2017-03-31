@@ -8,11 +8,16 @@
 
 #include "TextRenderer.h"
 
+#include "EntityManager.h"
+
 namespace engine
 {
 	class ENGINE_API Engine
 	{
 	public:
+		Engine() = default;
+		~Engine() {}
+
 		void init();
 
 		void run();
@@ -25,6 +30,8 @@ namespace engine
 
 		Window* window{ nullptr };
 
-		TextRenderer* text;
+		TextRenderer* text{ nullptr };
+
+		EntityManager* em{};
 	};
 }

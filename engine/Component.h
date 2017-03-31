@@ -8,29 +8,9 @@
 
 #include <memory>
 #include "EngineDLL.h"
+#include <GL/glew.h>
+#include <atomic>
 
-class Entity;
+#include <typeinfo.h>
 
-class ENGINE_API Component
-{
-public:
-	// Constructors, Destructors
-	Component() {}
-	virtual ~Component();
-
-	// pub functions
-
-	// Include this in case of needed physics and such
-	//virtual void fixedUpdate() = 0;
-
-	// pub variables (should be none)
-protected:
-	// prot functions
-
-	// prot variables
-private:
-	// priv functions
-
-	// priv variables
-};
-
+// Behövs inte för tillfället

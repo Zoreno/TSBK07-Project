@@ -6,18 +6,48 @@
 
 #include "TransformPipeline3D.h"
 
-#include "ComponentContainer.h"
 #include "Entity.h"
 #include "Component.h"
+#include "EntityManager.h"
 
 namespace engine
 {
-	class TransformComponent : public Component
+	class TransformComponent
 	{
 	public:
-		TransformComponent() {}
+		TransformComponent() = default;
+		explicit TransformComponent(glm::vec3 position, float angle = 0.f, glm::vec3 rotationAxis = glm::vec3{ 0.f,1.f,0.f }, glm::vec3 scale = glm::vec3{ 1.f,1.f,1.f })
+			: position(position), angle(angle), rotationAxis(rotationAxis), scale(scale) {}
 
-		glm::vec3 position;
+		glm::vec3 position{};
+		float angle{};
+		glm::vec3 rotationAxis{};
+		glm::vec3 scale{};
+
+		TransformPipeline3D getPipeline() const
+		{
+			TransformPipeline3D pipeline{};
+
+			pipeline.translate(position);
+
+			if(angle != 0.f)
+			{
+				pipeline.rotate(angle, rotationAxis);
+			}
+			pipeline.scale(scale);
+
+			return pipeline;
+		}
+	};
+
+	class NameComponent
+	{
+	public:
+		NameComponent() = default;
+		explicit NameComponent(const std::string& str) : userString(str) {}
+
+
+		std::string userString{};
 	};
 
 	void Engine::init()
@@ -28,24 +58,48 @@ namespace engine
 
 		text = new TextRenderer{ "../res/fonts/arial.ttf" };
 
-		Entity ent;
+		em = new EntityManager{};
 
-		TransformComponent trans{};
+		em->registerComponent<TransformComponent>();
+		em->registerComponent<NameComponent>();
 
-		trans.position = glm::vec3{ 4.f,0.f,0.f };
+		EntityHandle entity1 = em->createEntity();
+		EntityHandle entity2 = em->createEntity();
 
-		ComponentContainer::addComponent(ent.getID(), trans);
+		em->assignComponent<TransformComponent>(entity1, glm::vec3{ 1.f,0.f,0.f });
+		em->assignComponent<TransformComponent>(entity2, glm::vec3{ 3.f,0.f,0.f });
+		em->assignComponent<NameComponent>(entity1, "Bös...");
+		em->assignComponent<NameComponent>(entity2, "Hello Test");
+
+		std::cout << em->getComponent<TransformComponent>(entity1)->position.x << std::endl;
+		std::cout << em->getComponent<TransformComponent>(entity2)->position.x << std::endl;
+
+		std::cout << em->getComponent<NameComponent>(entity1)->userString << std::endl;
+		std::cout << em->getComponent<NameComponent>(entity2)->userString << std::endl;
+
+		if(em->hasComponent<TransformComponent, NameComponent>(entity1))
+		{
+			std::cout << "Entity 1 have Transform and Name" << std::endl;
+		}
+
+		em->detachComponent<TransformComponent>(entity2);
+
+		if(!em->hasComponent<TransformComponent>(entity2))
+		{
+			std::cout << "Entity 2 does not have a Transform Component!" << std::endl;
+		}
 	}
 
 	void Engine::run()
 	{
 		while (!window->shouldClose())
 		{
+			WindowEvent ev;
+			while (window->pollEvent(ev));
+
 			text->render("Hello World!", 25.f, 25.f, 0.5f, Color{ 0.5f, 0.8f, 0.2f });
 
 			window->display();
-
-			std::cout << ComponentContainer::getComponent<TransformComponent>(0)->position.x << std::endl;
 		}
 	}
 
@@ -54,6 +108,8 @@ namespace engine
 		delete text;
 
 		delete window;
+
+		delete em;
 	}
 
 	void Engine::dumpInfo(std::ostream& stream)
