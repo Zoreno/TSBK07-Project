@@ -1,7 +1,6 @@
 #include <Engine.h>
 
 #include <Component.h>
-#include <Entity.h>
 #include <iostream>
 
 int main()

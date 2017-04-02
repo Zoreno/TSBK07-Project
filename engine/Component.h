@@ -6,11 +6,8 @@
 */
 #pragma once
 
-#include <memory>
-#include "EngineDLL.h"
-#include <GL/glew.h>
-#include <atomic>
-
-#include <typeinfo.h>
-
-// Behövs inte för tillfället
+class Component
+{
+public:
+	virtual ~Component() {}
+};

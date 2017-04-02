@@ -7,6 +7,13 @@
 
 #include "EntityManager.h"
 
+EntityHandle getNextHandle()
+{
+	static EntityHandle next = 0;
+
+	return next++;
+}
+
 EntityManager::~EntityManager()
 {
 	while(_pools.size() > 0)
@@ -25,12 +32,31 @@ EntityHandle EntityManager::createEntity()
 	return ent.getID();
 }
 
-bool EntityManager::match(EntityHandle entHandle, ComponentSet set)
+void EntityManager::destroyEntity(EntityHandle entHandle)
 {
 	EntityPtr ePtr = getEntity(entHandle);
 
-	std::cout << set << std::endl;
-	std::cout << ePtr->_components << std::endl;
+	for(size_t i{0}; i < MAX_COMPONENTS; ++i)
+	{
+		if(ePtr->_components[i])
+		{
+			_pools[i]->removeComponent(entHandle);
+		}
+	}
+
+	for(auto it = _entities.begin(); it != _entities.end(); ++it)
+	{
+		if(it->getID() == entHandle)
+		{
+			_entities.erase(it);
+			break;
+		}
+	}
+}
+
+bool EntityManager::match(EntityHandle entHandle, ComponentSet set)
+{
+	EntityPtr ePtr = getEntity(entHandle);
 
 	return (ePtr->_components & set) == set;
 }

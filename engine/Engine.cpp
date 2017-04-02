@@ -6,13 +6,17 @@
 
 #include "TransformPipeline3D.h"
 
-#include "Entity.h"
 #include "Component.h"
 #include "EntityManager.h"
 
+std::ostream& operator<<(std::ostream& os, glm::vec3 vec)
+{
+	return os << '{' << vec.x << ',' << vec.y << ',' << vec.z << '}';
+}
+
 namespace engine
 {
-	class TransformComponent
+	class TransformComponent : public Component
 	{
 	public:
 		TransformComponent() = default;
@@ -40,7 +44,7 @@ namespace engine
 		}
 	};
 
-	class NameComponent
+	class NameComponent : public Component
 	{
 	public:
 		NameComponent() = default;
@@ -69,25 +73,27 @@ namespace engine
 		em->assignComponent<TransformComponent>(entity1, glm::vec3{ 1.f,0.f,0.f });
 		em->assignComponent<TransformComponent>(entity2, glm::vec3{ 3.f,0.f,0.f });
 		em->assignComponent<NameComponent>(entity1, "Bös...");
-		em->assignComponent<NameComponent>(entity2, "Hello Test");
+		//em->assignComponent<NameComponent>(entity2, "Hello Test");
 
-		std::cout << em->getComponent<TransformComponent>(entity1)->position.x << std::endl;
-		std::cout << em->getComponent<TransformComponent>(entity2)->position.x << std::endl;
-
-		std::cout << em->getComponent<NameComponent>(entity1)->userString << std::endl;
-		std::cout << em->getComponent<NameComponent>(entity2)->userString << std::endl;
-
-		if(em->hasComponent<TransformComponent, NameComponent>(entity1))
+		auto func = [](EntityHandle ent, TransformComponent* transform)
 		{
-			std::cout << "Entity 1 have Transform and Name" << std::endl;
-		}
+			std::cout << "Hej" << std::endl;
 
-		em->detachComponent<TransformComponent>(entity2);
+			std::cout << transform->position << std::endl;
+		};
 
-		if(!em->hasComponent<TransformComponent>(entity2))
+		em->each<TransformComponent>(func);
+
+		auto func2 = [](EntityHandle ent, TransformComponent* tr, NameComponent* na)
 		{
-			std::cout << "Entity 2 does not have a Transform Component!" << std::endl;
-		}
+			std::cout << "HejHej" << std::endl;
+
+			std::cout << tr->position << std::endl;
+
+			std::cout << na->userString << std::endl;
+		};
+
+		em->each<TransformComponent, NameComponent>(func2);
 	}
 
 	void Engine::run()
