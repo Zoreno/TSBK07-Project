@@ -54,6 +54,42 @@ namespace engine
 		std::string userString{};
 	};
 
+	class NameSystem : public System
+	{
+	public:
+		NameSystem() = default;
+
+		void update(float dt) override
+		{
+			em->each<NameComponent>(*this); // operator()
+			em->each<NameComponent>(statFunc); // static function
+
+			auto func = [this](EntityHandle ent, NameComponent* nc) -> void
+			{
+				std::cout << "Lambda test" << std::endl;
+			};
+
+			auto func2 = [this](EntityHandle ent, NameComponent* nc, TransformComponent* tr) ->void 
+			{
+				std::cout << "Transform and Name" << std::endl;
+			};
+
+			em->each<NameComponent>(func); // Lambda func
+			em->each<NameComponent, TransformComponent>(func2);
+		}
+		
+		void operator()(EntityHandle ent, NameComponent* nc)
+		{
+			std::cout << "operator() test" << std::endl;
+		}
+
+	private:
+		static void statFunc(EntityHandle ent, NameComponent* nc)
+		{
+			std::cout << "Static function test" << std::endl;
+		}
+	};
+
 	void Engine::init()
 	{
 		window = new Window{ 800, 600, "MyWindow" };
@@ -73,27 +109,10 @@ namespace engine
 		em->assignComponent<TransformComponent>(entity1, glm::vec3{ 1.f,0.f,0.f });
 		em->assignComponent<TransformComponent>(entity2, glm::vec3{ 3.f,0.f,0.f });
 		em->assignComponent<NameComponent>(entity1, "Bös...");
-		//em->assignComponent<NameComponent>(entity2, "Hello Test");
+		em->assignComponent<NameComponent>(entity2, "Hello Test");
 
-		auto func = [](EntityHandle ent, TransformComponent* transform)
-		{
-			std::cout << "Hej" << std::endl;
-
-			std::cout << transform->position << std::endl;
-		};
-
-		em->each<TransformComponent>(func);
-
-		auto func2 = [](EntityHandle ent, TransformComponent* tr, NameComponent* na)
-		{
-			std::cout << "HejHej" << std::endl;
-
-			std::cout << tr->position << std::endl;
-
-			std::cout << na->userString << std::endl;
-		};
-
-		em->each<TransformComponent, NameComponent>(func2);
+		// Detta tar hand om instansiering och sånt.
+		em->registerSystem<NameSystem>();
 	}
 
 	void Engine::run()
@@ -104,6 +123,8 @@ namespace engine
 			while (window->pollEvent(ev));
 
 			text->render("Hello World!", 25.f, 25.f, 0.5f, Color{ 0.5f, 0.8f, 0.2f });
+
+			em->update(0);
 
 			window->display();
 		}

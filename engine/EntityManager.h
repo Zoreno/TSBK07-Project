@@ -16,6 +16,7 @@
 #include <functional>
 
 #include "Component.h"
+#include "System.h"
 
 // Bör var mer än tillräckligt
 #define MAX_COMPONENTS 10
@@ -63,14 +64,6 @@ private:
 
 typedef Entity* EntityPtr;
 
-class System
-{
-public:
-	virtual ~System() {}
-
-	virtual void update(float dt) = 0;
-};
-
 class BasePool
 {
 public:
@@ -89,14 +82,14 @@ public:
 	~ComponentPool() override {}
 
 	typename std::enable_if<std::is_base_of<Component, T>::value, T*>::type
-	getComponent(EntityHandle entHandle);
+		getComponent(EntityHandle entHandle);
 
 	template <typename ... Args>
 	typename std::enable_if<std::is_base_of<Component, T>::value>::type
-	createComponent(EntityHandle entHandle, Args ... args);
+		createComponent(EntityHandle entHandle, Args ... args);
 
 	typename std::enable_if<std::is_base_of<Component, T>::value>::type
-	removeComponent(EntityHandle entHandle) override;
+		removeComponent(EntityHandle entHandle) override;
 private:
 
 	std::map<EntityHandle, T> _components{};
@@ -110,11 +103,11 @@ public:
 
 	template <typename T>
 	typename std::enable_if<std::is_base_of<Component, T>::value, ComponentType>::type
-	getTypeID() const;
+		getTypeID() const;
 
 	template <typename T>
 	typename std::enable_if<std::is_base_of<Component, T>::value, ComponentType>::type
-	createTypeID();
+		createTypeID();
 
 	const ComponentType INVALID_TYPE{ 0 };
 
@@ -131,45 +124,51 @@ public:
 
 	template <typename T>
 	typename std::enable_if<std::is_base_of<Component, T>::value>::type
-	registerComponent();
+		registerComponent();
+
+	template <typename T, typename ... Args>
+	typename std::enable_if<std::is_base_of<System, T>::value>::type
+		registerSystem(Args ... args);
 
 	EntityHandle createEntity();
 	void destroyEntity(EntityHandle entHandle);
 
 	template <typename T, typename ... Args>
 	typename std::enable_if<std::is_base_of<Component, T>::value>::type
-	assignComponent(EntityHandle entHandle, Args ... args);
+		assignComponent(EntityHandle entHandle, Args ... args);
 
 	template <typename T>
 	typename std::enable_if<std::is_base_of<Component, T>::value>::type
-	detachComponent(EntityHandle entHandle);
+		detachComponent(EntityHandle entHandle);
 
 	template <typename T>
 	typename std::enable_if<std::is_base_of<Component, T>::value, T*>::type
-	getComponent(EntityHandle entHandle);
+		getComponent(EntityHandle entHandle);
 
 	template <typename T>
 	typename std::enable_if<std::is_base_of<Component, T>::value, bool>::type
-	hasComponent(EntityHandle entHandle, ComponentSet set = ComponentSet{});
+		hasComponent(EntityHandle entHandle, ComponentSet set = ComponentSet{});
 
 	template <typename T, typename S, typename ... Other>
 	typename std::enable_if<std::is_base_of<Component, T>::value && std::is_base_of<Component, S>::value, bool>::type
-	hasComponent(EntityHandle entHandle, ComponentSet set = ComponentSet{});
+		hasComponent(EntityHandle entHandle, ComponentSet set = ComponentSet{});
 
 	template <typename T>
 	typename std::enable_if<std::is_base_of<Component, T>::value, ComponentType>::type
-	getComponentType();
+		getComponentType();
 
 	template <typename T>
 	typename std::enable_if<std::is_base_of<Component, T>::value, std::tuple<T*>>::type
-	getComponents(EntityHandle entHandle);
+		getComponents(EntityHandle entHandle);
 
 	template <typename T, typename S, typename ... Other>
 	typename std::enable_if<std::is_base_of<Component, T>::value && std::is_base_of<Component, S>::value, std::tuple<T*, S*, Other* ... >>::type
-	getComponents(EntityHandle entHandle);
+		getComponents(EntityHandle entHandle);
 
 	template <typename ... Args>
 	void each(typename std::identity<std::function<void(EntityHandle, Args*...)>>::type f);
+
+	void update(float dt);
 
 private:
 
@@ -177,15 +176,15 @@ private:
 
 	template <typename T, typename ... Args>
 	typename std::enable_if<std::is_base_of<Component, T>::value>::type
-	createComponent(EntityHandle entHandle, Args ... args);
+		createComponent(EntityHandle entHandle, Args ... args);
 
 	template <typename T>
 	typename std::enable_if<std::is_base_of<Component, T>::value>::type
-	removeComponent(EntityHandle entHandle);
+		removeComponent(EntityHandle entHandle);
 
 	template <typename T>
 	typename std::enable_if<std::is_base_of<Component, T>::value, ComponentPool<T>*>::type
-	getPool();
+		getPool();
 
 	template <typename Func, typename Tup, std::size_t ... index>
 	void invoke_helper(EntityHandle entHandle, Func&& func, Tup&& tup, std::index_sequence<index...>);
@@ -198,10 +197,15 @@ private:
 	ComponentTypeMap _typemap{};
 	PoolMap _pools{};
 	std::vector<Entity> _entities{};
+	std::vector<System*> _systems{};
 };
 
 //=============================================================================
 // Implementation
+//=============================================================================
+
+//=============================================================================
+// ComponentPool<T>
 //=============================================================================
 
 template <typename T>
@@ -236,6 +240,10 @@ ComponentPool<T>::removeComponent(EntityHandle entHandle)
 	_components.erase(it);
 }
 
+//=============================================================================
+// ComponentTypeMap
+//=============================================================================
+
 template <typename T>
 typename std::enable_if<std::is_base_of<Component, T>::value, ComponentType>::type
 ComponentTypeMap::getTypeID() const
@@ -266,6 +274,10 @@ ComponentTypeMap::createTypeID()
 	return _currID++;
 }
 
+//=============================================================================
+// EntityManager
+//=============================================================================
+
 template <typename T>
 typename std::enable_if<std::is_base_of<Component, T>::value>::type
 EntityManager::registerComponent()
@@ -280,6 +292,17 @@ EntityManager::registerComponent()
 	}
 
 	_pools.emplace(_typemap.createTypeID<T>(), new ComponentPool<T>{});
+}
+
+template <typename T, typename ... Args>
+typename std::enable_if<std::is_base_of<System, T>::value>::type
+EntityManager::registerSystem(Args ... args)
+{
+	T* system = new T(std::forward<Args...>(args)...);
+
+	system->registerManager(this);
+
+	_systems.push_back(system);
 }
 
 template <typename T, typename ... Args>
@@ -373,9 +396,9 @@ void EntityManager::invoke(EntityHandle entHandle, Func&& func, Tup&& tup)
 template <typename ... Args>
 void EntityManager::each(typename std::identity<std::function<void(EntityHandle, Args*...)>>::type f)
 {
-	for(auto it : _entities)
+	for (auto it : _entities)
 	{
-		if(hasComponent<Args...>(it.getID()))
+		if (hasComponent<Args...>(it.getID()))
 		{
 			invoke(it.getID(), f, getComponents<Args...>(it.getID()));
 		}

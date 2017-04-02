@@ -212,6 +212,9 @@
     <ClInclude Include="AssetManager.h">
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
+    <ClInclude Include="System.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ConfigFile.inl">

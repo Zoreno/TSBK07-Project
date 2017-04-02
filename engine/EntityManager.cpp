@@ -21,6 +21,12 @@ EntityManager::~EntityManager()
 		delete _pools.begin()->second;
 		_pools.erase(_pools.begin());
 	}
+
+	while(_systems.size() > 0)
+	{
+		delete _systems.back();
+		_systems.pop_back();
+	}
 }
 
 EntityHandle EntityManager::createEntity()
@@ -51,6 +57,14 @@ void EntityManager::destroyEntity(EntityHandle entHandle)
 			_entities.erase(it);
 			break;
 		}
+	}
+}
+
+void EntityManager::update(float dt)
+{
+	for(auto it : _systems)
+	{
+		it->update(dt);
 	}
 }
 
