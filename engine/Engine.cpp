@@ -54,15 +54,36 @@ namespace engine
 		std::string userString{};
 	};
 
-	class NameSystem : public System
+	class TestEvent : public Event
+	{
+	public:
+		std::string data{};
+	};
+
+	class NameSystem : public System, public Subscriber<TestEvent>
 	{
 	public:
 		NameSystem() = default;
 
+		void handleEvent(const TestEvent& ev) override
+		{
+			std::cout << ev.data << std::endl;
+		}
+
+		void startUp() override
+		{
+			ev->addSubscriber<TestEvent>(this);
+		}
+
+		void shutDown() override
+		{
+			ev->removeSubscriber<TestEvent>(this);
+		}
+
 		void update(float dt) override
 		{
-			em->each<NameComponent>(*this); // operator()
-			em->each<NameComponent>(statFunc); // static function
+			//em->each<NameComponent>(*this); // operator()
+			//em->each<NameComponent>(statFunc); // static function
 
 			auto func = [this](EntityHandle ent, NameComponent* nc) -> void
 			{
@@ -74,11 +95,11 @@ namespace engine
 				std::cout << "Transform and Name" << std::endl;
 			};
 
-			em->each<NameComponent>(func); // Lambda func
-			em->each<NameComponent, TransformComponent>(func2);
+			//em->each<NameComponent>(func); // Lambda func
+			//em->each<NameComponent, TransformComponent>(func2);
 		}
 		
-		void operator()(EntityHandle ent, NameComponent* nc)
+		void operator()(EntityHandle ent, NameComponent* nc) const
 		{
 			std::cout << "operator() test" << std::endl;
 		}
@@ -98,7 +119,9 @@ namespace engine
 
 		text = new TextRenderer{ "../res/fonts/arial.ttf" };
 
-		em = new EntityManager{};
+		ev = new EventManager{};
+
+		em = new EntityManager{ev};
 
 		em->registerComponent<TransformComponent>();
 		em->registerComponent<NameComponent>();
@@ -113,6 +136,11 @@ namespace engine
 
 		// Detta tar hand om instansiering och sånt.
 		em->registerSystem<NameSystem>();
+
+		TestEvent eve;
+		eve.data = "TestData";
+
+		ev->postEvent(eve);
 	}
 
 	void Engine::run()
@@ -137,6 +165,8 @@ namespace engine
 		delete window;
 
 		delete em;
+
+		delete ev;
 	}
 
 	void Engine::dumpInfo(std::ostream& stream)

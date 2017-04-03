@@ -1,7 +1,7 @@
 /**
-* @file	EntityManager.cpp
+* @file		EntityManager.cpp
 * @Author	Kevin Kjellén
-* @date	2017-03-05
+* @date		2017-03-05
 * @brief	Container for all the components for all entities
 */
 
@@ -14,6 +14,15 @@ EntityHandle getNextHandle()
 	return next++;
 }
 
+EventManager::~EventManager()
+{
+	while(_channels.size())
+	{
+		delete _channels.begin()->second;
+		_channels.erase(_channels.begin());
+	}
+}
+
 EntityManager::~EntityManager()
 {
 	while(_pools.size() > 0)
@@ -24,6 +33,7 @@ EntityManager::~EntityManager()
 
 	while(_systems.size() > 0)
 	{
+		_systems.back()->shutDown();
 		delete _systems.back();
 		_systems.pop_back();
 	}

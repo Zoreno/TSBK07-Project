@@ -17,9 +17,11 @@
 
 #include "Component.h"
 #include "System.h"
+#include <AL/al.h>
+#include <iterator>
 
 // Bör var mer än tillräckligt
-#define MAX_COMPONENTS 10
+#define MAX_COMPONENTS 128
 
 #define USE_ASSERT 1
 
@@ -116,10 +118,84 @@ private:
 	std::map<ComponentHash, ComponentType> _component_types{};
 };
 
+class Event
+{
+public:
+	virtual ~Event() {}
+};
+
+template <typename T>
+class Subscriber
+{
+public:
+	virtual ~Subscriber() {}
+
+	virtual
+		typename std::enable_if<std::is_base_of<Event, T>::value>::type
+		handleEvent(const T& ev) = 0;
+};
+
+class EventManager
+{
+	class InternalEventChannelBase
+	{
+	public:
+		virtual ~InternalEventChannelBase() {}
+	};
+
+	template <typename T>
+	class InternalEventChannel : public InternalEventChannelBase
+	{
+	public:
+		typename std::enable_if<std::is_base_of<Event, T>::value>::type
+			addSubscriber(Subscriber<T>* sub);
+
+		typename std::enable_if<std::is_base_of<Event, T>::value>::type
+			removeSubscriber(Subscriber<T>* sub);
+
+		typename std::enable_if<std::is_base_of<Event, T>::value>::type
+			postEvent(const T& ev);
+	private:
+		std::vector<Subscriber<T>*> _subscribers;
+	};
+
+public:
+
+	EventManager() = default;
+	~EventManager();
+
+	template <typename T>
+	typename std::enable_if<std::is_base_of<Event, T>::value>::type
+		addSubscriber(Subscriber<T>* sub);
+
+	template <typename T>
+	typename std::enable_if<std::is_base_of<Event, T>::value>::type
+		removeSubscriber(Subscriber<T>* sub);
+
+	template <typename T>
+	typename std::enable_if<std::is_base_of<Event, T>::value>::type
+		postEvent(const T& ev);
+
+
+private:
+	typedef size_t EventHash;
+	using Entry = std::pair<EventHash, InternalEventChannelBase*>;
+
+	template <typename T>
+	typename std::enable_if<std::is_base_of<Event, T>::value, EventHash>::type
+		hash() const;
+
+	template <typename T>
+	typename std::enable_if<std::is_base_of<Event, T>::value, InternalEventChannel<T>*>::type
+		getInternalChannel();
+
+	std::map<EventHash, InternalEventChannelBase*> _channels;
+};
+
 class EntityManager
 {
 public:
-	EntityManager() {}
+	explicit EntityManager(EventManager* ev) : eventManager{ev} {}
 	~EntityManager();
 
 	template <typename T>
@@ -198,6 +274,8 @@ private:
 	PoolMap _pools{};
 	std::vector<Entity> _entities{};
 	std::vector<System*> _systems{};
+
+	EventManager* eventManager;
 };
 
 //=============================================================================
@@ -275,6 +353,83 @@ ComponentTypeMap::createTypeID()
 }
 
 //=============================================================================
+// EventManager
+//=============================================================================
+
+template <typename T>
+typename std::enable_if<std::is_base_of<Event, T>::value>::type
+EventManager::InternalEventChannel<T>::addSubscriber(Subscriber<T>* sub)
+{
+	_subscribers.push_back(sub);
+}
+
+template <typename T>
+typename std::enable_if<std::is_base_of<Event, T>::value>::type
+EventManager::InternalEventChannel<T>::removeSubscriber(Subscriber<T>* sub)
+{
+	for (auto it = _subscribers.begin(); it != _subscribers.end(); ++it)
+	{
+		if (*it == sub)
+		{
+			_subscribers.erase(it);
+			break;
+		}
+	}
+}
+
+template <typename T>
+typename std::enable_if<std::is_base_of<Event, T>::value>::type
+EventManager::InternalEventChannel<T>::postEvent(const T& ev)
+{
+	for (auto it : _subscribers)
+	{
+		it->handleEvent(ev);
+	}
+}
+
+template <typename T>
+typename std::enable_if<std::is_base_of<Event, T>::value>::type
+EventManager::addSubscriber(Subscriber<T>* sub)
+{
+	getInternalChannel<T>()->addSubscriber(sub);
+}
+
+template <typename T>
+typename std::enable_if<std::is_base_of<Event, T>::value>::type 
+EventManager::removeSubscriber(Subscriber<T>* sub)
+{
+	getInternalChannel<T>()->removeSubscriber(sub);
+}
+
+template <typename T>
+typename std::enable_if<std::is_base_of<Event, T>::value>::type
+EventManager::postEvent(const T& ev)
+{
+	getInternalChannel<T>()->postEvent(ev);
+}
+
+template <typename T>
+typename std::enable_if<std::is_base_of<Event, T>::value, EventManager::EventHash>::type
+EventManager::hash() const
+{
+	return std::type_index{ typeid(T) }.hash_code();
+}
+
+template <typename T>
+typename std::enable_if<std::is_base_of<Event, T>::value, EventManager::InternalEventChannel<T>*>::type
+EventManager::getInternalChannel()
+{
+	std::map<EventHash, InternalEventChannelBase*>::iterator it = _channels.find(hash<T>());
+
+	if (it == _channels.end())
+	{
+		it = _channels.insert(Entry(hash<T>(), new InternalEventChannel<T>())).first;
+	}
+
+	return dynamic_cast<InternalEventChannel<T>*>(it->second);
+}
+
+//=============================================================================
 // EntityManager
 //=============================================================================
 
@@ -300,9 +455,11 @@ EntityManager::registerSystem(Args ... args)
 {
 	T* system = new T(std::forward<Args...>(args)...);
 
-	system->registerManager(this);
+	system->registerManagers(this, eventManager);
 
 	_systems.push_back(system);
+
+	system->startUp();
 }
 
 template <typename T, typename ... Args>

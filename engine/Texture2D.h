@@ -6,6 +6,7 @@
  *
  * https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glTexParameter.xhtml
  * https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glTexImage2D.xhtml
+ * https://www.youtube.com/watch?v=dQw4w9WgXcQ
  */
 
 #pragma once
