@@ -20,7 +20,6 @@ namespace engine
 	class TransformComponent : public Component
 	{
 	public:
-		TransformComponent() = default;
 		explicit TransformComponent(glm::vec3 position = glm::vec3{ 0.f,0.f,0.f }, float angle = 0.f, glm::vec3 rotationAxis = glm::vec3{ 0.f,1.f,0.f }, glm::vec3 scale = glm::vec3{ 1.f,1.f,1.f })
 			: position(position), angle(angle), rotationAxis(rotationAxis), scale(scale) {}
 
