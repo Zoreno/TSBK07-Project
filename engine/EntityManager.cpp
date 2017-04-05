@@ -50,6 +50,25 @@ EntityHandle EntityManager::createEntity()
 	return ent.getID();
 }
 
+EntityHandle EntityManager::copyEntity(EntityHandle from)
+{
+	EntityHandle to = createEntity();
+
+	EntityPtr ePtr = getEntity(from);
+
+	for (size_t i{ 0 }; i < MAX_COMPONENTS; ++i)
+	{
+		if (ePtr->_components[i])
+		{
+			EntityPtr e2Ptr = getEntity(to);
+			e2Ptr->_components.set(i, true);
+			_pools[i]->copyComponent(from, to);
+		}
+	}
+
+	return to;
+}
+
 void EntityManager::destroyEntity(EntityHandle entHandle)
 {
 	_ent_to_remove.push_back(entHandle);

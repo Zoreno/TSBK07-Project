@@ -141,6 +141,8 @@ public:
 	 * @param entHandle The entity handle.
 	 */
 	virtual void removeComponent(EntityHandle entHandle) = 0;
+
+	virtual void copyComponent(EntityHandle from, EntityHandle to) = 0;
 };
 
 /**
@@ -206,6 +208,15 @@ public:
 	template <typename ... Args>
 	typename std::enable_if<std::is_base_of<Component, T>::value>::type
 		createComponent(EntityHandle entHandle, Args ... args);
+
+	/**
+	 * @brief Copies a component using the component's copy ctor.
+	 * @param from Handle to src entity.
+	 * @param to Handle to dest entity.
+	 * @return Void.
+	 */
+	typename std::enable_if<std::is_base_of<Component, T>::value>::type
+		copyComponent(EntityHandle from, EntityHandle to) override;
 
 	/**
 	 * @brief Removes a component associated with entity.
@@ -522,6 +533,13 @@ public:
 	EntityHandle createEntity();
 
 	/**
+	 * @brief Copies an entity.
+	 * @param from Entiity handle of original.
+	 * @return Entity handle of new entity.
+	 */
+	EntityHandle copyEntity(EntityHandle from);
+
+	/**
 	 * @brief Destroys an entity and all associated components.
 	 * @param entHandle Entity Handle.
 	 */
@@ -783,6 +801,15 @@ typename std::enable_if<std::is_base_of<Component, T>::value>::type
 ComponentPool<T>::createComponent(EntityHandle entHandle, Args... args)
 {
 	_components.emplace(entHandle, T(std::forward<Args>(args)...));
+}
+
+template <typename T>
+typename std::enable_if<std::is_base_of<Component, T>::value>::type 
+ComponentPool<T>::copyComponent(EntityHandle from, EntityHandle to)
+{
+	T* orig = getComponent(from);
+
+	_components.emplace(to, T(*orig));
 }
 
 template <typename T>

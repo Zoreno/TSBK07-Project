@@ -96,6 +96,8 @@ namespace engine
 			EntityHandle ent = em->createEntity();
 
 			em->assignComponent<TransformComponent>(ent, glm::vec3{ 1.f,0.f,0.f });
+
+			EntityHandle copy = em->copyEntity(ent);
 		}
 
 		void startUp() override
