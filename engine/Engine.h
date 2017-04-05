@@ -10,6 +10,8 @@
 
 #include "EntityManager.h"
 
+#include "AssetManager.h"
+
 namespace engine
 {
 	class ENGINE_API Engine
@@ -34,5 +36,6 @@ namespace engine
 
 		EntityManager* em{};
 		EventManager* ev{};
+		AssetManager* am{};
 	};
 }

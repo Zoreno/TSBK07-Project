@@ -8,6 +8,7 @@
 
 #include "Component.h"
 #include "EntityManager.h"
+#include "AssetManager.h"
 
 std::ostream& operator<<(std::ostream& os, glm::vec3 vec)
 {
@@ -122,6 +123,12 @@ namespace engine
 		ev = new EventManager{};
 
 		em = new EntityManager{ev};
+
+		am = new AssetManager{};
+
+		am->loadModel("../res/models/bunny.obj", "bunneh");
+
+		Model* bunModel = am->fetchModel("bunneh");
 
 		em->registerComponent<TransformComponent>();
 		em->registerComponent<NameComponent>();

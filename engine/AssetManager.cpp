@@ -1,13 +1,9 @@
 #include "AssetManager.h"
-
-
-
-std::map<std::string, Model*> AssetManager::models;
-std::map<std::string, Texture2D*> AssetManager::textures;
+#include "iostream"
 
 void AssetManager::loadModel(std::string filename, std::string ID)
 {
-	auto insPair = models.insert(std::pair<std::string, Model*>(ID, nullptr));
+	auto insPair = _models.insert(std::pair<std::string, Model*>(ID, nullptr));
 	if (insPair.second){
 		char *cstr = new char[filename.length() + 1];
 		strcpy(cstr, filename.c_str());
@@ -18,7 +14,7 @@ void AssetManager::loadModel(std::string filename, std::string ID)
 		}
 		catch (...) {
 			delete[] cstr;
-			models.erase(insPair.first);
+			_models.erase(insPair.first);
 			DisposeModel(m);
 			throw AssetManager_error(filename.append(": failed to load model file"));
 		}
@@ -34,7 +30,7 @@ void AssetManager::loadModel(std::string filename, std::string ID)
 
 void AssetManager::loadTexture(std::string filename, std::string ID)
 {
-	auto insPair = textures.insert(std::pair<std::string, Texture2D*>(ID, nullptr));
+	auto insPair = _textures.insert(std::pair<std::string, Texture2D*>(ID, nullptr));
 
 	if (insPair.second) {
 		try {
@@ -50,30 +46,53 @@ void AssetManager::loadTexture(std::string filename, std::string ID)
 	return;
 }
 
+Model* AssetManager::fetchModel(std::string ID)
+{
+	auto modIter = _models.find(ID);
+
+	if (modIter == _models.end())
+		throw AssetManager_error(ID.append(": model ID not found"));
+	else
+		return modIter->second;
+}
+
+Texture2D* AssetManager::fetchTexture(std::string ID)
+{
+	auto texIter = _textures.find(ID);
+
+	if (texIter == _textures.end())
+		throw AssetManager_error(ID.append(": model ID not found"));
+
+	std::cout << "fetching!!" << std::endl;
+	return texIter->second;
+}
+
+
+
 void AssetManager::disposeModel(std::string ID)
 {
-	auto iterator = models.find(ID);
+	auto iterator = _models.find(ID);
 
-	if (iterator == models.end()) {
+	if (iterator == _models.end()) {
 		throw(ID.append(": model ID not found and could not be disposed"));
 	}
 	else {
 		DisposeModel(iterator->second);
-		models.erase(iterator);
+		_models.erase(iterator);
 	}
 	return;
 }
 
 void AssetManager::disposeTexture(std::string ID)
 {
-	auto iterator = textures.find(ID);
+	auto iterator = _textures.find(ID);
 
-	if (iterator == textures.end()) {
+	if (iterator == _textures.end()) {
 		throw(ID.append(": model ID not found and could not be disposed"));
 	}
 	else {
 		delete iterator->second;
-		textures.erase(iterator);
+		_textures.erase(iterator);
 	}
 	return;
 }

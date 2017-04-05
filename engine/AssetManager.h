@@ -22,20 +22,22 @@ public:
 	AssetManager& operator=(const AssetManager&) = delete;
 	~AssetManager() = default;
 
-protected:
 	//loaders
-	static void loadModel(std::string filename, std::string ID);
-	static void loadTexture(std::string filename, std::string ID);
+	void loadModel(std::string filename, std::string ID);
+	void loadTexture(std::string filename, std::string ID);
 
 	//getters
+	Model* fetchModel(std::string ID);
+	Texture2D* fetchTexture(std::string ID);
+protected:
 
 	//removers
-	static void disposeModel(std::string ID);
-	static void disposeTexture(std::string ID);
+	void disposeModel(std::string ID);
+	void disposeTexture(std::string ID);
 
 	//containers
-	static std::map<std::string, Model*> models;
-	static std::map<std::string, Texture2D*> textures;
+	std::map<std::string, Model*> _models{};
+	std::map<std::string, Texture2D*> _textures{};
 	
 };
 
