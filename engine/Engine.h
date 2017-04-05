@@ -32,7 +32,7 @@ namespace engine
 
 		TextRenderer* text{ nullptr };
 
-		EntityManager* em{};
-		EventManager* ev{};
+		EntityManager* entityManager{};
+		EventManager* eventManager{};
 	};
 }

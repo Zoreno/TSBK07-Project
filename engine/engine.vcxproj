@@ -157,11 +157,13 @@
     <ClInclude Include="ConfigFile.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="EngineDLL.h" />
+    <ClInclude Include="Event.h" />
     <ClInclude Include="loadobj.h" />
     <ClInclude Include="PixelInfo.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="RawModel.h" />
     <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="Subscriber.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="TextRenderer.h" />
     <ClInclude Include="Texture2D.h" />

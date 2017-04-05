@@ -20,7 +20,7 @@ namespace engine
 	{
 	public:
 		TransformComponent() = default;
-		explicit TransformComponent(glm::vec3 position, float angle = 0.f, glm::vec3 rotationAxis = glm::vec3{ 0.f,1.f,0.f }, glm::vec3 scale = glm::vec3{ 1.f,1.f,1.f })
+		explicit TransformComponent(glm::vec3 position = glm::vec3{ 0.f,0.f,0.f }, float angle = 0.f, glm::vec3 rotationAxis = glm::vec3{ 0.f,1.f,0.f }, glm::vec3 scale = glm::vec3{ 1.f,1.f,1.f })
 			: position(position), angle(angle), rotationAxis(rotationAxis), scale(scale) {}
 
 		glm::vec3 position{};
@@ -34,7 +34,7 @@ namespace engine
 
 			pipeline.translate(position);
 
-			if(angle != 0.f)
+			if (angle != 0.f)
 			{
 				pipeline.rotate(angle, rotationAxis);
 			}
@@ -60,7 +60,18 @@ namespace engine
 		std::string data{};
 	};
 
-	class NameSystem : public System, public Subscriber<TestEvent>
+	class KeyEvent : public Event
+	{
+	public:
+		int key;
+	};
+
+	class NameSystem :
+		public System,
+		public Subscriber<TestEvent>,
+		public Subscriber<EntityCreatedEvent>,
+		public Subscriber<EntityDestroyedEvent>,
+		public Subscriber<KeyEvent>
 	{
 	public:
 		NameSystem() = default;
@@ -70,44 +81,55 @@ namespace engine
 			std::cout << ev.data << std::endl;
 		}
 
+		void handleEvent(const EntityCreatedEvent& ev) override
+		{
+			std::cout << "Entity Created: " << ev.entHandle << std::endl;
+		}
+
+		void handleEvent(const EntityDestroyedEvent& ev) override
+		{
+			std::cout << "Entity Destroyed: " << ev.entHandle << std::endl;
+		}
+
+		void handleEvent(const KeyEvent& ev) override
+		{
+			EntityHandle ent = em->createEntity();
+
+			em->assignComponent<TransformComponent>(ent, glm::vec3{ 1.f,0.f,0.f });
+		}
+
 		void startUp() override
 		{
 			ev->addSubscriber<TestEvent>(this);
+			ev->addSubscriber<EntityCreatedEvent>(this);
+			ev->addSubscriber<EntityDestroyedEvent>(this);
+			ev->addSubscriber<KeyEvent>(this);
 		}
 
 		void shutDown() override
 		{
 			ev->removeSubscriber<TestEvent>(this);
+			ev->removeSubscriber<EntityCreatedEvent>(this);
+			ev->removeSubscriber<EntityDestroyedEvent>(this);
+			ev->removeSubscriber<KeyEvent>(this);
 		}
 
 		void update(float dt) override
 		{
-			//em->each<NameComponent>(*this); // operator()
-			//em->each<NameComponent>(statFunc); // static function
-
-			auto func = [this](EntityHandle ent, NameComponent* nc) -> void
+			auto func = [this](EntityHandle ent, TransformComponent* tr) -> void
 			{
-				std::cout << "Lambda test" << std::endl;
+				tr->position += glm::vec3{ 1.f, 0.f,0.f };
+
+				std::cout << ent << " " << tr->position << std::endl;
+
+				if (tr->position.x > 10.f)
+				{
+					em->destroyEntity(ent);
+				}
 			};
 
-			auto func2 = [this](EntityHandle ent, NameComponent* nc, TransformComponent* tr) ->void 
-			{
-				std::cout << "Transform and Name" << std::endl;
-			};
+			em->each<TransformComponent>(func); // Lambda func
 
-			//em->each<NameComponent>(func); // Lambda func
-			//em->each<NameComponent, TransformComponent>(func2);
-		}
-		
-		void operator()(EntityHandle ent, NameComponent* nc) const
-		{
-			std::cout << "operator() test" << std::endl;
-		}
-
-	private:
-		static void statFunc(EntityHandle ent, NameComponent* nc)
-		{
-			std::cout << "Static function test" << std::endl;
 		}
 	};
 
@@ -119,28 +141,28 @@ namespace engine
 
 		text = new TextRenderer{ "../res/fonts/arial.ttf" };
 
-		ev = new EventManager{};
+		eventManager = new EventManager{};
 
-		em = new EntityManager{ev};
+		entityManager = new EntityManager{ eventManager };
 
-		em->registerComponent<TransformComponent>();
-		em->registerComponent<NameComponent>();
+		entityManager->registerComponent<TransformComponent>();
+		entityManager->registerComponent<NameComponent>();
 
-		EntityHandle entity1 = em->createEntity();
-		EntityHandle entity2 = em->createEntity();
+		EntityHandle entity1 = entityManager->createEntity();
+		EntityHandle entity2 = entityManager->createEntity();
 
-		em->assignComponent<TransformComponent>(entity1, glm::vec3{ 1.f,0.f,0.f });
-		em->assignComponent<TransformComponent>(entity2, glm::vec3{ 3.f,0.f,0.f });
-		em->assignComponent<NameComponent>(entity1, "Bös...");
-		em->assignComponent<NameComponent>(entity2, "Hello Test");
+		entityManager->assignComponent<TransformComponent>(entity1, glm::vec3{ 1.f,0.f,0.f });
+		entityManager->assignComponent<TransformComponent>(entity2, glm::vec3{ 3.f,0.f,0.f });
+		entityManager->assignComponent<NameComponent>(entity1, "Bös...");
+		entityManager->assignComponent<NameComponent>(entity2, "Hello Test");
 
 		// Detta tar hand om instansiering och sånt.
-		em->registerSystem<NameSystem>();
+		entityManager->registerSystem<NameSystem>();
 
 		TestEvent eve;
 		eve.data = "TestData";
 
-		ev->postEvent(eve);
+		eventManager->postEvent(eve);
 	}
 
 	void Engine::run()
@@ -148,11 +170,25 @@ namespace engine
 		while (!window->shouldClose())
 		{
 			WindowEvent ev;
-			while (window->pollEvent(ev));
+			while (window->pollEvent(ev))
+			{
+				if (ev.type == EventType::KEY_EVENT)
+				{
+					if (ev.key.action == Action::PRESS)
+					{
+						std::cout << "Key Press event" << std::endl;
+
+						KeyEvent new_event;
+						new_event.key = ev.key.key;
+
+						eventManager->postEvent(new_event);
+					}
+				}
+			}
 
 			text->render("Hello World!", 25.f, 25.f, 0.5f, Color{ 0.5f, 0.8f, 0.2f });
 
-			em->update(0);
+			entityManager->update(0);
 
 			window->display();
 		}
@@ -164,9 +200,9 @@ namespace engine
 
 		delete window;
 
-		delete em;
+		delete entityManager;
 
-		delete ev;
+		delete eventManager;
 	}
 
 	void Engine::dumpInfo(std::ostream& stream)
