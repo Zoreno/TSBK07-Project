@@ -6,8 +6,14 @@
 */
 #pragma once
 
+/**
+ * @brief Component base class.
+ */
 class Component
 {
 public:
+	/**
+	 * @brief Destructor
+	 */
 	virtual ~Component() {}
 };

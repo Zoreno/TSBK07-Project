@@ -43,31 +43,54 @@ EntityHandle EntityManager::createEntity()
 {
 	Entity ent{};
 
-	_entities.push_back(ent);
+	_ent_to_add.push_back(ent);
+
+	eventManager->postEvent(EntityCreatedEvent(ent.getID()));
 
 	return ent.getID();
 }
 
 void EntityManager::destroyEntity(EntityHandle entHandle)
 {
-	EntityPtr ePtr = getEntity(entHandle);
+	_ent_to_remove.push_back(entHandle);
 
-	for(size_t i{0}; i < MAX_COMPONENTS; ++i)
+	eventManager->postEvent(EntityDestroyedEvent(entHandle));
+}
+
+void EntityManager::refresh()
+{
+	// Add pending entities.
+	for(auto entity : _ent_to_add)
 	{
-		if(ePtr->_components[i])
+		_entities.push_back(entity);
+	}
+
+	_ent_to_add.clear();
+
+	// Remove pending entities.
+	for (auto entHandle : _ent_to_remove)
+	{
+		EntityPtr ePtr = getEntity(entHandle);
+
+		for (size_t i{ 0 }; i < MAX_COMPONENTS; ++i)
 		{
-			_pools[i]->removeComponent(entHandle);
+			if (ePtr->_components[i])
+			{
+				_pools[i]->removeComponent(entHandle);
+			}
+		}
+
+		for (auto it = _entities.begin(); it != _entities.end(); ++it)
+		{
+			if (it->getID() == entHandle)
+			{
+				_entities.erase(it);
+				break;
+			}
 		}
 	}
 
-	for(auto it = _entities.begin(); it != _entities.end(); ++it)
-	{
-		if(it->getID() == entHandle)
-		{
-			_entities.erase(it);
-			break;
-		}
-	}
+	_ent_to_remove.clear();
 }
 
 void EntityManager::update(float dt)
@@ -76,6 +99,8 @@ void EntityManager::update(float dt)
 	{
 		it->update(dt);
 	}
+
+	refresh();
 }
 
 bool EntityManager::match(EntityHandle entHandle, ComponentSet set)
@@ -94,6 +119,14 @@ EntityPtr EntityManager::getEntity(EntityHandle entHandle)
 			return EntityPtr(it._Ptr);
 		}
 
+	}
+
+	for(auto it = _ent_to_add.begin(); it != _ent_to_add.end(); ++it)
+	{
+		if(it->getID() == entHandle)
+		{
+			return EntityPtr(it._Ptr);
+		}
 	}
 
 	return nullptr;

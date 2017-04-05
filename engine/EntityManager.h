@@ -167,6 +167,28 @@ public:
 	~ComponentPool() override {}
 
 	/**
+	 * @brief Deleted Copy Constructor.
+	 */
+	ComponentPool(const ComponentPool&) = delete;
+
+	/**
+	 * @brief Deleted Move Constructor.
+	 */
+	ComponentPool(ComponentPool&&) = delete;
+
+	/**
+	 * @brief Deleted copy assignment.
+	 * @return Ref to self.
+	 */
+	ComponentPool& operator=(const ComponentPool&) = delete;
+
+	/**
+	* @brief Deleted move assignment.
+	* @return Ref to self.
+	*/
+	ComponentPool& operator=(ComponentPool&&) = delete;
+
+	/**
 	 * @brief Gets the component associated with entity.
 	 * @param entHandle Handle to entity.
 	 * @return Pointer to component.
@@ -193,7 +215,6 @@ public:
 	typename std::enable_if<std::is_base_of<Component, T>::value>::type
 		removeComponent(EntityHandle entHandle) override;
 private:
-
 	/**
 	 * @brief Map containing all components of type T.
 	 */
@@ -393,6 +414,62 @@ private:
 	 * @brief Map storing all the channels.
 	 */
 	std::map<EventHash, InternalEventChannelBase*> _channels;
+};
+
+/**
+ * @brief Event thrown by EventManager when a new entity is created.
+ */
+class EntityCreatedEvent : public Event
+{
+public:
+	/**
+	 * @brief Constructor
+	 */
+	EntityCreatedEvent() = default;
+
+	/**
+	 * @brief Destructor
+	 */
+	~EntityCreatedEvent() override {}
+
+	/**
+	 * @brief Constructor.
+	 * @param entHandle Entity Handle.
+	 */
+	explicit EntityCreatedEvent(EntityHandle entHandle) : entHandle(entHandle) {}
+
+	/**
+	 * @brief Entity Handle.
+	 */
+	EntityHandle entHandle{};
+};
+
+/**
+* @brief Event thrown by EventManager when an entity is destroyed.
+*/
+class EntityDestroyedEvent : public Event
+{
+public:
+	/**
+	* @brief Constructor
+	*/
+	EntityDestroyedEvent() = default;
+
+	/**
+	 * @brief Destructor.
+	 */
+	~EntityDestroyedEvent() override {}
+
+	/**
+	 * @brief Constructor.
+	 * @param entHandle Entity Handle.
+	 */
+	explicit EntityDestroyedEvent(EntityHandle entHandle) : entHandle(entHandle) {}
+
+	/**
+	 * @brief Entity Handle.
+	 */
+	EntityHandle entHandle;
 };
 
 /**
@@ -640,6 +717,11 @@ private:
 	EntityPtr getEntity(EntityHandle entHandle);
 
 	/**
+	 * @brief Adds and removes pending entities.
+	 */
+	void refresh();
+
+	/**
 	 * @brief Storage for the type IDs.
 	 */
 	ComponentTypeMap _typemap{};
@@ -653,6 +735,16 @@ private:
 	 * @brief Storage for all entities in contiguous memory.
 	 */
 	std::vector<Entity> _entities{};
+
+	/**
+	 * @brief Storage for all entities waiting to be added.
+	 */
+	std::vector<Entity> _ent_to_add{};
+
+	/**
+	* @brief Storage for all entities waiting to be removed.
+	*/
+	std::vector<EntityHandle> _ent_to_remove{};
 
 	/**
 	 * @brief Storage for all systems.

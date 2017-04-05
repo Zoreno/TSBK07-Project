@@ -34,8 +34,8 @@ namespace engine
 
 		TextRenderer* text{ nullptr };
 
-		EntityManager* em{};
-		EventManager* ev{};
-		AssetManager* am{};
+		EntityManager* entityManager{};
+		EventManager* eventManager{};
+		AssetManager* assetManager{};
 	};
 }
