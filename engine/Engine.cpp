@@ -3,6 +3,7 @@
 #include "RawModel.h"
 
 #include <iostream>
+#include <sstream>
 
 #include "TransformPipeline3D.h"
 
@@ -10,9 +11,19 @@
 #include "EntityManager.h"
 #include "AssetManager.h"
 
+
+#include <rapidxml/rapidxml.hpp>
+
 std::ostream& operator<<(std::ostream& os, glm::vec3 vec)
 {
 	return os << '{' << vec.x << ',' << vec.y << ',' << vec.z << '}';
+}
+
+std::istream& operator>>(std::istream& is, glm::vec3& vec)
+{
+	is >> vec.x >> vec.y >> vec.z;
+
+	return is;
 }
 
 namespace engine
@@ -22,6 +33,27 @@ namespace engine
 	public:
 		explicit TransformComponent(glm::vec3 position = glm::vec3{ 0.f,0.f,0.f }, float angle = 0.f, glm::vec3 rotationAxis = glm::vec3{ 0.f,1.f,0.f }, glm::vec3 scale = glm::vec3{ 1.f,1.f,1.f })
 			: position(position), angle(angle), rotationAxis(rotationAxis), scale(scale) {}
+
+		explicit TransformComponent(rapidxml::xml_node<>* node)
+		{
+			// Flummigt. Finns nog bättre sätt.
+
+			std::stringstream ss1{ node->first_node("position")->value() };
+
+			ss1 >> position;
+
+			std::stringstream ss2{ node->first_node("angle")->value() };
+
+			ss2 >> angle;
+
+			std::stringstream ss3{ node->first_node("rotationAxis")->value() };
+
+			ss3 >> rotationAxis;
+
+			std::stringstream ss4{ node->first_node("scale")->value() };
+
+			ss4 >> scale;
+		}
 
 		glm::vec3 position{};
 		float angle{};
@@ -50,6 +82,8 @@ namespace engine
 		NameComponent() = default;
 		explicit NameComponent(const std::string& str) : userString(str) {}
 
+		explicit NameComponent(rapidxml::xml_node<>* node)
+			: userString{node->first_node("userString")->value()} {}
 
 		std::string userString{};
 	};
@@ -93,11 +127,7 @@ namespace engine
 
 		void handleEvent(const KeyEvent& ev) override
 		{
-			EntityHandle ent = em->createEntity();
-
-			em->assignComponent<TransformComponent>(ent, glm::vec3{ 1.f,0.f,0.f });
-
-			EntityHandle copy = em->copyEntity(ent);
+			em->createEntityFromFile("../res/entities/test.entity");
 		}
 
 		void startUp() override
@@ -153,8 +183,8 @@ namespace engine
 
 		Model* bunModel = assetManager->fetchModel("bunneh");
 
-		entityManager->registerComponent<TransformComponent>();
-		entityManager->registerComponent<NameComponent>();
+		entityManager->registerComponent<TransformComponent>("TransformComponent");
+		entityManager->registerComponent<NameComponent>("NameComponent");
 
 
 		EntityHandle entity1 = entityManager->createEntity();
@@ -212,6 +242,21 @@ namespace engine
 		delete entityManager;
 
 		delete eventManager;
+	}
+
+	EntityManager* Engine::getEntityManager() const
+	{
+		return entityManager;
+	}
+
+	EventManager* Engine::geteventManager() const
+	{
+		return eventManager;
+	}
+
+	AssetManager* Engine::getAssetManager() const
+	{
+		return assetManager;
 	}
 
 	void Engine::dumpInfo(std::ostream& stream)

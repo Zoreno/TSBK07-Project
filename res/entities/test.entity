@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<components>
+	<component type="TransformComponent">
+		<position>1.0 14.0 0.0</position>
+		<angle>0.0</angle>
+		<rotationAxis>0.0 1.0 0.0</rotationAxis>
+		<scale>1.0 1.0 1.0</scale>
+	</component>
+	<component type="NameComponent">
+		<userString>This is some test data</userString>
+	</component>
+</components>

@@ -26,6 +26,10 @@ namespace engine
 
 		void cleanup();
 
+		EntityManager* getEntityManager() const;
+		EventManager* geteventManager() const;
+		AssetManager* getAssetManager() const;
+
 	private:
 
 		void dumpInfo(std::ostream& stream);

@@ -1,7 +1,10 @@
 #include <Engine.h>
 
 #include <Component.h>
-#include <iostream>
+#include <System.h>
+#include <EntityManager.h>
+
+
 
 int main()
 {

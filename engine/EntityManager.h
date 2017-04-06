@@ -14,8 +14,9 @@
 #include <memory>
 #include <bitset>
 #include <functional>
-
 #include <iterator>
+
+#include <rapidxml/rapidxml.hpp>
 
 #include "Component.h"
 #include "System.h"
@@ -142,7 +143,20 @@ public:
 	 */
 	virtual void removeComponent(EntityHandle entHandle) = 0;
 
+	/**
+	* @brief Copies a component.
+	* @param from Handle to src entity.
+	* @param to Handle to dest entity.
+	* @return Void.
+	*/
 	virtual void copyComponent(EntityHandle from, EntityHandle to) = 0;
+
+	/**
+	 * @brief Creates a component specified by a XML node.
+	 * @param entHandle Entity Handle
+	 * @param node Ptr to node.
+	 */
+	virtual void createComponentFromNode(EntityHandle entHandle, rapidxml::xml_node<>* node) = 0;
 };
 
 /**
@@ -210,6 +224,15 @@ public:
 		createComponent(EntityHandle entHandle, Args ... args);
 
 	/**
+	* @brief Creates a component specified by a XML node.
+	* @param entHandle Entity Handle
+	* @param node Ptr to node.
+	* @return Void.
+	*/
+	typename std::enable_if<std::is_base_of<Component, T>::value>::type
+		createComponentFromNode(EntityHandle entHandle, rapidxml::xml_node<>* node) override;
+
+	/**
 	 * @brief Copies a component using the component's copy ctor.
 	 * @param from Handle to src entity.
 	 * @param to Handle to dest entity.
@@ -249,6 +272,28 @@ public:
 	~ComponentTypeMap() {}
 
 	/**
+	 * @brief Copy constructor
+	 */
+	ComponentTypeMap(const ComponentTypeMap&) = delete;
+
+	/**
+	 * @brief Move constructor
+	 */
+	ComponentTypeMap(ComponentTypeMap&&) = delete;
+
+	/**
+	 * @brief Copy assignment operator
+	 * @return Ref to self.
+	 */
+	ComponentTypeMap& operator=(const ComponentTypeMap&) = delete;
+
+	/**
+	* @brief Move assignment operator
+	* @return Ref to self.
+	*/
+	ComponentTypeMap& operator=(ComponentTypeMap&&) = delete;
+
+	/**
 	 * @brief Gets the type ID for the Component of type T.
 	 * @tparam T Component type.
 	 * @return INVALID_TYPE if not registered, otherwise component ID.
@@ -258,13 +303,20 @@ public:
 		getTypeID() const;
 
 	/**
+	 * @brief Gets the type ID for the Component with string name.
+	 * @param name Name of requested component type.
+	 * @return Component type.
+	 */
+	ComponentType getTypeIDFromString(const std::string& name) const;
+
+	/**
 	 * @brief Creates a type ID for the component of type T.
 	 * @tparam T Component type.
 	 * @return ID of component.
 	 */
 	template <typename T>
 	typename std::enable_if<std::is_base_of<Component, T>::value, ComponentType>::type
-		createTypeID();
+		createTypeID(const std::string& name);
 
 	/**
 	 * @brief ID representing an invalid type.
@@ -281,6 +333,11 @@ private:
 	 * @brief Map storing the ID data.
 	 */
 	std::map<ComponentHash, ComponentType> _component_types{};
+
+	/**
+	 * @brief Map storing the ID data mapped with a string.
+	 */
+	std::map<std::string, ComponentType> _component_names{};
 };
 
 /**
@@ -428,6 +485,15 @@ private:
 };
 
 /**
+ * @brief Entity Manager Exception class.
+ */
+class EntityManagerException : public std::logic_error
+{
+public:
+	using std::logic_error::logic_error;
+};
+
+/**
  * @brief Event thrown by EventManager when a new entity is created.
  */
 class EntityCreatedEvent : public Event
@@ -489,6 +555,32 @@ public:
 class EntityManager
 {
 public:
+
+	/**
+	 * @brief Constructor.
+	 */
+	EntityManager() = delete;
+
+	/**
+	* @brief Copy Constructor.
+	*/
+	EntityManager(const EntityManager&) = delete;
+
+	/**
+	* @brief Move Constructor.
+	*/
+	EntityManager(EntityManager&&) = delete;
+
+	/**
+	* @brief Copy assignment operator.
+	*/
+	EntityManager& operator=(const EntityManager&) = delete;
+	
+	/**
+	* @brief Move assignment operator.
+	*/
+	EntityManager& operator=(EntityManager&&) = delete;
+
 	/**
 	 * @brief Constructor.
 	 * @param ev Pointer to a valid event manager.
@@ -510,7 +602,7 @@ public:
 	 */
 	template <typename T>
 	typename std::enable_if<std::is_base_of<Component, T>::value>::type
-		registerComponent();
+		registerComponent(const std::string& name);
 
 	/**
 	 * @brief Registers a system.
@@ -538,6 +630,13 @@ public:
 	 * @return Entity handle of new entity.
 	 */
 	EntityHandle copyEntity(EntityHandle from);
+
+	/**
+	 * @brief Creates an entity from a file.
+	 * @param filePath Path to file.
+	 * @return Entity Handle.
+	 */
+	EntityHandle createEntityFromFile(const char* filePath);
 
 	/**
 	 * @brief Destroys an entity and all associated components.
@@ -648,7 +747,9 @@ public:
 	 * This function works with (given that the signatures match):
 	 * 
 	 * operator()
+	 * 
 	 * Lambda functions. (use [this](){} to create a member lambda.)
+	 * 
 	 * static functions.
 	 * 
 	 * @tparam Args Component types to match. 
@@ -805,6 +906,14 @@ ComponentPool<T>::createComponent(EntityHandle entHandle, Args... args)
 
 template <typename T>
 typename std::enable_if<std::is_base_of<Component, T>::value>::type 
+ComponentPool<T>::createComponentFromNode(EntityHandle entHandle, rapidxml::xml_node<>* node)
+{
+	// TODO: Error checking
+	_components.emplace(entHandle, T(node));
+}
+
+template <typename T>
+typename std::enable_if<std::is_base_of<Component, T>::value>::type 
 ComponentPool<T>::copyComponent(EntityHandle from, EntityHandle to)
 {
 	T* orig = getComponent(from);
@@ -848,12 +957,13 @@ ComponentTypeMap::getTypeID() const
 
 template <typename T>
 typename std::enable_if<std::is_base_of<Component, T>::value, ComponentType>::type
-ComponentTypeMap::createTypeID()
+ComponentTypeMap::createTypeID(const std::string& name)
 {
 	std::type_index index(typeid(T));
 	ComponentHash hash = index.hash_code();
 
 	_component_types.emplace(hash, _currID);
+	_component_names.emplace(name, _currID);
 
 	return _currID++;
 }
@@ -941,18 +1051,15 @@ EventManager::getInternalChannel()
 
 template <typename T>
 typename std::enable_if<std::is_base_of<Component, T>::value>::type
-EntityManager::registerComponent()
+EntityManager::registerComponent(const std::string& name)
 {
 	// Generate a new ID for the component
 	ComponentType id = _typemap.getTypeID<T>();
 
 	if (id != _typemap.INVALID_TYPE)
-	{
-		// Already registered!
-		return;
-	}
+		throw EntityManagerException{ "Component is already registered." };
 
-	_pools.emplace(_typemap.createTypeID<T>(), new ComponentPool<T>{});
+	_pools.emplace(_typemap.createTypeID<T>(name), new ComponentPool<T>{});
 }
 
 template <typename T, typename ... Args>
@@ -974,7 +1081,8 @@ EntityManager::assignComponent(EntityHandle entHandle, Args... args)
 {
 	EntityPtr ePtr = getEntity(entHandle);
 
-	EM_ASSERT(ePtr != nullptr, "Entity Pointer is null");
+	if (!ePtr)
+		throw EntityManagerException{ "Assigning component to invalid entity." };
 
 	ePtr->_components.set(_typemap.getTypeID<T>());
 
@@ -987,7 +1095,8 @@ EntityManager::detachComponent(EntityHandle entHandle)
 {
 	EntityPtr ePtr = getEntity(entHandle);
 
-	EM_ASSERT(ePtr != nullptr, "Entity Pointer is null");
+	if (!ePtr)
+		throw EntityManagerException{ "Detaching component from invalid entity." };
 
 	ePtr->_components.set(_typemap.getTypeID<T>(), false);
 
@@ -1095,7 +1204,7 @@ EntityManager::getPool()
 	auto it = _pools.find(id);
 
 	if (it == _pools.end())
-		return nullptr; // Error: Component not registered.
+		throw EntityManagerException{ "Component is not yet registered." };
 
 	ComponentPool<T>* pool = dynamic_cast<ComponentPool<T>*>(it->second);
 

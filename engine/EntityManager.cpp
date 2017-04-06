@@ -6,12 +6,23 @@
 */
 
 #include "EntityManager.h"
+#include "Utils.h"
 
 EntityHandle getNextHandle()
 {
 	static EntityHandle next = 0;
 
 	return next++;
+}
+
+ComponentType ComponentTypeMap::getTypeIDFromString(const std::string& name) const
+{
+	auto it = _component_names.find(name);
+
+	if (it == _component_names.end())
+		throw EntityManagerException{ "Component not registered." };
+
+	return it->second;
 }
 
 EventManager::~EventManager()
@@ -67,6 +78,38 @@ EntityHandle EntityManager::copyEntity(EntityHandle from)
 	}
 
 	return to;
+}
+
+EntityHandle EntityManager::createEntityFromFile(const char* filePath)
+{
+	using namespace rapidxml;
+
+	std::string source = getStringFromFile(filePath);
+
+	xml_document<> doc;
+
+	doc.parse<0>(const_cast<char*>(source.c_str()));
+
+	EntityHandle entHandle = createEntity();
+	EntityPtr entPtr = getEntity(entHandle);
+
+	xml_node<>* components = doc.first_node("components");
+
+	xml_node<>* currComp = components->first_node("component");
+
+	while(currComp != nullptr)
+	{
+		xml_attribute<>* type = currComp->first_attribute("type");
+
+		ComponentType compType = _typemap.getTypeIDFromString(type->value());
+
+		_pools[compType]->createComponentFromNode(entHandle, currComp);
+		entPtr->_components.set(compType, true);
+
+		currComp = currComp->next_sibling("component");
+	}
+
+	return entHandle;
 }
 
 void EntityManager::destroyEntity(EntityHandle entHandle)
