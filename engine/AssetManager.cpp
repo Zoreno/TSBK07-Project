@@ -1,6 +1,14 @@
 #include "AssetManager.h"
 #include "iostream"
 
+AssetManager::AssetManager() :
+	_assets{}
+{
+	registerAsset<RawModel>();
+	registerAsset<Texture2D>();
+}
+
+/*
 void AssetManager::loadModel(std::string filename, std::string ID)
 {
 	auto insPair = _models.insert(std::pair<std::string, Model*>(ID, nullptr));
@@ -25,7 +33,7 @@ void AssetManager::loadModel(std::string filename, std::string ID)
 		throw AssetManager_error(ID.append(": duplicate model ID"));
 	}
 
-	return ;
+	return;
 }
 
 void AssetManager::loadTexture(std::string filename, std::string ID)
@@ -96,3 +104,4 @@ void AssetManager::disposeTexture(std::string ID)
 	}
 	return;
 }
+*/

@@ -34,11 +34,11 @@ namespace engine
 
 		assetManager = new AssetManager{};
 
+		assetManager->load<RawModel>("../res/models/bunny.obj","bunneh");
+    
+    RawModel* bunModel = assetManager->fetch<RawModel>("bunneh");
+
 		entityManager = new EntityManager{ eventManager , assetManager };
-
-		assetManager->loadModel("../res/models/bunny.obj", "bunneh");
-
-		Model* bunModel = assetManager->fetchModel("bunneh");
 
 		entityManager->registerComponent<TransformComponent>("TransformComponent");
 		entityManager->registerComponent<ModelComponent>("ModelComponent");
@@ -51,7 +51,7 @@ namespace engine
 		entityManager->assignComponent<TransformComponent>(entity2, glm::vec3{ 3.f,0.f,0.f });
 		entityManager->assignComponent<CameraComponent>(entity1);
 
-		// Detta tar hand om instansiering och sånt.
+		// Detta tar hand om instansiering och sÃ¥nt.
 		entityManager->registerSystem<RenderingSystem>();
 	}
 
