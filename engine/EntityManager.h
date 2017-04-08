@@ -584,8 +584,9 @@ public:
 	/**
 	 * @brief Constructor.
 	 * @param ev Pointer to a valid event manager.
+	 * @param am Pointer to a valid asset manager.
 	 */
-	explicit EntityManager(EventManager* ev) : eventManager{ev} {}
+	explicit EntityManager(EventManager* ev, AssetManager* am) : eventManager{ ev }, assetManager{am} {}
 
 	/**
 	 * @brief Destructor.
@@ -874,6 +875,11 @@ private:
 	 * @brief Pointer to event manager.
 	 */
 	EventManager* eventManager;
+
+	/**
+	 * @brief Pointer to asset manager
+	 */
+	AssetManager* assetManager;
 };
 
 //=============================================================================
@@ -1068,7 +1074,7 @@ EntityManager::registerSystem(Args ... args)
 {
 	T* system = new T(std::forward<Args...>(args)...);
 
-	system->registerManagers(this, eventManager);
+	system->registerManagers(this, eventManager, assetManager);
 
 	_systems.push_back(system);
 

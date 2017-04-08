@@ -9,12 +9,10 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-TransformPipeline3D TransformPipeline3D::origin{};
-
 TransformPipeline3D::TransformPipeline3D()
 	: model{1.f}, view{1.f}, proj{1.f}
 {
-	parentTransform = &origin;
+	parentTransform = nullptr;
 }
 
 void TransformPipeline3D::translate(glm::vec3 vec)
@@ -49,7 +47,7 @@ void TransformPipeline3D::setParentTransform(TransformPipeline3D* parent)
 
 glm::mat4 TransformPipeline3D::getModelTransform() const
 {
-	return model*parentTransform->getModelTransform();
+	return model * ( parentTransform ? parentTransform->getModelTransform() : glm::mat4{1.f});
 }
 
 glm::mat4 TransformPipeline3D::getLocalModelTransform() const
@@ -59,5 +57,5 @@ glm::mat4 TransformPipeline3D::getLocalModelTransform() const
 
 glm::mat4 TransformPipeline3D::getMVP() const
 {
-	return proj*view*model*parentTransform->getModelTransform();
+	return proj * view * model*( parentTransform ? parentTransform->getModelTransform() : glm::mat4{1.f});
 }

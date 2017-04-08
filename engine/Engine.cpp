@@ -11,160 +11,17 @@
 #include "EntityManager.h"
 #include "AssetManager.h"
 
+#include "TransformComponent.h"
+#include "Utils.h"
 
 #include <rapidxml/rapidxml.hpp>
-
-std::ostream& operator<<(std::ostream& os, glm::vec3 vec)
-{
-	return os << '{' << vec.x << ',' << vec.y << ',' << vec.z << '}';
-}
-
-std::istream& operator>>(std::istream& is, glm::vec3& vec)
-{
-	is >> vec.x >> vec.y >> vec.z;
-
-	return is;
-}
+#include "ModelComponent.h"
+#include "RenderingSystem.h"
+#include "CameraComponent.h"
+#include "KeyEvent.h"
 
 namespace engine
 {
-	class TransformComponent : public Component
-	{
-	public:
-		explicit TransformComponent(glm::vec3 position = glm::vec3{ 0.f,0.f,0.f }, float angle = 0.f, glm::vec3 rotationAxis = glm::vec3{ 0.f,1.f,0.f }, glm::vec3 scale = glm::vec3{ 1.f,1.f,1.f })
-			: position(position), angle(angle), rotationAxis(rotationAxis), scale(scale) {}
-
-		explicit TransformComponent(rapidxml::xml_node<>* node)
-		{
-			// Flummigt. Finns nog bättre sätt.
-
-			std::stringstream ss1{ node->first_node("position")->value() };
-
-			ss1 >> position;
-
-			std::stringstream ss2{ node->first_node("angle")->value() };
-
-			ss2 >> angle;
-
-			std::stringstream ss3{ node->first_node("rotationAxis")->value() };
-
-			ss3 >> rotationAxis;
-
-			std::stringstream ss4{ node->first_node("scale")->value() };
-
-			ss4 >> scale;
-		}
-
-		glm::vec3 position{};
-		float angle{};
-		glm::vec3 rotationAxis{};
-		glm::vec3 scale{};
-
-		TransformPipeline3D getPipeline() const
-		{
-			TransformPipeline3D pipeline{};
-
-			pipeline.translate(position);
-
-			if (angle != 0.f)
-			{
-				pipeline.rotate(angle, rotationAxis);
-			}
-			pipeline.scale(scale);
-
-			return pipeline;
-		}
-	};
-
-	class NameComponent : public Component
-	{
-	public:
-		NameComponent() = default;
-		explicit NameComponent(const std::string& str) : userString(str) {}
-
-		explicit NameComponent(rapidxml::xml_node<>* node)
-			: userString{node->first_node("userString")->value()} {}
-
-		std::string userString{};
-	};
-
-	class TestEvent : public Event
-	{
-	public:
-		std::string data{};
-	};
-
-	class KeyEvent : public Event
-	{
-	public:
-		int key;
-	};
-
-	class NameSystem :
-		public System,
-		public Subscriber<TestEvent>,
-		public Subscriber<EntityCreatedEvent>,
-		public Subscriber<EntityDestroyedEvent>,
-		public Subscriber<KeyEvent>
-	{
-	public:
-		NameSystem() = default;
-
-		void handleEvent(const TestEvent& ev) override
-		{
-			std::cout << ev.data << std::endl;
-		}
-
-		void handleEvent(const EntityCreatedEvent& ev) override
-		{
-			std::cout << "Entity Created: " << ev.entHandle << std::endl;
-		}
-
-		void handleEvent(const EntityDestroyedEvent& ev) override
-		{
-			std::cout << "Entity Destroyed: " << ev.entHandle << std::endl;
-		}
-
-		void handleEvent(const KeyEvent& ev) override
-		{
-			em->createEntityFromFile("../res/entities/test.entity");
-		}
-
-		void startUp() override
-		{
-			ev->addSubscriber<TestEvent>(this);
-			ev->addSubscriber<EntityCreatedEvent>(this);
-			ev->addSubscriber<EntityDestroyedEvent>(this);
-			ev->addSubscriber<KeyEvent>(this);
-		}
-
-		void shutDown() override
-		{
-			ev->removeSubscriber<TestEvent>(this);
-			ev->removeSubscriber<EntityCreatedEvent>(this);
-			ev->removeSubscriber<EntityDestroyedEvent>(this);
-			ev->removeSubscriber<KeyEvent>(this);
-		}
-
-		void update(float dt) override
-		{
-			auto func = [this](EntityHandle ent, TransformComponent* tr) -> void
-			{
-				tr->position += glm::vec3{ 1.f, 0.f,0.f };
-
-				std::cout << ent << " " << tr->position << std::endl;
-
-				if (tr->position.x > 10.f)
-				{
-					em->destroyEntity(ent);
-				}
-			};
-
-			em->each<TransformComponent>(func); // Lambda func
-
-		}
-	};
-
 	void Engine::init()
 	{
 		window = new Window{ 800, 600, "MyWindow" };
@@ -175,33 +32,27 @@ namespace engine
 
 		eventManager = new EventManager{};
 
-		entityManager = new EntityManager{ eventManager };
-
 		assetManager = new AssetManager{};
+
+		entityManager = new EntityManager{ eventManager , assetManager };
 
 		assetManager->loadModel("../res/models/bunny.obj", "bunneh");
 
 		Model* bunModel = assetManager->fetchModel("bunneh");
 
 		entityManager->registerComponent<TransformComponent>("TransformComponent");
-		entityManager->registerComponent<NameComponent>("NameComponent");
-
+		entityManager->registerComponent<ModelComponent>("ModelComponent");
+		entityManager->registerComponent<CameraComponent>("CameraComponent");
 
 		EntityHandle entity1 = entityManager->createEntity();
 		EntityHandle entity2 = entityManager->createEntity();
 
 		entityManager->assignComponent<TransformComponent>(entity1, glm::vec3{ 1.f,0.f,0.f });
 		entityManager->assignComponent<TransformComponent>(entity2, glm::vec3{ 3.f,0.f,0.f });
-		entityManager->assignComponent<NameComponent>(entity1, "Bös...");
-		entityManager->assignComponent<NameComponent>(entity2, "Hello Test");
+		entityManager->assignComponent<CameraComponent>(entity1);
 
 		// Detta tar hand om instansiering och sånt.
-		entityManager->registerSystem<NameSystem>();
-
-		TestEvent eve;
-		eve.data = "TestData";
-
-		eventManager->postEvent(eve);
+		entityManager->registerSystem<RenderingSystem>();
 	}
 
 	void Engine::run()
@@ -213,21 +64,21 @@ namespace engine
 			{
 				if (ev.type == EventType::KEY_EVENT)
 				{
-					if (ev.key.action == Action::PRESS)
-					{
-						std::cout << "Key Press event" << std::endl;
 
-						KeyEvent new_event;
-						new_event.key = ev.key.key;
+					std::cout << "Key Press event" << std::endl;
 
-						eventManager->postEvent(new_event);
-					}
+					KeyEvent new_event;
+					new_event.key = ev.key.key;
+					new_event.action = (int)ev.key.action;
+
+					eventManager->postEvent(new_event);
+
 				}
 			}
 
 			text->render("Hello World!", 25.f, 25.f, 0.5f, Color{ 0.5f, 0.8f, 0.2f });
 
-			entityManager->update(0);
+			entityManager->update(1.f);
 
 			window->display();
 		}
@@ -242,6 +93,8 @@ namespace engine
 		delete entityManager;
 
 		delete eventManager;
+
+		delete assetManager;
 	}
 
 	EntityManager* Engine::getEntityManager() const

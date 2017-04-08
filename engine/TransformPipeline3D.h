@@ -92,11 +92,6 @@ private:
 	 * @brief Current projection matrix.
 	 */
 	glm::mat4 proj{ 1.f };
-
-	/**
-	 * @brief Root parent transform. Should be identity transform.
-	 */
-	static TransformPipeline3D origin;
 	
 	/**
 	 * @brief Ptr to parent transform object.
