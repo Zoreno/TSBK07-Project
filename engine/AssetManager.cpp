@@ -8,58 +8,6 @@ AssetManager::AssetManager() :
 	registerAsset<Texture2D>();
 }
 
-template <typename T>
-void AssetManager::registerAsset()
-{
-	// Generate a new ID for the component
-	size_t id = std::type_index{ typeid(T) }.hash_code();
-
-	auto it = _assets.find(id);
-
-	if (it == _assets.end())
-		throw AssetManager_error{ "Asset is already registered." };
-
-	_assets.emplace(id, new AssetPool<T>{});
-}
-
-template <typename T>
-T* AssetManager::fetch(const std::string& ID)
-{
-	AssetPool<T>* pool = getPool<T>();
-
-	return pool->fetchAsset(ID);
-}
-
-template <typename T>
-void AssetManager::load(const std::string& path, std::string ID)
-{
-	AssetPool<T>* pool = getPool<T>();
-
-	pool->loadAsset(path, ID);
-}
-
-template <typename T>
-void AssetManager::dispose(const std::string& ID)
-{
-	AssetPool<T>* pool = getPool<T>();
-
-	pool->removeAsset(ID);
-}
-
-template <typename T>
-AssetPool<T>* AssetManager::getPool()
-{
-	size_t id = std::type_index{ typeid(T) }.hash_code();
-
-	auto it = _assets.find(id);
-
-	if (it == _assets.end())
-		throw AssetManager_error{ "Asset is not registered yet." };
-
-	AssetPool<T>* pool = dynamic_cast<AssetPool<T>*>(it->second);
-
-	return pool;
-}
 /*
 void AssetManager::loadModel(std::string filename, std::string ID)
 {
