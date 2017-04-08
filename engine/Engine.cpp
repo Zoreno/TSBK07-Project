@@ -35,8 +35,8 @@ namespace engine
 		assetManager = new AssetManager{};
 
 		assetManager->load<RawModel>("../res/models/bunny.obj","bunneh");
-    
-    RawModel* bunModel = assetManager->fetch<RawModel>("bunneh");
+
+		RawModel* bunModel = assetManager->fetch<RawModel>("bunneh");
 
 		entityManager = new EntityManager{ eventManager , assetManager };
 
