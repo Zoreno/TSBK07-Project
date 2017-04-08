@@ -8,6 +8,7 @@
 #pragma once
 
 #include <string>
+#include <glm/glm.hpp>
 
 /**
  * @brief Constructs a string using content of file at path
@@ -15,3 +16,7 @@
  * @return String with file contents
  */
 std::string getStringFromFile(const std::string& path);
+
+std::ostream& operator<<(std::ostream& os, const glm::vec3& vec);
+
+std::istream& operator>>(std::istream& is, glm::vec3& vec);

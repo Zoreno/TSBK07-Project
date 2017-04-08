@@ -52,6 +52,18 @@
     <Filter Include="Source Files\Engine">
       <UniqueIdentifier>{1f16d21b-3c41-446c-80ea-20cda864aa03}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Standard Systems">
+      <UniqueIdentifier>{4194dc61-b691-47d1-9fa0-3c0a6e5263d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Standard Components">
+      <UniqueIdentifier>{46de69a4-72d7-4a53-bb07-5ac5cdbce144}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Standard Components">
+      <UniqueIdentifier>{d3a7b7e7-ee80-440f-ace8-c91a165dd244}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Standard Systems">
+      <UniqueIdentifier>{6e186350-4e19-417b-9c57-7cf899d5f068}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Utils.cpp">
@@ -122,6 +134,12 @@
     </ClCompile>
     <ClCompile Include="EntityManager.cpp">
       <Filter>Source Files\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelComponent.cpp">
+      <Filter>Source Files\Standard Components</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingSystem.cpp">
+      <Filter>Source Files\Standard Systems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -220,6 +238,21 @@
     </ClInclude>
     <ClInclude Include="System.h">
       <Filter>Header Files\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelComponent.h">
+      <Filter>Header Files\Standard Components</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraComponent.h">
+      <Filter>Header Files\Standard Components</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingSystem.h">
+      <Filter>Header Files\Standard Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformComponent.h">
+      <Filter>Header Files\Standard Components</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyEvent.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

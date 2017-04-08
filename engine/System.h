@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include "AssetManager.h"
 
 class EntityManager;
 class EventManager;
@@ -30,8 +31,9 @@ public:
 	 * @brief Registers managers in the default way. Should not be overridden without good reason.
 	 * @param em Pointer to Entity Manager.
 	 * @param ev Pointer to Event Manager
+	 * @param am Pointer to Asset Manager
 	 */
-	virtual void registerManagers(EntityManager* em, EventManager* ev) { this->em = em; this->ev = ev; }
+	virtual void registerManagers(EntityManager* em, EventManager* ev, AssetManager* am) { this->em = em; this->ev = ev; this->am = am; }
 
 	/**
 	 * @brief Startup Function. Called before system goes live.
@@ -59,4 +61,9 @@ protected:
 	 * @brief Pointer to Event Manager.
 	 */
 	EventManager* ev{ nullptr };
+
+	/**
+	 * @brief Pointer to Asset Manager.
+	 */
+	AssetManager* am{ nullptr };
 };
