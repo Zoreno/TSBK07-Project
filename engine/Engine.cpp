@@ -179,9 +179,9 @@ namespace engine
 
 		assetManager = new AssetManager{};
 
-		assetManager->loadModel("../res/models/bunny.obj", "bunneh");
+		assetManager->load<RawModel>("../res/models/bunny.obj","bunneh");
 
-		Model* bunModel = assetManager->fetchModel("bunneh");
+		RawModel* bunModel = assetManager->fetch<RawModel>("bunneh");
 
 		entityManager->registerComponent<TransformComponent>("TransformComponent");
 		entityManager->registerComponent<NameComponent>("NameComponent");
