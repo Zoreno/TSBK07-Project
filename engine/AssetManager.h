@@ -40,16 +40,6 @@ public:
 	*/
 	virtual void removeAsset(std::string assetID) = 0;
 
-	
-	/**
-	* @brief Fetches the asset of a type with given ID.
-	* @param path The path to file to be loaded.
-	* @param assocID ID the asset will be associated with
-	*/
-	/*
-	template <typename ... Args>
-	virtual void loadAsset(std::string path, std::string assocID, Args args) = 0;
-	*/
 };
 
 /**
@@ -93,28 +83,40 @@ public:
 	AssetPool& operator=(AssetPool&&) = delete;
 
 	/**
-	* @brief Removes a component associated with entity.
-	* @param entHandle Handle to entity
+	* @brief Removes an asset associated with the ID.
+	* @param assetID ID to asset
 	* @return Void.
 	*/
 	void	removeAsset(std::string assetID) override;
 
 	/**
 	* @brief Gets the component associated with entity.
-	* @param entHandle Handle to entity.
+	* @param assetID ID to asset.
 	* @return Pointer to component.
 	*/
 	T*	fetchAsset(std::string assetID);
 
 	/**
-	* @brief Creates a component and associates it with the given entity.
-	* @tparam Args Types of arguments to forward to component construction.
-	* @param entHandle Handle to entity.
-	* @param args Arguments to forward to component construction
-	* @return Void.
+	* @brief Loads the asset with args as constructor arguments and with assocID as key.
+	* @param assocID ID the asset will be associated with
+	* @param args Arguments to be passed on to the constructor
 	*/
 	template <typename ... Args>
-	void	loadAsset(std::string path, std::string assocID, Args ... args);
+	void	loadAsset(std::string assocID, Args ... args);
+
+	/**
+	* @brief Store the asset with the ID as key.
+	* @param assocID ID the asset will be associated with
+	* @param assetPtr Pointer to an asset
+	*/
+	void	storeAsset(std::string assocID, T* assetPtr);
+
+	/**
+	* @brief Store the asset with the ID as key.
+	* @param assocID ID the asset will be associated with
+	* @param assetRef Reference to an asset
+	*/
+	void	storeAsset(std::string assocID, T& assetRef);
 
 private:
 	/**
@@ -140,11 +142,21 @@ T* AssetPool<T>::fetchAsset(std::string assetID)
 
 template <typename T>
 template <typename ... Args>
-void AssetPool<T>::loadAsset(std::string path, std::string assocID, Args ... args)
+void AssetPool<T>::loadAsset(std::string assocID, Args ... args)
 {
-	char *cstr = new char[path.length() + 1];
-	strcpy(cstr, path.c_str());
-	_assets.emplace(assocID, new T(cstr, std::forward<Args>(args)...));
+	_assets.emplace(assocID, new T(std::forward<Args>(args)...));
+}
+
+template <typename T>
+void AssetPool<T>::storeAsset(std::string assocID, T* assetPtr)
+{
+	_assets.emplace(assocID, assetPtr);
+}
+
+template <typename T>
+void AssetPool<T>::storeAsset(std::string assocID, T& assetRef)
+{
+	_assets.emplace(assocID, &assetRef);
 }
 
 template <typename T>
@@ -169,22 +181,64 @@ public:
 	AssetManager& operator=(const AssetManager&) = delete;
 	~AssetManager();
 
+	/**
+	* @brief Fetches the asset of a type with given ID.
+	* @param ID ID the asset will be associated with
+	* @param args Arguments to be passed on to the constructor
+	*/
 	template <typename T, typename ... Args>
-	void load(const std::string& filename, std::string ID, Args ... args);
+	void load(std::string ID, Args ... args);
 
+	/**
+	* @brief Store the asset with the ID as key.
+	* @param assocID ID the asset will be associated with
+	* @param assetPtr Reference to an asset
+	*/
+	template <typename T>
+	void store(const std::string& assocID, T* assetPtr);
+
+	/**
+	* @brief Store the asset with the ID as key.
+	* @param assocID ID the asset will be associated with
+	* @param assetRef Reference to an asset
+	*/
+	template <typename T>
+	void store(const std::string& assocID, T& assetRef);
+
+	/**
+	* @brief Gets the component associated with entity.
+	* @param ID ID to asset.
+	* @return Pointer to component.
+	*/
 	template <typename T>
 	T* fetch(const std::string& ID);
 
+	/**
+	* @brief Removes an asset associated with the ID.
+	* @param ID ID to asset
+	* @return Void.
+	*/
 	template <typename T>
 	void dispose(const std::string& ID);
 
+	/**
+	 * @brief Registers a type to the asset map. Needed to be able to store things.
+	 * @return void
+	 */
 	template <typename T>
 	void registerAsset();
 
+	/**
+	* @brief Returns the pool holding all assets of type T.
+	* @return Pointer to pool
+	*/
 	template <typename T>
 	AssetPool<T>* getPool();
 
 private:
+	/**
+	* @brief Pool holding all the individual asset pools.
+	*/
 	std::map<size_t, AssetBase*> _assets{};
 };
 
@@ -211,11 +265,26 @@ T* AssetManager::fetch(const std::string& ID)
 }
 
 template <typename T, typename ... Args>
-void AssetManager::load(const std::string& path, std::string ID, Args ... args)
+void AssetManager::load(std::string ID, Args ... args)
 {
 	AssetPool<T>* pool = getPool<T>();
 
-	pool->loadAsset(path, ID, std::forward<Args>(args)...);
+	pool->loadAsset(ID, std::forward<Args>(args)...);
+}
+
+template <typename T>
+void AssetManager::store(const std::string& assocID, T* assetPtr)
+{
+	AssetPool<T>* pool = getPool<T>();
+
+	pool->storeAsset(assocID, assetPtr);
+}
+template <typename T>
+void AssetManager::store(const std::string& assocID, T& assetRef)
+{
+	AssetPool<T>* pool = getPool<T>();
+
+	pool->storeAsset(assocID, assetRef);
 }
 
 template <typename T>
