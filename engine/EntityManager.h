@@ -51,6 +51,11 @@ typedef std::bitset<MAX_COMPONENTS> ComponentSet;
 typedef uint32_t EntityHandle;
 
 /**
+ * @brief A representation of an invalid handle.
+ */
+const EntityHandle INVALID_ENTITY{ 0 };
+
+/**
  * @brief An id referencing a registered component type.
  */
 typedef uint32_t ComponentType;
@@ -491,62 +496,6 @@ class EntityManagerException : public std::logic_error
 {
 public:
 	using std::logic_error::logic_error;
-};
-
-/**
- * @brief Event thrown by EventManager when a new entity is created.
- */
-class EntityCreatedEvent : public Event
-{
-public:
-	/**
-	 * @brief Constructor
-	 */
-	EntityCreatedEvent() = default;
-
-	/**
-	 * @brief Destructor
-	 */
-	~EntityCreatedEvent() override {}
-
-	/**
-	 * @brief Constructor.
-	 * @param entHandle Entity Handle.
-	 */
-	explicit EntityCreatedEvent(EntityHandle entHandle) : entHandle(entHandle) {}
-
-	/**
-	 * @brief Entity Handle.
-	 */
-	EntityHandle entHandle{};
-};
-
-/**
-* @brief Event thrown by EventManager when an entity is destroyed.
-*/
-class EntityDestroyedEvent : public Event
-{
-public:
-	/**
-	* @brief Constructor
-	*/
-	EntityDestroyedEvent() = default;
-
-	/**
-	 * @brief Destructor.
-	 */
-	~EntityDestroyedEvent() override {}
-
-	/**
-	 * @brief Constructor.
-	 * @param entHandle Entity Handle.
-	 */
-	explicit EntityDestroyedEvent(EntityHandle entHandle) : entHandle(entHandle) {}
-
-	/**
-	 * @brief Entity Handle.
-	 */
-	EntityHandle entHandle;
 };
 
 /**

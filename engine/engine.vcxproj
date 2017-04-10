@@ -124,6 +124,7 @@
     <ClCompile Include="AudioSource.cpp" />
     <ClCompile Include="BMP.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="Collada.cpp" />
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="ConfigFile.cpp" />
@@ -154,9 +155,12 @@
     <ClInclude Include="BMP.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraComponent.h" />
+    <ClInclude Include="CameraController.h" />
     <ClInclude Include="Collada.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="EntityCreatedEvent.h" />
+    <ClInclude Include="EntityDestroyedEvent.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="ConfigFile.h" />
     <ClInclude Include="Engine.h" />
@@ -165,6 +169,7 @@
     <ClInclude Include="KeyEvent.h" />
     <ClInclude Include="loadobj.h" />
     <ClInclude Include="ModelComponent.h" />
+    <ClInclude Include="MouseEvent.h" />
     <ClInclude Include="PixelInfo.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="RawModel.h" />

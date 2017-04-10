@@ -20,11 +20,6 @@ public:
 
 	void update(float dt) override;
 
-	bool w_pressed{ false };
-	bool a_pressed{ false };
-	bool s_pressed{ false };
-	bool d_pressed{ false };
-
 	Window* window;
 	const GLfloat FOV{ glm::radians(45.f) };
 	const GLfloat NEAR_PLANE{ 0.1f };

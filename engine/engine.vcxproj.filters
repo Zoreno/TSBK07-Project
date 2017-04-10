@@ -64,6 +64,9 @@
     <Filter Include="Source Files\Standard Systems">
       <UniqueIdentifier>{6e186350-4e19-417b-9c57-7cf899d5f068}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Standard Events">
+      <UniqueIdentifier>{7011eff2-702e-4132-82d6-faee3eb63f90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Utils.cpp">
@@ -143,6 +146,9 @@
     </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraController.cpp">
+      <Filter>Source Files\Standard Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -254,11 +260,23 @@
     <ClInclude Include="TransformComponent.h">
       <Filter>Header Files\Standard Components</Filter>
     </ClInclude>
-    <ClInclude Include="KeyEvent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyEvent.h">
+      <Filter>Header Files\Standard Events</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityCreatedEvent.h">
+      <Filter>Header Files\Standard Events</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityDestroyedEvent.h">
+      <Filter>Header Files\Standard Events</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraController.h">
+      <Filter>Header Files\Standard Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseEvent.h">
+      <Filter>Header Files\Standard Events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

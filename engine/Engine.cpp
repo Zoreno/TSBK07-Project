@@ -19,6 +19,8 @@
 #include "RenderingSystem.h"
 #include "CameraComponent.h"
 #include "KeyEvent.h"
+#include "MouseEvent.h"
+#include "CameraController.h"
 
 namespace engine
 {
@@ -57,7 +59,10 @@ namespace engine
 		entityManager->assignComponent<ModelComponent>(entity2, "bunneh");
 
 		// Detta tar hand om instansiering och sånt.
+		entityManager->registerSystem<CameraController>();
 		entityManager->registerSystem<RenderingSystem>(window);
+
+		window->setCursorMode(CursorMode::DISABLED);
 	}
 
 	void Engine::run()
@@ -73,7 +78,7 @@ namespace engine
 
 			timeElapsed += timeDelta;
 			frames++;
-			if(timeElapsed>1.f)
+			if (timeElapsed > 1.f)
 			{
 				timeElapsed -= 1.f;
 				fps = frames;
@@ -83,27 +88,48 @@ namespace engine
 			WindowEvent ev;
 			while (window->pollEvent(ev))
 			{
-				if (ev.type == EventType::KEY_EVENT)
+				switch (ev.type)
 				{
-
-					std::cout << "Key Press event" << std::endl;
-
+				case EventType::KEY_EVENT:
+				{
 					KeyEvent new_event;
 					new_event.key = ev.key.key;
 					new_event.action = (int)ev.key.action;
 
 					eventManager->postEvent(new_event);
+				}
+				break;
+				case EventType::MOUSE_MOVED_EVENT:
+				{
+					MouseEvent new_event;
+					new_event.posX = ev.mouse.posx;
+					new_event.posY = ev.mouse.posy;
 
+					eventManager->postEvent(new_event);
+				}
+				break;
+				case EventType::GAINED_FOCUS:
+				{
+					window->setCursorMode(CursorMode::HIDDEN);
+				}
+				break;
+				case EventType::LOST_FOCUS:
+				{
+					window->setCursorMode(CursorMode::NORMAL);
+				}
+				break;
+				default:
+				{}
+				break;
 				}
 			}
 
 			char buf[100];
-
-			sprintf(buf, "%i FPS", fps);
+			sprintf(buf, "%i FPS, TimeDelta: %f", fps, timeDelta);
 
 			entityManager->update(static_cast<float>(timeDelta));
 
-			text->render(buf, 15.f, 570.f, 0.5f, Color{ 0.5f, 0.8f, 0.2f });
+			text->render(buf, 15.f, 570.f, 0.3f, Color{ 0.5f, 0.8f, 0.2f });
 
 			window->display();
 		}
