@@ -62,9 +62,23 @@ namespace engine
 
 	void Engine::run()
 	{
+		int frames{ 0 };
+		int fps{ 0 };
+
+		GLfloat timeElapsed{ 0.f };
+
 		while (!window->shouldClose())
 		{
 			GLfloat timeDelta = timer.reset();
+
+			timeElapsed += timeDelta;
+			frames++;
+			if(timeElapsed>1.f)
+			{
+				timeElapsed -= 1.f;
+				fps = frames;
+				frames = 0;
+			}
 
 			WindowEvent ev;
 			while (window->pollEvent(ev))
@@ -83,9 +97,13 @@ namespace engine
 				}
 			}
 
-			text->render("Hello World!", 25.f, 25.f, 0.5f, Color{ 0.5f, 0.8f, 0.2f });
+			char buf[100];
+
+			sprintf(buf, "%i FPS", fps);
 
 			entityManager->update(static_cast<float>(timeDelta));
+
+			text->render(buf, 15.f, 570.f, 0.5f, Color{ 0.5f, 0.8f, 0.2f });
 
 			window->display();
 		}
