@@ -64,7 +64,7 @@ public:
 	/**
 	* @brief Destructor.
 	*/
-	~AssetPool() override {}
+	~AssetPool() override {for (auto& i : _assets) { delete i.second; }}
 
 	/**
 	* @brief Deleted Copy Constructor.
@@ -109,7 +109,7 @@ public:
 	* @param args Arguments to forward to component construction
 	* @return Void.
 	*/
-	void	loadAsset(std::string path, std::string assocID);
+	void	loadAsset(std::string path, std::string assocID) override;
 
 private:
 	/**
@@ -161,7 +161,7 @@ public:
 	AssetManager();
 	AssetManager(const AssetManager&) = delete;
 	AssetManager& operator=(const AssetManager&) = delete;
-	~AssetManager() = default;
+	~AssetManager();
 
 	template <typename T>
 	void load(const std::string& filename, std::string ID);

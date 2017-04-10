@@ -8,6 +8,15 @@ AssetManager::AssetManager() :
 	registerAsset<Texture2D>();
 }
 
+AssetManager::~AssetManager()
+{
+	for (auto& i : _assets)
+	{
+		delete i.second;
+	}
+}
+
+
 /*
 void AssetManager::loadModel(std::string filename, std::string ID)
 {
