@@ -40,12 +40,16 @@ public:
 	*/
 	virtual void removeAsset(std::string assetID) = 0;
 
+	
 	/**
 	* @brief Fetches the asset of a type with given ID.
 	* @param path The path to file to be loaded.
 	* @param assocID ID the asset will be associated with
 	*/
-	virtual void loadAsset(std::string path, std::string assocID) = 0;
+	/*
+	template <typename ... Args>
+	virtual void loadAsset(std::string path, std::string assocID, Args args) = 0;
+	*/
 };
 
 /**
@@ -109,7 +113,8 @@ public:
 	* @param args Arguments to forward to component construction
 	* @return Void.
 	*/
-	void	loadAsset(std::string path, std::string assocID) override;
+	template <typename ... Args>
+	void	loadAsset(std::string path, std::string assocID, Args ... args);
 
 private:
 	/**
@@ -134,11 +139,12 @@ T* AssetPool<T>::fetchAsset(std::string assetID)
 }
 
 template <typename T>
-void AssetPool<T>::loadAsset(std::string path, std::string assocID)
+template <typename ... Args>
+void AssetPool<T>::loadAsset(std::string path, std::string assocID, Args ... args)
 {
 	char *cstr = new char[path.length() + 1];
 	strcpy(cstr, path.c_str());
-	_assets.emplace(assocID, new T(cstr));
+	_assets.emplace(assocID, new T(cstr, std::forward<Args>(args)...));
 }
 
 template <typename T>
@@ -163,8 +169,8 @@ public:
 	AssetManager& operator=(const AssetManager&) = delete;
 	~AssetManager();
 
-	template <typename T>
-	void load(const std::string& filename, std::string ID);
+	template <typename T, typename ... Args>
+	void load(const std::string& filename, std::string ID, Args ... args);
 
 	template <typename T>
 	T* fetch(const std::string& ID);
@@ -204,12 +210,12 @@ T* AssetManager::fetch(const std::string& ID)
 	return pool->fetchAsset(ID);
 }
 
-template <typename T>
-void AssetManager::load(const std::string& path, std::string ID)
+template <typename T, typename ... Args>
+void AssetManager::load(const std::string& path, std::string ID, Args ... args)
 {
 	AssetPool<T>* pool = getPool<T>();
 
-	pool->loadAsset(path, ID);
+	pool->loadAsset(path, ID, std::forward<Args>(args)...);
 }
 
 template <typename T>
