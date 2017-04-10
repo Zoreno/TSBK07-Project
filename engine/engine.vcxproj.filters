@@ -64,6 +64,9 @@
     <Filter Include="Source Files\Standard Systems">
       <UniqueIdentifier>{6e186350-4e19-417b-9c57-7cf899d5f068}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Standard Events">
+      <UniqueIdentifier>{82fd853d-2bed-48ca-a71b-54fc34e9f7ac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Utils.cpp">
@@ -252,7 +255,7 @@
       <Filter>Header Files\Standard Components</Filter>
     </ClInclude>
     <ClInclude Include="KeyEvent.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Standard Events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

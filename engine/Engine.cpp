@@ -34,9 +34,12 @@ namespace engine
 
 		assetManager = new AssetManager{};
 
-		assetManager->load<RawModel>("../res/models/bunny.obj","bunneh");
-
+		assetManager->load<RawModel>("bunneh", "../res/models/bunny.obj");
 		RawModel* bunModel = assetManager->fetch<RawModel>("bunneh");
+
+		assetManager->registerAsset<Model>();
+		Model* mod = LoadModelPlus("../res/models/bunny.obj");
+		assetManager->store("bunny", mod);
 
 		entityManager = new EntityManager{ eventManager , assetManager };
 
@@ -47,12 +50,14 @@ namespace engine
 		EntityHandle entity1 = entityManager->createEntity();
 		EntityHandle entity2 = entityManager->createEntity();
 
-		entityManager->assignComponent<TransformComponent>(entity1, glm::vec3{ 1.f,0.f,0.f });
-		entityManager->assignComponent<TransformComponent>(entity2, glm::vec3{ 3.f,0.f,0.f });
+		entityManager->assignComponent<TransformComponent>(entity1, glm::vec3{ 0.f,0.f,0.f });
 		entityManager->assignComponent<CameraComponent>(entity1);
 
+		entityManager->assignComponent<TransformComponent>(entity2, glm::vec3{ 5.f,0.f,0.f });
+		entityManager->assignComponent<ModelComponent>(entity2, "bunneh");
+
 		// Detta tar hand om instansiering och sånt.
-		entityManager->registerSystem<RenderingSystem>();
+		entityManager->registerSystem<RenderingSystem>(window);
 	}
 
 	void Engine::run()
