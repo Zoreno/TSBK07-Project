@@ -47,12 +47,14 @@ namespace engine
 		EntityHandle entity1 = entityManager->createEntity();
 		EntityHandle entity2 = entityManager->createEntity();
 
-		entityManager->assignComponent<TransformComponent>(entity1, glm::vec3{ 1.f,0.f,0.f });
-		entityManager->assignComponent<TransformComponent>(entity2, glm::vec3{ 3.f,0.f,0.f });
+		entityManager->assignComponent<TransformComponent>(entity1, glm::vec3{ 0.f,0.f,0.f });
 		entityManager->assignComponent<CameraComponent>(entity1);
 
+		entityManager->assignComponent<TransformComponent>(entity2, glm::vec3{ 5.f,0.f,0.f });
+		entityManager->assignComponent<ModelComponent>(entity2, "bunneh");
+
 		// Detta tar hand om instansiering och sånt.
-		entityManager->registerSystem<RenderingSystem>();
+		entityManager->registerSystem<RenderingSystem>(window);
 	}
 
 	void Engine::run()
