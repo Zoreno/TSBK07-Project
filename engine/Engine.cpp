@@ -64,6 +64,8 @@ namespace engine
 	{
 		while (!window->shouldClose())
 		{
+			GLfloat timeDelta = timer.reset();
+
 			WindowEvent ev;
 			while (window->pollEvent(ev))
 			{
@@ -83,7 +85,7 @@ namespace engine
 
 			text->render("Hello World!", 25.f, 25.f, 0.5f, Color{ 0.5f, 0.8f, 0.2f });
 
-			entityManager->update(1.f);
+			entityManager->update(static_cast<float>(timeDelta));
 
 			window->display();
 		}

@@ -10,7 +10,7 @@ class RenderingSystem : public System, public Subscriber<KeyEvent>
 {
 public:
 
-	RenderingSystem(Window* window);
+	explicit RenderingSystem(Window* window);
 
 	void handleEvent(const KeyEvent& ev) override;
 
