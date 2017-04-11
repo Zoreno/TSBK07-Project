@@ -67,31 +67,23 @@ void CameraController::startUp()
 {
 	ev->addSubscriber<KeyEvent>(this);
 	ev->addSubscriber<MouseEvent>(this);
+
+	currentCamera = em->createEntity();
+
+	em->assignComponent<TransformComponent>(currentCamera, glm::vec3{ 0.f,0.f,0.f });
+	em->assignComponent<CameraComponent>(currentCamera);
 }
 
 void CameraController::shutDown()
 {
 	ev->removeSubscriber<KeyEvent>(this);
 	ev->removeSubscriber<MouseEvent>(this);
+
+	em->destroyEntity(currentCamera);
 }
 
 void CameraController::update(float dt)
 {
-	auto findCamera = [&](EntityHandle entHandle, TransformComponent* tr, CameraComponent* ca)
-	{
-		currentCamera = entHandle;
-	};
-
-	if(currentCamera == INVALID_ENTITY)
-	{
-		em->each<TransformComponent, CameraComponent>(findCamera);
-	}
-
-	if(currentCamera == INVALID_ENTITY)
-	{
-		return;
-	}
-
 	TransformComponent* tr = em->getComponent<TransformComponent>(currentCamera);
 	CameraComponent* ca = em->getComponent<CameraComponent>(currentCamera);
 

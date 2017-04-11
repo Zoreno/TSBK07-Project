@@ -49,14 +49,14 @@ namespace engine
 		entityManager->registerComponent<ModelComponent>("ModelComponent");
 		entityManager->registerComponent<CameraComponent>("CameraComponent");
 
-		EntityHandle entity1 = entityManager->createEntity();
 		EntityHandle entity2 = entityManager->createEntity();
-
-		entityManager->assignComponent<TransformComponent>(entity1, glm::vec3{ 0.f,0.f,0.f });
-		entityManager->assignComponent<CameraComponent>(entity1);
+		EntityHandle entity3 = entityManager->createEntity();
 
 		entityManager->assignComponent<TransformComponent>(entity2, glm::vec3{ 5.f,0.f,0.f });
 		entityManager->assignComponent<ModelComponent>(entity2, "bunneh");
+
+		entityManager->assignComponent<TransformComponent>(entity3, glm::vec3{ 10.f,0.f,0.f });
+		entityManager->assignComponent<ModelComponent>(entity3, "bunneh");
 
 		// Detta tar hand om instansiering och sånt.
 		entityManager->registerSystem<CameraController>();
@@ -75,6 +75,7 @@ namespace engine
 		while (!window->shouldClose())
 		{
 			GLfloat timeDelta = timer.reset();
+			Timer dutyTimer{};
 
 			timeElapsed += timeDelta;
 			frames++;
@@ -124,10 +125,12 @@ namespace engine
 				}
 			}
 
-			char buf[100];
-			sprintf(buf, "%i FPS, TimeDelta: %f", fps, timeDelta);
-
 			entityManager->update(static_cast<float>(timeDelta));
+
+			GLfloat tickTime = dutyTimer.reset();
+
+			char buf[100];
+			sprintf(buf, "%i FPS, TimeDelta: %f, CPU: %.0f%%", fps, timeDelta, 100.f*tickTime/timeDelta);
 
 			text->render(buf, 15.f, 570.f, 0.3f, Color{ 0.5f, 0.8f, 0.2f });
 
