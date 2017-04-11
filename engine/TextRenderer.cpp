@@ -87,6 +87,8 @@ void TextRenderer::render(const std::string& text, GLfloat x, GLfloat y, GLfloat
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
 	textShader.use();
 
 	textShader.uploadUniform("textColor", glm::vec3(color.r, color.g, color.b));

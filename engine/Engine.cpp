@@ -52,7 +52,7 @@ namespace engine
 		EntityHandle entity2 = entityManager->createEntity();
 		EntityHandle entity3 = entityManager->createEntity();
 
-		entityManager->assignComponent<TransformComponent>(entity2, glm::vec3{ 5.f,0.f,0.f });
+		entityManager->assignComponent<TransformComponent>(entity2, glm::vec3{ 5.f,0.f,0.f }, 45.f);
 		entityManager->assignComponent<ModelComponent>(entity2, "bunneh");
 
 		entityManager->assignComponent<TransformComponent>(entity3, glm::vec3{ 10.f,0.f,0.f });
@@ -124,6 +124,8 @@ namespace engine
 				break;
 				}
 			}
+
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			entityManager->update(static_cast<float>(timeDelta));
 

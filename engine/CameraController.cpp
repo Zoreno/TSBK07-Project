@@ -1,6 +1,8 @@
 #include "CameraController.h"
+
 #include "TransformComponent.h"
 #include "CameraComponent.h"
+
 #include "EntityManager.h"
 
 void CameraController::handleEvent(const KeyEvent& ev)
