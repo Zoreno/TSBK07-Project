@@ -19,6 +19,8 @@
 #include "RenderingSystem.h"
 #include "CameraComponent.h"
 #include "KeyEvent.h"
+#include "MouseEvent.h"
+#include "CameraController.h"
 
 namespace engine
 {
@@ -47,43 +49,92 @@ namespace engine
 		entityManager->registerComponent<ModelComponent>("ModelComponent");
 		entityManager->registerComponent<CameraComponent>("CameraComponent");
 
-		EntityHandle entity1 = entityManager->createEntity();
 		EntityHandle entity2 = entityManager->createEntity();
+		EntityHandle entity3 = entityManager->createEntity();
 
-		entityManager->assignComponent<TransformComponent>(entity1, glm::vec3{ 0.f,0.f,0.f });
-		entityManager->assignComponent<CameraComponent>(entity1);
-
-		entityManager->assignComponent<TransformComponent>(entity2, glm::vec3{ 5.f,0.f,0.f });
+		entityManager->assignComponent<TransformComponent>(entity2, glm::vec3{ 5.f,0.f,0.f }, 45.f);
 		entityManager->assignComponent<ModelComponent>(entity2, "bunneh");
 
+		entityManager->assignComponent<TransformComponent>(entity3, glm::vec3{ 10.f,0.f,0.f });
+		entityManager->assignComponent<ModelComponent>(entity3, "bunneh");
+
 		// Detta tar hand om instansiering och sånt.
+		entityManager->registerSystem<CameraController>();
 		entityManager->registerSystem<RenderingSystem>(window);
+
+		window->setCursorMode(CursorMode::DISABLED);
 	}
 
 	void Engine::run()
 	{
+		int frames{ 0 };
+		int fps{ 0 };
+
+		GLfloat timeElapsed{ 0.f };
+
 		while (!window->shouldClose())
 		{
+			GLfloat timeDelta = timer.reset();
+			Timer dutyTimer{};
+
+			timeElapsed += timeDelta;
+			frames++;
+			if (timeElapsed > 1.f)
+			{
+				timeElapsed -= 1.f;
+				fps = frames;
+				frames = 0;
+			}
+
 			WindowEvent ev;
 			while (window->pollEvent(ev))
 			{
-				if (ev.type == EventType::KEY_EVENT)
+				switch (ev.type)
 				{
-
-					std::cout << "Key Press event" << std::endl;
-
+				case EventType::KEY_EVENT:
+				{
 					KeyEvent new_event;
 					new_event.key = ev.key.key;
 					new_event.action = (int)ev.key.action;
 
 					eventManager->postEvent(new_event);
+				}
+				break;
+				case EventType::MOUSE_MOVED_EVENT:
+				{
+					MouseEvent new_event;
+					new_event.posX = ev.mouse.posx;
+					new_event.posY = ev.mouse.posy;
 
+					eventManager->postEvent(new_event);
+				}
+				break;
+				case EventType::GAINED_FOCUS:
+				{
+					window->setCursorMode(CursorMode::HIDDEN);
+				}
+				break;
+				case EventType::LOST_FOCUS:
+				{
+					window->setCursorMode(CursorMode::NORMAL);
+				}
+				break;
+				default:
+				{}
+				break;
 				}
 			}
 
-			text->render("Hello World!", 25.f, 25.f, 0.5f, Color{ 0.5f, 0.8f, 0.2f });
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			entityManager->update(1.f);
+			entityManager->update(static_cast<float>(timeDelta));
+
+			GLfloat tickTime = dutyTimer.reset();
+
+			char buf[100];
+			sprintf(buf, "%i FPS, TimeDelta: %f, CPU: %.0f%%", fps, timeDelta, 100.f*tickTime/timeDelta);
+
+			text->render(buf, 15.f, 570.f, 0.3f, Color{ 0.5f, 0.8f, 0.2f });
 
 			window->display();
 		}

@@ -11,6 +11,7 @@
 #include "EntityManager.h"
 
 #include "AssetManager.h"
+#include "Timer.h"
 
 namespace engine
 {
@@ -41,5 +42,7 @@ namespace engine
 		EntityManager* entityManager{};
 		EventManager* eventManager{};
 		AssetManager* assetManager{};
+
+		Timer timer{};
 	};
 }

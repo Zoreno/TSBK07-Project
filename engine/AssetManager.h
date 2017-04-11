@@ -171,7 +171,6 @@ void AssetPool<T>::removeAsset(std::string assetID)
 	_assets.erase(it);
 }
 
-
 class AssetManager
 {
 public:

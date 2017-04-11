@@ -7,10 +7,12 @@
 
 #include "EntityManager.h"
 #include "Utils.h"
+#include "EntityCreatedEvent.h"
+#include "EntityDestroyedEvent.h"
 
 EntityHandle getNextHandle()
 {
-	static EntityHandle next = 0;
+	static EntityHandle next = 1;
 
 	return next++;
 }
