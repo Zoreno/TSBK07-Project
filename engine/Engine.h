@@ -11,6 +11,8 @@
 #include "EntityManager.h"
 
 #include "AssetManager.h"
+
+#include "UIManager.h"
 #include "Timer.h"
 
 namespace engine
@@ -42,6 +44,8 @@ namespace engine
 		EntityManager* entityManager{};
 		EventManager* eventManager{};
 		AssetManager* assetManager{};
+
+		userinterface::UIManager* uiManager{};
 
 		Font font;
 

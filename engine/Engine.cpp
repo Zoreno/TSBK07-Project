@@ -22,7 +22,6 @@
 #include "MouseEvent.h"
 #include "CameraController.h"
 
-#include "UIDetail.h"
 
 namespace engine
 {
@@ -33,6 +32,10 @@ namespace engine
 		dumpInfo(std::cout);
 
 		text = new TextRenderer{ window->getWidth(), window->getHeight() };
+
+		uiManager = new userinterface::UIManager(window->getWidth(), window->getHeight());
+
+		uiManager->addElement<userinterface::UITestRect>("testRect");
 
 		text->loadFont("../res/fonts/arial.ttf", 16, &font);
 
@@ -67,15 +70,6 @@ namespace engine
 		entityManager->registerSystem<RenderingSystem>(window);
 
 		window->setCursorMode(CursorMode::DISABLED);
-
-		userinterface::detail::Point2i point{ 128, 128 };
-
-		userinterface::detail::IntRect rect{ 64, 64 };
-
-		if(rect.contains(point))
-		{
-			std::cout << "Rect contains point" << std::endl;
-		}
 	}
 
 	void Engine::run()
@@ -111,6 +105,9 @@ namespace engine
 					new_event.action = (int)ev.key.action;
 
 					eventManager->postEvent(new_event);
+
+					if (ev.key.key == GLFW_KEY_0 && ev.key.action == Action::PRESS)
+						uiManager->getElement<userinterface::UITestRect>("testRect")->toggleVisibility();
 				}
 				break;
 				case EventType::MOUSE_MOVED_EVENT:
@@ -153,6 +150,10 @@ namespace engine
 			sprintf(buf, "%i FPS, TimeDelta: %f, CPU: %.1f%%", fps, timeDelta, 100.f*tickTime / timeDelta);
 
 			text->render(buf, 15.f, 15.f, 1.f, Color{ 0.5f, 0.8f, 0.2f }, &font);
+
+			glDisable(GL_DEPTH_TEST);
+
+			uiManager->draw();
 
 			window->display();
 		}

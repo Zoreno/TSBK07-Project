@@ -73,6 +73,9 @@
     <Filter Include="Header Files\UI\Util">
       <UniqueIdentifier>{53d138c2-5bfa-4bfc-8426-d94220e4eab9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\UI">
+      <UniqueIdentifier>{9cbdb19e-0eba-4a03-ba39-8dbcb67f1fe8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Utils.cpp">
@@ -155,6 +158,9 @@
     </ClCompile>
     <ClCompile Include="CameraController.cpp">
       <Filter>Source Files\Standard Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UIManager.cpp">
+      <Filter>Source Files\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -286,6 +292,9 @@
     </ClInclude>
     <ClInclude Include="UIDetail.h">
       <Filter>Header Files\UI\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="UIManager.h">
+      <Filter>Header Files\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

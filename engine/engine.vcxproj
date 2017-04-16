@@ -140,6 +140,7 @@
     <ClCompile Include="TGA.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TransformPipeline3D.cpp" />
+    <ClCompile Include="UIManager.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="VertexArrayObject.cpp" />
     <ClCompile Include="VertexBufferObject.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="TransformPipeline3D.h" />
+    <ClInclude Include="UIManager.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="VertexArrayObject.h" />
     <ClInclude Include="VertexBufferObject.h" />

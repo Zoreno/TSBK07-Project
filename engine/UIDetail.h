@@ -76,7 +76,7 @@ namespace userinterface {
 
 			bool operator==(const Vector<T, SIZE, CMP>& rhs);
 
-		private:
+		protected:
 			T data[SIZE];
 		};
 
@@ -314,7 +314,7 @@ namespace userinterface {
 			bool intersects(const Rectangle<T>& other) const;
 			bool intersects(const Rectangle<T>& other, Rectangle<T>& intersection) const;
 
-		private:
+		protected:
 			T _width{};
 			T _height{};
 
