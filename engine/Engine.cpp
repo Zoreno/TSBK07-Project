@@ -22,6 +22,8 @@
 #include "MouseEvent.h"
 #include "CameraController.h"
 
+#include "UIDetail.h"
+
 namespace engine
 {
 	void Engine::init()
@@ -65,6 +67,15 @@ namespace engine
 		entityManager->registerSystem<RenderingSystem>(window);
 
 		window->setCursorMode(CursorMode::DISABLED);
+
+		userinterface::detail::Point2i point{ 128, 128 };
+
+		userinterface::detail::IntRect rect{ 64, 64 };
+
+		if(rect.contains(point))
+		{
+			std::cout << "Rect contains point" << std::endl;
+		}
 	}
 
 	void Engine::run()

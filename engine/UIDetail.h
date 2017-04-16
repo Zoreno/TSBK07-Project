@@ -4,6 +4,7 @@
 #include <utility>
 #include <stdexcept>
 #include <algorithm>
+#include <map>
 
 namespace userinterface {
 	namespace detail {
@@ -12,9 +13,18 @@ namespace userinterface {
 		// Vector
 		//=================================================================
 
-		template <typename T, size_t SIZE>
+		template <typename T>
+		class Compare
+		{
+		public:
+			bool operator()(const T& first, const T& second);
+		};
+
+		template <typename T, size_t SIZE, class CMP = Compare<T>>
 		class Vector
 		{
+			typedef CMP compare_type;
+
 		public:
 			//=================================================================
 			// Constructors
@@ -23,8 +33,8 @@ namespace userinterface {
 			Vector();
 			Vector(std::initializer_list<T> args);
 			template <size_t OTHER_SIZE, typename = typename std::enable_if<SIZE >= OTHER_SIZE>::type>
-			explicit Vector(const Vector<T, OTHER_SIZE>& other);
-			explicit Vector(Vector<T, SIZE>&& other) noexcept;
+			explicit Vector(const Vector<T, OTHER_SIZE, CMP>& other);
+			explicit Vector(Vector<T, SIZE, CMP>&& other) noexcept;
 
 			//=================================================================
 			// Destructor
@@ -37,35 +47,34 @@ namespace userinterface {
 			//=================================================================
 
 			template <size_t OTHER_SIZE, typename = typename std::enable_if<SIZE >= OTHER_SIZE>::type>
-			Vector <T, SIZE>& operator=(const Vector<T, OTHER_SIZE>& other) &;
+			Vector <T, SIZE, CMP>& operator=(const Vector<T, OTHER_SIZE, CMP>& other) &;
 
-			Vector<T, SIZE>& operator=(Vector<T, SIZE>&& other) & noexcept;
+			Vector<T, SIZE, CMP>& operator=(Vector<T, SIZE, CMP>&& other) & noexcept;
 
 			//=================================================================
 			// Swap
 			//=================================================================
 
-			void swap(Vector<T, SIZE>& other) noexcept;
-			friend void swap(Vector<T, SIZE>& first, Vector<T, SIZE>& second) noexcept;
+			void swap(Vector<T, SIZE, CMP>& other) noexcept;
+			friend void swap(Vector<T, SIZE, CMP>& first, Vector<T, SIZE, CMP>& second) noexcept;
 
 			//=================================================================
 			// Member Access
 			//=================================================================
 
 			T at(size_t i) const;
+			
+			T X() const;
 
-			typename std::enable_if<std::isgreaterequal(SIZE, 1U), T>::type
-				X() const;
+			T Y() const;
 
-			typename std::enable_if<std::isgreaterequal(SIZE, 2U), T>::type
-				Y() const;
-
-			typename std::enable_if<std::isgreaterequal(SIZE, 3U), T>::type
-				Z() const;
+			T Z() const;				
 
 			//=================================================================
 			// Relational Operators
 			//=================================================================
+
+			bool operator==(const Vector<T, SIZE, CMP>& rhs);
 
 		private:
 			T data[SIZE];
@@ -103,8 +112,14 @@ namespace userinterface {
 		// Vector implementation
 		//=================================================================
 
-		template <typename T, size_t SIZE>
-		Vector<T, SIZE>::Vector()
+		template <typename T>
+		bool Compare<T>::operator()(const T& first, const T& second)
+		{
+			return first == second;
+		}
+
+		template <typename T, size_t SIZE, class CMP>
+		Vector<T, SIZE, CMP>::Vector()
 		{
 			for (size_t i{ 0 }; i < SIZE; ++i)
 			{
@@ -112,8 +127,8 @@ namespace userinterface {
 			}
 		}
 
-		template <typename T, size_t SIZE>
-		Vector<T, SIZE>::Vector(std::initializer_list<T> args)
+		template <typename T, size_t SIZE, class CMP>
+		Vector<T, SIZE, CMP>::Vector(std::initializer_list<T> args)
 		{
 			if (args.size() > SIZE)
 				throw std::out_of_range{ "Too many arguments" };
@@ -125,9 +140,9 @@ namespace userinterface {
 			}
 		}
 
-		template <typename T, size_t SIZE>
+		template <typename T, size_t SIZE, class CMP>
 		template <size_t OTHER_SIZE, typename>
-		Vector<T, SIZE>::Vector(const Vector<T, OTHER_SIZE>& other)
+		Vector<T, SIZE, CMP>::Vector(const Vector<T, OTHER_SIZE, CMP>& other)
 		{
 			size_t i{ 0 };
 			for (; i < OTHER_SIZE; ++i)
@@ -140,18 +155,18 @@ namespace userinterface {
 			}
 		}
 
-		template <typename T, size_t SIZE>
-		Vector<T, SIZE>::Vector(Vector<T, SIZE>&& other) noexcept
+		template <typename T, size_t SIZE, class CMP>
+		Vector<T, SIZE, CMP>::Vector(Vector<T, SIZE, CMP>&& other) noexcept
 		{
 			swap(*this, other);
 		}
 
-		template <typename T, size_t SIZE>
-		Vector<T, SIZE>::~Vector() {}
+		template <typename T, size_t SIZE, class CMP>
+		Vector<T, SIZE, CMP>::~Vector() {}
 
-		template <typename T, size_t SIZE>
+		template <typename T, size_t SIZE, class CMP>
 		template <size_t OTHER_SIZE, typename>
-		Vector<T, SIZE>& Vector<T, SIZE>::operator=(const Vector<T, OTHER_SIZE>& other) &
+		Vector<T, SIZE, CMP>& Vector<T, SIZE, CMP>::operator=(const Vector<T, OTHER_SIZE, CMP>& other) &
 		{
 			size_t i{ 0 };
 			for (; i < OTHER_SIZE; ++i)
@@ -166,22 +181,22 @@ namespace userinterface {
 			return *this;
 		}
 
-		template <typename T, size_t SIZE>
-		Vector<T, SIZE>& Vector<T, SIZE>::operator=(Vector<T, SIZE>&& other) & noexcept
+		template <typename T, size_t SIZE, class CMP>
+		Vector<T, SIZE, CMP>& Vector<T, SIZE, CMP>::operator=(Vector<T, SIZE, CMP>&& other) & noexcept
 		{
 			swap(*this, other);
 
 			return *this;
 		}
 
-		template <typename T, size_t SIZE>
-		void Vector<T, SIZE>::swap(Vector<T, SIZE>& other) noexcept
+		template <typename T, size_t SIZE, class CMP>
+		void Vector<T, SIZE, CMP>::swap(Vector<T, SIZE, CMP>& other) noexcept
 		{
 			swap(*this, other);
 		}
 
-		template <typename T, size_t SIZE>
-		T Vector<T, SIZE>::at(size_t i) const
+		template <typename T, size_t SIZE, class CMP>
+		T Vector<T, SIZE, CMP>::at(size_t i) const
 		{
 			if (i >= SIZE)
 				throw std::out_of_range("Index out of range");
@@ -189,29 +204,47 @@ namespace userinterface {
 			return data[i];
 		}
 
-		template <typename T, size_t SIZE>
-		typename std::enable_if<std::isgreaterequal(SIZE, 1U), T>::type
-			Vector<T, SIZE>::X() const
+		template <typename T, size_t SIZE, class CMP>
+		T Vector<T, SIZE, CMP>::X() const
 		{
+			if (SIZE < 1)
+				throw std::out_of_range("Vector too small");
+
 			return data[0];
 		}
 
-		template <typename T, size_t SIZE>
-		typename std::enable_if<std::isgreaterequal(SIZE, 2U), T>::type
-			Vector<T, SIZE>::Y() const
+		template <typename T, size_t SIZE, class CMP>
+		T Vector<T, SIZE, CMP>::Y() const
 		{
+			if (SIZE < 2)
+				throw std::out_of_range("Vector too small");
+
 			return data[1];
 		}
 
-		template <typename T, size_t SIZE>
-		typename std::enable_if<std::isgreaterequal(SIZE, 3U), T>::type
-			Vector<T, SIZE>::Z() const
+		template <typename T, size_t SIZE, class CMP>
+		T Vector<T, SIZE, CMP>::Z() const
 		{
+			if (SIZE < 3)
+				throw std::out_of_range("Vector too small");
+
 			return data[2];
 		}
 
-		template<typename T, size_t SIZE>
-		void swap(Vector<T, SIZE>& first, Vector<T, SIZE>& second) noexcept
+		template <typename T, size_t SIZE, class CMP>
+		bool Vector<T, SIZE, CMP>::operator==(const Vector<T, SIZE, CMP>& rhs)
+		{
+			for (size_t i{ 0 }; i < SIZE; ++i)
+			{
+				if (!CMP(data[i], rhs.data[i]))
+					return false;
+			}
+
+			return true;
+		}
+
+		template<typename T, size_t SIZE, class CMP>
+		void swap(Vector<T, SIZE, CMP>& first, Vector<T, SIZE, CMP>& second) noexcept
 		{
 			std::swap(first.data, second.data);
 		}
