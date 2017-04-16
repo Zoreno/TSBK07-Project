@@ -67,6 +67,12 @@
     <Filter Include="Header Files\Standard Events">
       <UniqueIdentifier>{7011eff2-702e-4132-82d6-faee3eb63f90}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\UI">
+      <UniqueIdentifier>{dfd24f81-6d4e-42cd-a397-07e8e36548fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UI\Util">
+      <UniqueIdentifier>{53d138c2-5bfa-4bfc-8426-d94220e4eab9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Utils.cpp">
@@ -277,6 +283,9 @@
     </ClInclude>
     <ClInclude Include="MouseEvent.h">
       <Filter>Header Files\Standard Events</Filter>
+    </ClInclude>
+    <ClInclude Include="UIDetail.h">
+      <Filter>Header Files\UI\Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

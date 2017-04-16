@@ -173,6 +173,7 @@
     <ClInclude Include="PixelInfo.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="RawModel.h" />
+    <ClInclude Include="UIDetail.h" />
     <ClInclude Include="RenderingSystem.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Subscriber.h" />

@@ -7,30 +7,45 @@
 #include <memory>
 #include "ShaderProgram.h"
 
-// TODO: multiple fonts
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 struct Character
 {
-	std::shared_ptr<Texture2D> tex;
-	glm::ivec2 Size;
-	glm::ivec2 Bearing;
-	GLuint Advance;
+	std::shared_ptr<Texture2D> texture;
+	glm::ivec2 size;
+	glm::ivec2 bearing;
+	GLuint advance;
+};
+
+typedef std::map<GLchar, Character> CharMap;
+
+struct Font
+{
+	CharMap characters;
 };
 
 class TextRenderer
 {
 public:
-	explicit TextRenderer(const char* fontPath);
+	explicit TextRenderer( unsigned int witdth, unsigned int height);
+	~TextRenderer();
 
-	void render(const std::string& text, GLfloat x, GLfloat y, GLfloat scale, Color color);
+	void loadFont(const char* fontPath, unsigned int size, Font* font);
 
+	void render(const std::string& text, GLfloat x, GLfloat y, GLfloat scale, Color color, Font* font);
+
+	void setScreenDimensions(unsigned int width, unsigned int height);
 private:
-
-	std::map<GLchar, Character> Characters;
 
 	GLuint VAO;
 	GLuint VBO;
 	ShaderProgram textShader;
+
+	FT_Library ft;
+
+	unsigned int screenWidth;
+	unsigned int screenHeight;
 
 	glm::mat4 projection;
 };

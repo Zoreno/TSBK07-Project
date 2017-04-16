@@ -43,6 +43,8 @@ namespace engine
 		EventManager* eventManager{};
 		AssetManager* assetManager{};
 
+		Font font;
+
 		Timer timer{};
 	};
 }

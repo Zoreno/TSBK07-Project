@@ -30,7 +30,9 @@ namespace engine
 
 		dumpInfo(std::cout);
 
-		text = new TextRenderer{ "../res/fonts/arial.ttf" };
+		text = new TextRenderer{ window->getWidth(), window->getHeight() };
+
+		text->loadFont("../res/fonts/arial.ttf", 16, &font);
 
 		eventManager = new EventManager{};
 
@@ -119,6 +121,11 @@ namespace engine
 					window->setCursorMode(CursorMode::NORMAL);
 				}
 				break;
+				case EventType::RESIZED:
+				{
+					text->setScreenDimensions(ev.size.width, ev.size.height);
+				}
+				break;
 				default:
 				{}
 				break;
@@ -132,9 +139,9 @@ namespace engine
 			GLfloat tickTime = dutyTimer.reset();
 
 			char buf[100];
-			sprintf(buf, "%i FPS, TimeDelta: %f, CPU: %.0f%%", fps, timeDelta, 100.f*tickTime/timeDelta);
+			sprintf(buf, "%i FPS, TimeDelta: %f, CPU: %.1f%%", fps, timeDelta, 100.f*tickTime / timeDelta);
 
-			text->render(buf, 15.f, 570.f, 0.3f, Color{ 0.5f, 0.8f, 0.2f });
+			text->render(buf, 15.f, 15.f, 1.f, Color{ 0.5f, 0.8f, 0.2f }, &font);
 
 			window->display();
 		}

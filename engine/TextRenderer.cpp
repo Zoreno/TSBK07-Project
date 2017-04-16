@@ -2,23 +2,55 @@
 
 #include <iostream>
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
 // https://learnopengl.com/#!In-Practice/Text-Rendering
 
-TextRenderer::TextRenderer(const char* fontPath)
-	: textShader("../res/shaders/textVert.shader", "../res/shaders/textFrag.shader")
+TextRenderer::TextRenderer(unsigned int width, unsigned int height)
+	: textShader("../res/shaders/textVert.shader", "../res/shaders/textFrag.shader"), screenWidth{width}, screenHeight{height}
 {
-	FT_Library ft;
 	if (FT_Init_FreeType(&ft))
 		std::cerr << "Could not initialize FT" << std::endl;
 
+	// Setup rendering quad
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+
+	// Setup screen projection.
+	projection = glm::ortho(0.f, static_cast<GLfloat>(screenWidth), 0.f, static_cast<GLfloat>(screenHeight));
+
+	// Setup shader
+	try
+	{
+		textShader.compile();
+
+		textShader.bindAttribLocation(0, "vertex");
+
+		textShader.link();
+	} catch (const std::exception& ex)
+	{
+		std::cout << ex.what() << std::endl;
+		throw;
+	}
+}
+
+TextRenderer::~TextRenderer()
+{
+	FT_Done_FreeType(ft);
+}
+
+void TextRenderer::loadFont(const char* fontPath, unsigned int size, Font* font)
+{
 	FT_Face face;
 	if (FT_New_Face(ft, fontPath, 0, &face))
 		std::cerr << "Could not load font" << std::endl;
 
-	FT_Set_Pixel_Sizes(face, 0, 48);
+	FT_Set_Pixel_Sizes(face, 0, size);
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
@@ -50,39 +82,13 @@ TextRenderer::TextRenderer(const char* fontPath)
 			face->glyph->advance.x
 		};
 
-		Characters.insert(std::pair<GLchar, Character>(c, character));
+		font->characters.emplace(c, character);
 	}
 
 	FT_Done_Face(face);
-	FT_Done_FreeType(ft);
-
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	projection = glm::ortho(0.f, 800.f, 0.f, 600.f);
-
-	try
-	{
-		textShader.compile();
-
-		textShader.bindAttribLocation(0, "vertex");
-
-		textShader.link();
-	} catch (const std::exception& ex)
-	{
-		std::cout << ex.what() << std::endl;
-		throw;
-	}
 }
 
-void TextRenderer::render(const std::string& text, GLfloat x, GLfloat y, GLfloat scale, Color color)
+void TextRenderer::render(const std::string& text, GLfloat x, GLfloat y, GLfloat scale, Color color, Font* font)
 {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -101,13 +107,13 @@ void TextRenderer::render(const std::string& text, GLfloat x, GLfloat y, GLfloat
 
 	for(ci = text.begin(); ci != text.end(); ++ci)
 	{
-		Character ch = Characters[*ci];
+		Character ch = font->characters[*ci];
 
-		GLfloat xpos = x + ch.Bearing.x * scale;
-		GLfloat ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+		GLfloat xpos = x + ch.bearing.x * scale;
+		GLfloat ypos = y - (ch.size.y - ch.bearing.y) * scale;
 
-		GLfloat w = ch.Size.x * scale;
-		GLfloat h = ch.Size.y * scale;
+		GLfloat w = ch.size.x * scale;
+		GLfloat h = ch.size.y * scale;
 
 		GLfloat vertices[6][4] = {
 			{ xpos,     ypos + h,   0.0, 0.0 },
@@ -119,7 +125,7 @@ void TextRenderer::render(const std::string& text, GLfloat x, GLfloat y, GLfloat
 			{ xpos + w, ypos + h,   1.0, 0.0 }
 		};
 
-		ch.tex->bind(0);
+		ch.texture->bind(0);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
@@ -127,8 +133,16 @@ void TextRenderer::render(const std::string& text, GLfloat x, GLfloat y, GLfloat
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
-		x += (ch.Advance >> 6) * scale;
+		x += (ch.advance >> 6) * scale;
 	}
 
 	glBindVertexArray(0);
+}
+
+void TextRenderer::setScreenDimensions(unsigned width, unsigned height)
+{
+	screenWidth = width;
+	screenHeight = height;
+
+	projection = glm::ortho(0.f, static_cast<GLfloat>(screenWidth), 0.f, static_cast<GLfloat>(screenHeight));
 }
