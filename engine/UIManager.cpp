@@ -27,9 +27,9 @@ namespace userinterface
 
 	void UIManager::draw()
 	{
-		for (auto it : _children)
+		for (std::deque<Entry>::reverse_iterator it = _children.rbegin(); it != _children.rend(); ++it)
 		{
-			it.second->draw(&_surface);
+			it->second->draw(&_surface);
 		}
 	}
 }
