@@ -3,9 +3,9 @@
 in vec2 TexCoords;
 out vec4 FragColor;
 
-uniform vec3 color;
+uniform vec4 color;
 
 void main()
 {
-	FragColor = vec4(color, 1.0);
+	FragColor = color;
 }

@@ -6,8 +6,6 @@
 
 #include "Color.h"
 
-#include "TextRenderer.h"
-
 #include "EntityManager.h"
 
 #include "AssetManager.h"
@@ -39,15 +37,11 @@ namespace engine
 
 		Window* window{ nullptr };
 
-		TextRenderer* text{ nullptr };
-
 		EntityManager* entityManager{};
 		EventManager* eventManager{};
 		AssetManager* assetManager{};
 
 		userinterface::UIManager* uiManager{};
-
-		Font font;
 
 		Timer timer{};
 	};

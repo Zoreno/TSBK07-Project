@@ -74,7 +74,8 @@ namespace userinterface {
 			// Relational Operators
 			//=================================================================
 
-			bool operator==(const Vector<T, SIZE, CMP>& rhs);
+			bool operator==(const Vector<T, SIZE, CMP>& rhs) const;
+			bool operator!=(const Vector<T, SIZE, CMP>& rhs) const;
 
 		protected:
 			T data[SIZE];
@@ -232,7 +233,7 @@ namespace userinterface {
 		}
 
 		template <typename T, size_t SIZE, class CMP>
-		bool Vector<T, SIZE, CMP>::operator==(const Vector<T, SIZE, CMP>& rhs)
+		bool Vector<T, SIZE, CMP>::operator==(const Vector<T, SIZE, CMP>& rhs) const
 		{
 			for (size_t i{ 0 }; i < SIZE; ++i)
 			{
@@ -241,6 +242,12 @@ namespace userinterface {
 			}
 
 			return true;
+		}
+
+		template <typename T, size_t SIZE, class CMP>
+		bool Vector<T, SIZE, CMP>::operator!=(const Vector<T, SIZE, CMP>& rhs) const
+		{
+			return !(*this == rhs);
 		}
 
 		template<typename T, size_t SIZE, class CMP>
@@ -265,8 +272,8 @@ namespace userinterface {
 			Rectangle() = default;
 			Rectangle(T width, T height);
 			Rectangle(T width, T height, T posX, T posY);
-			Rectangle(const Rectangle<T>& other);
-			Rectangle(Rectangle<T>&& other) noexcept;
+			explicit Rectangle(const Rectangle<T>& other);
+			explicit Rectangle(Rectangle<T>&& other) noexcept;
 
 			//=================================================================
 			// Destructor
@@ -304,6 +311,9 @@ namespace userinterface {
 
 			Vector<T, 2> getSize() const;
 			Vector<T, 2> getPosition() const;
+
+			void setSize(const Vector<T, 2>& size);
+			void setPosition(const Vector<T, 2>& position);
 
 			//=================================================================
 			// Other
@@ -437,6 +447,20 @@ namespace userinterface {
 		Vector<T, 2> Rectangle<T>::getPosition() const
 		{
 			return Vector<T, 2>(_posX, _posY);
+		}
+
+		template <typename T>
+		void Rectangle<T>::setSize(const Vector<T, 2>& size)
+		{
+			_width = size.X();
+			_height = size.Y();
+		}
+
+		template <typename T>
+		void Rectangle<T>::setPosition(const Vector<T, 2>& position)
+		{
+			_posX = position.X();
+			_posY = position.Y();
 		}
 
 		template <typename T>

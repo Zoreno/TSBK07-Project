@@ -4,87 +4,62 @@
 
 #include <string>
 #include "Color.h"
+#include <GL/glew.h>
+#include "ShaderProgram.h"
+#include "UITextRenderer.h"
+#include "UI2DRenderingSurface.h"
+#include "UIElement.h"
+#include <deque>
 
 namespace userinterface
 {
-	class UIManager;
-
-	class UIElement : public detail::IntRect
-	{
-	public:
-		UIElement() = delete;
-		UIElement(UIManager* manager, const std::string& identifier, int width, int height, int posX, int posY);
-
-		// TODO: Copy/Move ctor/=
-
-		virtual ~UIElement();
-
-		virtual void draw() = 0;
-
-		std::string getIdentifier() const;
-
-		void show();
-		void hide();
-		void toggleVisibility();
-
-	protected:
-		UIManager* manager;
-		std::string identifier;
-
-		bool visible{ true };
-		bool active{ false };
-	};
-
-	class UITestRect : public UIElement
-	{
-	public:
-		UITestRect(UIManager* manager, const std::string& identifier);
-
-		void draw() override;
-
-		Color color{ 1.f,0.f,1.f };
-	};
-
 	class UIManager
 	{
 	public:
 		UIManager(int width, int height);
+		~UIManager();
 
 		template <typename T>
 		typename std::enable_if<std::is_base_of<UIElement, T>::value, T*>::type
 			getElement(const std::string& identifier);
 
 		template <typename T, typename ... Args>
-		typename std::enable_if<std::is_base_of<UIElement, T>::value>::type
+		typename std::enable_if<std::is_base_of<UIElement, T>::value, T*>::type
 			addElement(const std::string& identifier, Args ... args);
 
 		void draw();
 	private:
-		std::map<std::string, UIElement*> children;
+		typedef std::pair<std::string, UIElement*> Entry;
 
-		int screenWidth;
-		int screenHeight;
+		std::deque<Entry> _children;
+
+		int _screenWidth;
+		int _screenHeight;
+
+		UI2DRenderingSurface _surface;
 	};
 
 	template <typename T>
 	typename std::enable_if<std::is_base_of<UIElement, T>::value, T*>::type
 		UIManager::getElement(const std::string& identifier)
 	{
-		auto it = children.find(identifier);
-
-		if (it != children.end())
+		for (auto it = _children.begin();it != _children.end(); ++it)
 		{
-			return dynamic_cast<T*>(it->second);
+			if(it->first == identifier)
+			{
+				return dynamic_cast<T*>(it->second);
+			}
 		}
-
 		return nullptr;
 	}
 
 	template <typename T, typename ... Args>
-	typename std::enable_if<std::is_base_of<UIElement, T>::value>::type
+	typename std::enable_if<std::is_base_of<UIElement, T>::value, T*>::type
 		UIManager::addElement(const std::string& identifier, Args ... args)
 	{
-		children.emplace(identifier, new T{ this, identifier, std::forward<Args>(args)... });
+		_children.emplace_front(Entry(identifier, new T(this, identifier, std::forward<Args>(args)...)));
+
+		return dynamic_cast<T*>(_children.front().second);
 	}
 }
 
