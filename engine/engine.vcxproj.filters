@@ -150,6 +150,9 @@
     <ClCompile Include="CameraController.cpp">
       <Filter>Source Files\Standard Components</Filter>
     </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioBuffer.h">
@@ -277,6 +280,9 @@
     </ClInclude>
     <ClInclude Include="MouseEvent.h">
       <Filter>Header Files\Standard Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Header Files\Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -134,6 +134,7 @@
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="RawModel.cpp" />
     <ClCompile Include="RenderingSystem.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="TextRenderer.cpp" />
     <ClCompile Include="Texture2D.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="RawModel.h" />
     <ClInclude Include="RenderingSystem.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Subscriber.h" />
     <ClInclude Include="System.h" />
