@@ -1,4 +1,5 @@
 #pragma once
+#include <map>
 
 #include "EngineDLL.h"
 
@@ -7,14 +8,20 @@
 #include "Color.h"
 
 #include "TextRenderer.h"
-
+#include "Scene.h"
 #include "EntityManager.h"
 
 #include "AssetManager.h"
 #include "Timer.h"
 
+typedef std::map<std::string, Scene*> SceneMap;
+
 namespace engine
 {
+	class Engine_error : public std::logic_error {
+		using std::logic_error::logic_error;
+	};
+
 	class ENGINE_API Engine
 	{
 	public:
@@ -27,8 +34,11 @@ namespace engine
 
 		void cleanup();
 
-		EntityManager* getEntityManager() const;
-		EventManager* geteventManager() const;
+		Scene* createScene(std::string);
+		Scene* getScene(std::string) const;
+		void setActiveScene(std::string);
+		EntityManager* getEntityManager(std::string sceneID) const;
+		EventManager* getEventManager(std::string sceneID) const;
 		AssetManager* getAssetManager() const;
 
 	private:
@@ -39,9 +49,9 @@ namespace engine
 
 		TextRenderer* text{ nullptr };
 
-		EntityManager* entityManager{};
-		EventManager* eventManager{};
-		AssetManager* assetManager{};
+		SceneMap Scenes;
+		std::string activeScene;
+		AssetManager* assetManager{nullptr};
 
 		Timer timer{};
 	};

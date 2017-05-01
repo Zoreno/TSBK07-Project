@@ -23,9 +23,9 @@ public:
 	explicit Scene(AssetManager* AsM);
 	~Scene();
 
-	AssetManager* getAssetManager();
-	EntityManager* getEntityManager();
-	EventManager* getEventManager();
+	AssetManager* getAssetManager() const;
+	EntityManager* getEntityManager() const;
+	EventManager* getEventManager() const;
 private:
 	AssetManager* AMptr;
 	EntityManager* EnMptr;

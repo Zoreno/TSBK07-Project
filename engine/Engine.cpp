@@ -32,9 +32,11 @@ namespace engine
 
 		text = new TextRenderer{ "../res/fonts/arial.ttf" };
 
-		eventManager = new EventManager{};
-
 		assetManager = new AssetManager{};
+		Scene* testScene = createScene("Test1");
+
+		EntityManager* entityManager = testScene->getEntityManager();
+		EventManager* eventManager = testScene->getEventManager();
 
 		assetManager->load<RawModel>("bunneh", "../res/models/bunny.obj");
 		RawModel* bunModel = assetManager->fetch<RawModel>("bunneh");
@@ -42,8 +44,6 @@ namespace engine
 		assetManager->registerAsset<Model>();
 		Model* mod = LoadModelPlus("../res/models/bunny.obj");
 		assetManager->store("bunny", mod);
-
-		entityManager = new EntityManager{ eventManager , assetManager };
 
 		entityManager->registerComponent<TransformComponent>("TransformComponent");
 		entityManager->registerComponent<ModelComponent>("ModelComponent");
@@ -74,6 +74,7 @@ namespace engine
 
 		while (!window->shouldClose())
 		{
+			Scene* currentScene = Scenes.find(activeScene)->second;
 			GLfloat timeDelta = timer.reset();
 			Timer dutyTimer{};
 
@@ -97,7 +98,7 @@ namespace engine
 					new_event.key = ev.key.key;
 					new_event.action = (int)ev.key.action;
 
-					eventManager->postEvent(new_event);
+					currentScene->getEventManager()->postEvent(new_event);
 				}
 				break;
 				case EventType::MOUSE_MOVED_EVENT:
@@ -106,7 +107,7 @@ namespace engine
 					new_event.posX = ev.mouse.posx;
 					new_event.posY = ev.mouse.posy;
 
-					eventManager->postEvent(new_event);
+					currentScene->getEventManager()->postEvent(new_event);
 				}
 				break;
 				case EventType::GAINED_FOCUS:
@@ -127,7 +128,7 @@ namespace engine
 
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			entityManager->update(static_cast<float>(timeDelta));
+			currentScene->getEntityManager()->update(static_cast<float>(timeDelta));
 
 			GLfloat tickTime = dutyTimer.reset();
 
@@ -146,21 +147,62 @@ namespace engine
 
 		delete window;
 
-		delete entityManager;
-
-		delete eventManager;
+		for (auto& i : Scenes) delete i.second;
 
 		delete assetManager;
 	}
 
-	EntityManager* Engine::getEntityManager() const
+	Scene* Engine::createScene(std::string ID)
 	{
-		return entityManager;
+		auto sc = Scenes.find(ID);
+		if (sc != Scenes.end())
+			throw Engine_error(std::string("Scene ID '").append(ID).append("' already exists"));
+
+		if (assetManager == nullptr)
+			throw Engine_error("Cannot create scene. AssetManager is uninitialized");
+
+		Scene* scenePtr = new Scene{ assetManager };
+
+		Scenes.emplace(ID, scenePtr);
+
+		if (activeScene == "") activeScene = ID;
+
+		return scenePtr;
 	}
 
-	EventManager* Engine::geteventManager() const
+	Scene * Engine::getScene(std::string ID) const
 	{
-		return eventManager;
+		auto sc = Scenes.find(ID);
+
+		if (sc == Scenes.end())
+			throw Engine_error(std::string("Scene ID '").append(ID).append("' not found"));
+
+		return sc->second;
+	}
+
+	void Engine::setActiveScene(std::string sceneID)
+	{
+		activeScene = sceneID;
+	}
+
+	EntityManager* Engine::getEntityManager(std::string sceneID) const
+	{
+		auto sc = Scenes.find(sceneID);
+
+		if (sc == Scenes.end())
+			throw Engine_error(std::string("Scene ID '").append(sceneID).append("' not found"));
+
+		return sc->second->getEntityManager();
+	}
+
+	EventManager* Engine::getEventManager(std::string sceneID) const
+	{
+		auto sc = Scenes.find(sceneID);
+
+		if (sc == Scenes.end())
+			throw Engine_error(std::string("Scene ID '").append(sceneID).append("' not found"));
+
+		return sc->second->getEventManager();
 	}
 
 	AssetManager* Engine::getAssetManager() const

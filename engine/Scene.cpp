@@ -14,21 +14,21 @@ EvMptr{nullptr}
 
 Scene::~Scene()
 {
-	delete EvMptr;
 	delete EnMptr;
+	delete EvMptr;
 }
 
-AssetManager* Scene::getAssetManager()
+AssetManager* Scene::getAssetManager() const
 {
 	return AMptr;
 }
 
-EntityManager* Scene::getEntityManager()
+EntityManager* Scene::getEntityManager() const
 {
 	return EnMptr;
 }
 
-EventManager* Scene::getEventManager()
+EventManager* Scene::getEventManager() const
 {
 	return EvMptr;
 }
