@@ -67,6 +67,12 @@
     <Filter Include="Header Files\Standard Events">
       <UniqueIdentifier>{7011eff2-702e-4132-82d6-faee3eb63f90}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Quadtree">
+      <UniqueIdentifier>{d96f91fa-f449-4424-8231-deeab2cd8f3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Quadtree">
+      <UniqueIdentifier>{26110809-019e-436f-879f-b27583ea122e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Utils.cpp">
@@ -152,6 +158,9 @@
     </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Quadtree.cpp">
+      <Filter>Source Files\Quadtree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -283,6 +292,9 @@
     </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Quadtree.h">
+      <Filter>Header Files\Quadtree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
