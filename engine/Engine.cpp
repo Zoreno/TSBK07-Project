@@ -156,7 +156,7 @@ namespace engine
 	{
 		auto sc = Scenes.find(ID);
 		if (sc != Scenes.end())
-			throw Engine_error(std::string("Scene ID '").append(ID).append("' already exists"));
+			throw Engine_error(std::string("Scene ID '").append(ID).append("' already exist"));
 
 		if (assetManager == nullptr)
 			throw Engine_error("Cannot create scene. AssetManager is uninitialized");
@@ -182,6 +182,8 @@ namespace engine
 
 	void Engine::setActiveScene(std::string sceneID)
 	{
+		if(Scenes.find(sceneID) == Scenes.end())
+
 		activeScene = sceneID;
 	}
 
