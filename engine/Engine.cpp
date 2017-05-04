@@ -21,16 +21,38 @@
 #include "KeyEvent.h"
 #include "MouseEvent.h"
 #include "CameraController.h"
+#include "UILabel.h"
+#include "UIProgressBar.h"
+
 
 namespace engine
 {
 	void Engine::init()
 	{
-		window = new Window{ 800, 600, "MyWindow" };
+		WindowSettings settings = getDefaultWindowSettings();
+
+		settings.maximized = true;
+
+		window = new Window{ 1680, 1050, "MyWindow" , settings };
 
 		dumpInfo(std::cout);
 
-		text = new TextRenderer{ "../res/fonts/arial.ttf" };
+		uiManager = new userinterface::UIManager(window->getWidth(), window->getHeight());
+
+		userinterface::UILabel* label = uiManager->addElement<userinterface::UILabel>("testRect", 320, 32, 0, 0);
+
+		label->setBorder(4);
+		label->setBorderColor(Color{ 0.2f });
+		label->setFillColor(Color{ 0.5f});
+		label->setTextColor(Color{ 0.f,0.f,0.f });
+
+		userinterface::UIProgressBar* bar = uiManager->addElement<userinterface::UIProgressBar>("testBar", 128, 32, 0, 64, 50.f, 0.f, 100.f);
+
+		bar->setBorder(4);
+		bar->setBorderColor(Color{ 0.2f });
+		bar->setFillColor(Color{ 0.5f });
+		bar->setBarColor(Color{ 1.f,0.f,0.f });
+		bar->setTextColor(Color{ 0.f,0.f,0.f });
 
 		eventManager = new EventManager{};
 
@@ -98,6 +120,17 @@ namespace engine
 					new_event.action = (int)ev.key.action;
 
 					eventManager->postEvent(new_event);
+
+					// Just for testing
+					// TODO: Remove
+					if (ev.key.key == GLFW_KEY_0 && ev.key.action == Action::PRESS)
+						uiManager->getElement<userinterface::UILabel>("testRect")->toggleVisibility();
+
+					if (ev.key.key == GLFW_KEY_1 && ev.key.action == Action::PRESS)
+						uiManager->getElement<userinterface::UIProgressBar>("testBar")->decrementValue(10.f);
+
+					if (ev.key.key == GLFW_KEY_2 && ev.key.action == Action::PRESS)
+						uiManager->getElement<userinterface::UIProgressBar>("testBar")->incrementValue(10.f);
 				}
 				break;
 				case EventType::MOUSE_MOVED_EVENT:
@@ -107,6 +140,8 @@ namespace engine
 					new_event.posY = ev.mouse.posy;
 
 					eventManager->postEvent(new_event);
+
+					std::cout << ev.mouse.posx << " " << ev.mouse.posy << std::endl;
 				}
 				break;
 				case EventType::GAINED_FOCUS:
@@ -117,6 +152,11 @@ namespace engine
 				case EventType::LOST_FOCUS:
 				{
 					window->setCursorMode(CursorMode::NORMAL);
+				}
+				break;
+				case EventType::RESIZED:
+				{
+					//text->setScreenDimensions(ev.size.width, ev.size.height);
 				}
 				break;
 				default:
@@ -132,9 +172,13 @@ namespace engine
 			GLfloat tickTime = dutyTimer.reset();
 
 			char buf[100];
-			sprintf(buf, "%i FPS, TimeDelta: %f, CPU: %.0f%%", fps, timeDelta, 100.f*tickTime/timeDelta);
+			sprintf(buf, "%i FPS, TimeDelta: %f, CPU: %.1f%%", fps, timeDelta, 100.f*tickTime / timeDelta);
 
-			text->render(buf, 15.f, 570.f, 0.3f, Color{ 0.5f, 0.8f, 0.2f });
+			uiManager->getElement<userinterface::UILabel>("testRect")->setText(buf);
+
+			glDisable(GL_DEPTH_TEST);
+
+			uiManager->draw();
 
 			window->display();
 		}
@@ -142,8 +186,6 @@ namespace engine
 
 	void Engine::cleanup()
 	{
-		delete text;
-
 		delete window;
 
 		delete entityManager;

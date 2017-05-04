@@ -6,11 +6,11 @@
 
 #include "Color.h"
 
-#include "TextRenderer.h"
-
 #include "EntityManager.h"
 
 #include "AssetManager.h"
+
+#include "UIManager.h"
 #include "Timer.h"
 
 namespace engine
@@ -37,11 +37,11 @@ namespace engine
 
 		Window* window{ nullptr };
 
-		TextRenderer* text{ nullptr };
-
 		EntityManager* entityManager{};
 		EventManager* eventManager{};
 		AssetManager* assetManager{};
+
+		userinterface::UIManager* uiManager{};
 
 		Timer timer{};
 	};

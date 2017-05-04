@@ -67,6 +67,21 @@
     <Filter Include="Header Files\Standard Events">
       <UniqueIdentifier>{7011eff2-702e-4132-82d6-faee3eb63f90}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\UI">
+      <UniqueIdentifier>{dfd24f81-6d4e-42cd-a397-07e8e36548fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UI\Util">
+      <UniqueIdentifier>{53d138c2-5bfa-4bfc-8426-d94220e4eab9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UI">
+      <UniqueIdentifier>{9cbdb19e-0eba-4a03-ba39-8dbcb67f1fe8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UI\Elements">
+      <UniqueIdentifier>{88b5e565-a72f-4165-9a2f-b2a063728a74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UI\Elements">
+      <UniqueIdentifier>{d5452a5c-35f5-40ab-bedb-772808429f84}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Utils.cpp">
@@ -129,9 +144,6 @@
     <ClCompile Include="TransformPipeline3D.cpp">
       <Filter>Source Files\OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="TextRenderer.cpp">
-      <Filter>Source Files\OpenGL</Filter>
-    </ClCompile>
     <ClCompile Include="AssetManager.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
@@ -149,6 +161,24 @@
     </ClCompile>
     <ClCompile Include="CameraController.cpp">
       <Filter>Source Files\Standard Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UIManager.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UITextRenderer.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI2DRenderingSurface.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIElement.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UILabel.cpp">
+      <Filter>Source Files\UI\Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="UIProgressbar.cpp">
+      <Filter>Source Files\UI\Elements</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -227,9 +257,6 @@
     <ClInclude Include="TransformPipeline3D.h">
       <Filter>Header Files\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="TextRenderer.h">
-      <Filter>Header Files\OpenGL</Filter>
-    </ClInclude>
     <ClInclude Include="AssetManager.h">
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
@@ -277,6 +304,27 @@
     </ClInclude>
     <ClInclude Include="MouseEvent.h">
       <Filter>Header Files\Standard Events</Filter>
+    </ClInclude>
+    <ClInclude Include="UIDetail.h">
+      <Filter>Header Files\UI\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="UIManager.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UITextRenderer.h">
+      <Filter>Header Files\UI\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="UI2DRenderingSurface.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIElement.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UILabel.h">
+      <Filter>Header Files\UI\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="UIProgressBar.h">
+      <Filter>Header Files\UI\Elements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
