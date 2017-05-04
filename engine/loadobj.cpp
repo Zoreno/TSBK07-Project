@@ -441,7 +441,7 @@ static void ParseOBJ(MeshPtr theMesh)
 				theMesh->groupCount += 1;
 				if (theMesh->coordStarts != NULL) // NULL if we are just counting
 				{
-					theMesh->coordStarts = (int*)realloc(theMesh->coordStarts, (theMesh->groupCount + 1)*sizeof(int));
+					theMesh->coordStarts = (int*)realloc(theMesh->coordStarts, (theMesh->groupCount + 1) * sizeof(int));
 					theMesh->coordStarts[theMesh->groupCount] = coordCount;
 				}
 				printf("groupCount = %d\n", theMesh->groupCount);
@@ -563,7 +563,7 @@ static struct Mesh * LoadOBJ(const char *filename)
 											  // Add a finish to coordStarts
 	if (theMesh->coordStarts != NULL)
 	{
-		theMesh->coordStarts = (int*)realloc(theMesh->coordStarts, (theMesh->groupCount + 1)*sizeof(int));
+		theMesh->coordStarts = (int*)realloc(theMesh->coordStarts, (theMesh->groupCount + 1) * sizeof(int));
 		theMesh->coordStarts[theMesh->groupCount + 1] = coordCount;
 	}
 
@@ -1178,6 +1178,7 @@ void DrawModel(Model *m, GLuint program, char* vertexVariableName, char* normalV
 		if (normalVariableName != NULL)
 		{
 			loc = glGetAttribLocation(program, normalVariableName);
+
 			if (loc >= 0)
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, m->nb);
@@ -1266,7 +1267,7 @@ void ReloadModelData(Model *m)
 	// VBO for vertex data
 	glBindBuffer(GL_ARRAY_BUFFER, m->vb);
 	glBufferData(GL_ARRAY_BUFFER, m->numVertices * 3 * sizeof(GLfloat), m->vertexArray, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0); 
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
 
 	// VBO for normal data
@@ -1285,7 +1286,7 @@ void ReloadModelData(Model *m)
 	}
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m->ib);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m->numIndices*sizeof(GLuint), m->indexArray, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m->numIndices * sizeof(GLuint), m->indexArray, GL_STATIC_DRAW);
 }
 
 Model* LoadModelPlus(char* name/*,

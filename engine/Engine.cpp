@@ -23,7 +23,9 @@
 #include "CameraController.h"
 #include "UILabel.h"
 #include "UIProgressBar.h"
-
+#include "TerrainModel.h"
+#include "TerrainComponent.h"
+#include "TextureComponent.h"
 
 namespace engine
 {
@@ -33,7 +35,7 @@ namespace engine
 
 		settings.maximized = true;
 
-		window = new Window{ 1680, 1050, "MyWindow" , settings };
+		window = new Window{ 1920, 1080, "MyWindow" , settings };
 
 		dumpInfo(std::cout);
 
@@ -58,27 +60,73 @@ namespace engine
 
 		assetManager = new AssetManager{};
 
-		assetManager->load<RawModel>("bunneh", "../res/models/bunny.obj");
+		//=====================================================================
+		// AssetManager setup
+		//=====================================================================
+
+		assetManager->registerAsset<TerrainModel>();
+
+		//=====================================================================
+		// Load Models
+		//=====================================================================
+
+		assetManager->load<RawModel>("bunneh", "../res/models/bunnyplus.obj");
 		RawModel* bunModel = assetManager->fetch<RawModel>("bunneh");
 
 		assetManager->registerAsset<Model>();
 		Model* mod = LoadModelPlus("../res/models/bunny.obj");
 		assetManager->store("bunny", mod);
 
+		assetManager->load<TerrainModel>("basicTerrain", "../res/terrains/fft-terrain.tga");
+
+		//=====================================================================
+		// Load textures
+		//=====================================================================
+
+		assetManager->load<Texture2D>("grass", "../res/textures/grass.tga");
+		assetManager->load<Texture2D>("conc", "../res/textures/conc.tga");
+		assetManager->load<Texture2D>("dirt", "../res/textures/dirt.tga");
+
+		//=====================================================================
+		// EntityManager setup
+		//=====================================================================
+
 		entityManager = new EntityManager{ eventManager , assetManager };
 
 		entityManager->registerComponent<TransformComponent>("TransformComponent");
 		entityManager->registerComponent<ModelComponent>("ModelComponent");
 		entityManager->registerComponent<CameraComponent>("CameraComponent");
+		entityManager->registerComponent<TerrainComponent>("TerrainComponent");
+		entityManager->registerComponent<TextureComponent>("TextureComponent");
 
+		//=====================================================================
+		// Load entities
+		//=====================================================================
+
+		EntityHandle terrain = entityManager->createEntity();
 		EntityHandle entity2 = entityManager->createEntity();
 		EntityHandle entity3 = entityManager->createEntity();
 
+		entityManager->assignComponent<TransformComponent>(terrain, glm::vec3{ 0.f,0.f,0.f });
+		entityManager->assignComponent<TerrainComponent>(terrain, "basicTerrain");
+		entityManager->assignComponent<TextureComponent>(terrain);
+
+		TextureComponent* texComp = entityManager->getComponent<TextureComponent>(terrain);
+		texComp->attach(0, "grass");
+
 		entityManager->assignComponent<TransformComponent>(entity2, glm::vec3{ 5.f,0.f,0.f }, 45.f);
 		entityManager->assignComponent<ModelComponent>(entity2, "bunneh");
+		entityManager->assignComponent<TextureComponent>(entity2);
+
+		TextureComponent* texComp2 = entityManager->getComponent<TextureComponent>(entity2);
+		texComp2->attach(0, "conc");
 
 		entityManager->assignComponent<TransformComponent>(entity3, glm::vec3{ 10.f,0.f,0.f });
 		entityManager->assignComponent<ModelComponent>(entity3, "bunneh");
+		entityManager->assignComponent<TextureComponent>(entity3);
+
+		TextureComponent* texComp3 = entityManager->getComponent<TextureComponent>(entity3);
+		texComp3->attach(0, "dirt");
 
 		// Detta tar hand om instansiering och sånt.
 		entityManager->registerSystem<CameraController>();
@@ -141,7 +189,16 @@ namespace engine
 
 					eventManager->postEvent(new_event);
 
-					std::cout << ev.mouse.posx << " " << ev.mouse.posy << std::endl;
+					//std::cout << ev.mouse.posx << " " << ev.mouse.posy << std::endl;
+				}
+				break;
+				case EventType::MOUSE_KEY_EVENT:
+				{
+					if(ev.mouse.button == GLFW_MOUSE_BUTTON_1 && ev.mouse.action == Action::PRESS)
+						uiManager->getElement<userinterface::UIProgressBar>("testBar")->decrementValue(10.f);
+
+					if (ev.mouse.button == GLFW_MOUSE_BUTTON_2 && ev.mouse.action == Action::PRESS)
+						uiManager->getElement<userinterface::UIProgressBar>("testBar")->incrementValue(10.f);
 				}
 				break;
 				case EventType::GAINED_FOCUS:
@@ -179,6 +236,8 @@ namespace engine
 			glDisable(GL_DEPTH_TEST);
 
 			uiManager->draw();
+
+			glEnable(GL_DEPTH_TEST);
 
 			window->display();
 		}

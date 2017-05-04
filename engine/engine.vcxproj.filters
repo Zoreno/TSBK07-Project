@@ -180,6 +180,12 @@
     <ClCompile Include="UIProgressbar.cpp">
       <Filter>Source Files\UI\Elements</Filter>
     </ClCompile>
+    <ClCompile Include="TerrainModel.cpp">
+      <Filter>Source Files\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureComponent.cpp">
+      <Filter>Source Files\Standard Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioBuffer.h">
@@ -325,6 +331,15 @@
     </ClInclude>
     <ClInclude Include="UIProgressBar.h">
       <Filter>Header Files\UI\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainModel.h">
+      <Filter>Header Files\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainComponent.h">
+      <Filter>Header Files\Standard Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureComponent.h">
+      <Filter>Header Files\Standard Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

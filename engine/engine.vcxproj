@@ -135,6 +135,8 @@
     <ClCompile Include="RawModel.cpp" />
     <ClCompile Include="RenderingSystem.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="TerrainModel.cpp" />
+    <ClCompile Include="TextureComponent.cpp" />
     <ClCompile Include="UI2DRenderingSurface.cpp" />
     <ClCompile Include="UIElement.cpp" />
     <ClCompile Include="UILabel.cpp" />
@@ -178,6 +180,9 @@
     <ClInclude Include="PixelInfo.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="RawModel.h" />
+    <ClInclude Include="TerrainComponent.h" />
+    <ClInclude Include="TerrainModel.h" />
+    <ClInclude Include="TextureComponent.h" />
     <ClInclude Include="UI2DRenderingSurface.h" />
     <ClInclude Include="UIDetail.h" />
     <ClInclude Include="RenderingSystem.h" />

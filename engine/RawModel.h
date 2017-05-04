@@ -26,7 +26,7 @@ public:
 	virtual void draw();
 
 	virtual ~RawModel();
-private:
+protected:
 
 	VertexArrayObject vao{};
 	VertexBufferObject vertexPositions{ GL_ARRAY_BUFFER };

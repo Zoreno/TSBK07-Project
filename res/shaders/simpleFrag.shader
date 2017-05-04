@@ -6,7 +6,11 @@ in vec2 texCoords;
 
 out vec4 frag_color;
 
+uniform sampler2D tex;
+
 void main()
 {
-	frag_color = vec4(normal, 1.0);
+	vec4 objColor = texture(tex, texCoords);
+
+	frag_color = objColor;
 }
