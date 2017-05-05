@@ -15,6 +15,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "PointLight.h"
 
 /**
  * @brief Shader Program Exception
@@ -131,6 +132,13 @@ public:
 	* @param value Value to be upload.
 	*/
 	void uploadUniform(const std::string& name, glm::mat4 value);
+
+	/**
+	 * @brief Uploads a value as an uniform to the shader
+	 * @param name Name of the uniform
+	 * @param pointLight PointLight object
+	 */
+	void uploadUniform(const std::string& name, const PointLight& pointLight);
 
 	/**
 	 * @brief Swaps two shaders

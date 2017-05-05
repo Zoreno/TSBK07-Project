@@ -26,6 +26,7 @@
 #include "TerrainModel.h"
 #include "TerrainComponent.h"
 #include "TextureComponent.h"
+#include "PointLightComponent.h"
 
 namespace engine
 {
@@ -98,6 +99,7 @@ namespace engine
 		entityManager->registerComponent<CameraComponent>("CameraComponent");
 		entityManager->registerComponent<TerrainComponent>("TerrainComponent");
 		entityManager->registerComponent<TextureComponent>("TextureComponent");
+		entityManager->registerComponent<PointLightComponent>("PointLightComponent");
 
 		//=====================================================================
 		// Load entities
@@ -106,6 +108,7 @@ namespace engine
 		EntityHandle terrain = entityManager->createEntity();
 		EntityHandle entity2 = entityManager->createEntity();
 		EntityHandle entity3 = entityManager->createEntity();
+		EntityHandle lightSource = entityManager->createEntity();
 
 		entityManager->assignComponent<TransformComponent>(terrain, glm::vec3{ 0.f,0.f,0.f });
 		entityManager->assignComponent<TerrainComponent>(terrain, "basicTerrain");
@@ -127,6 +130,15 @@ namespace engine
 
 		TextureComponent* texComp3 = entityManager->getComponent<TextureComponent>(entity3);
 		texComp3->attach(0, "dirt");
+
+		entityManager->assignComponent<TransformComponent>(lightSource, glm::vec3{ 10.f, 10.f, 10.f });
+		entityManager->assignComponent<PointLightComponent>(lightSource, 
+			glm::vec3{ 0.7f, 0.7f, 0.7f },	// Ambient
+			glm::vec3{ 0.3f,0.3f,0.3f },	// Diffuse
+			glm::vec3{ 1.0f,1.0f,1.0f },	// Specular
+			1.f,							// Constant
+			0.01f,							// Linear
+			0.003f);						// Quadratic
 
 		// Detta tar hand om instansiering och sånt.
 		entityManager->registerSystem<CameraController>();

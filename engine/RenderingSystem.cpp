@@ -12,9 +12,11 @@
 #include "ModelComponent.h"
 #include "TerrainComponent.h"
 #include "TextureComponent.h"
+#include "PointLight.h"
+#include "PointLightComponent.h"
 
 RenderingSystem::RenderingSystem(Window* window)
-	: window{window} {}
+	: window{ window } {}
 
 void RenderingSystem::handleEvent(const KeyEvent& ev)
 {
@@ -64,16 +66,52 @@ void RenderingSystem::shutDown()
 void RenderingSystem::update(float dt)
 {
 	glm::mat4 proj = glm::perspective(FOV, window->getAspectRatio(), NEAR_PLANE, FAR_PLANE);
-	glm::mat4 view;
 
+	glm::mat4 view;
+	glm::vec3 view_pos;
+
+	// This is hax
 	auto updateCamera = [&](EntityHandle entHandle, TransformComponent* tr, CameraComponent* ca)
 	{
 		view = ca->camera.getViewMatrix();
+		view_pos = tr->position;
 	};
 
 	em->each<TransformComponent, CameraComponent>(updateCamera);
 
 	ShaderProgram* shader = am->fetch<ShaderProgram>("simpleShader");
+
+	shader->uploadUniform("viewPos", view_pos);
+
+	std::vector<PointLight> lights;
+
+	auto getLights = [&](EntityHandle entHandle, TransformComponent* tr, PointLightComponent* pl)
+	{
+		PointLight pointLight{
+		tr->position,
+		pl->ambient,
+		pl->diffuse,
+		pl->specular,
+		pl->constant,
+		pl->linear,
+		pl->quadratic };
+
+		lights.push_back(pointLight);
+	};
+
+	em->each<TransformComponent, PointLightComponent>(getLights);
+
+	shader->use();
+
+	for(int i = 0; i < lights.size(); ++i)
+	{
+		std::string name{ "lights[" };
+		name += std::to_string(i);
+		name += "]";
+		shader->uploadUniform(name, lights[i]);
+	}
+
+	shader->uploadUniform("numLights", (int)lights.size());
 
 	auto renderTerrain = [&](EntityHandle entHandle, TransformComponent* tr, TerrainComponent* te)
 	{
@@ -88,9 +126,9 @@ void RenderingSystem::update(float dt)
 
 		TextureComponent* tex = em->getComponent<TextureComponent>(entHandle);
 
-		if(tex)
+		if (tex)
 		{
-			for(auto it : tex->textureMap)
+			for (auto it : tex->textureMap)
 			{
 				am->fetch<Texture2D>(it.second)->bind(it.first);
 			}
@@ -126,6 +164,7 @@ void RenderingSystem::update(float dt)
 
 		am->fetch<RawModel>(mc->getID())->draw();
 	};
+
 	em->each<TransformComponent, TerrainComponent>(renderTerrain);
 	em->each<TransformComponent, ModelComponent>(renderAll);
 }

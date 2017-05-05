@@ -191,6 +191,19 @@ void ShaderProgram::uploadUniform(const std::string& name, glm::mat4 value)
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgramHandle, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
 
+void ShaderProgram::uploadUniform(const std::string& name, const PointLight& pointLight)
+{
+	uploadUniform(name + ".position", pointLight.getPosition());
+
+	uploadUniform(name + ".ambient", pointLight.getAmbient());
+	uploadUniform(name + ".diffuse", pointLight.getDiffuse());
+	uploadUniform(name + ".specular", pointLight.getSpecular());
+
+	uploadUniform(name + ".constant", pointLight.getConstant());
+	uploadUniform(name + ".linear", pointLight.getLinear());
+	uploadUniform(name + ".quadratic", pointLight.getQuadratic());
+}
+
 void swap(ShaderProgram& lhs, ShaderProgram& rhs) noexcept
 {
 

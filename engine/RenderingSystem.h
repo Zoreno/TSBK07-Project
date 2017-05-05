@@ -24,4 +24,7 @@ public:
 	const GLfloat FOV{ glm::radians(45.f) };
 	const GLfloat NEAR_PLANE{ 0.1f };
 	const GLfloat FAR_PLANE{ 100.f };
+
+private:
+	GLuint lightSSBO;
 };

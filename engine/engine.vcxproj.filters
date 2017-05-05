@@ -341,6 +341,9 @@
     <ClInclude Include="TextureComponent.h">
       <Filter>Header Files\Standard Components</Filter>
     </ClInclude>
+    <ClInclude Include="PointLightComponent.h">
+      <Filter>Header Files\Standard Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ConfigFile.inl">
