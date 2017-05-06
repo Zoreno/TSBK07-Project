@@ -130,6 +130,7 @@
     <ClCompile Include="ConfigFile.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="loadobj.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="ModelComponent.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="RawModel.cpp" />
@@ -175,6 +176,8 @@
     <ClInclude Include="Event.h" />
     <ClInclude Include="KeyEvent.h" />
     <ClInclude Include="loadobj.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="MaterialComponent.h" />
     <ClInclude Include="ModelComponent.h" />
     <ClInclude Include="MouseEvent.h" />
     <ClInclude Include="PixelInfo.h" />

@@ -4,6 +4,7 @@
 #include "CameraComponent.h"
 
 #include "EntityManager.h"
+#include "UILabel.h"
 
 void CameraController::handleEvent(const KeyEvent& ev)
 {
@@ -107,4 +108,13 @@ void CameraController::update(float dt)
 	lastMousePosY = mousePosY;
 
 	tr->position = ca->camera.getPosition();
+
+	std::string s;
+	std::stringstream ss;
+
+	ss << tr->position;
+
+	s = ss.str();
+
+	ui->getElement<userinterface::UILabel>("coords")->setText(s);
 }

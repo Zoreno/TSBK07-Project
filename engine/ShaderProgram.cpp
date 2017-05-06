@@ -204,6 +204,14 @@ void ShaderProgram::uploadUniform(const std::string& name, const PointLight& poi
 	uploadUniform(name + ".quadratic", pointLight.getQuadratic());
 }
 
+void ShaderProgram::uploadUniform(const std::string& name, const Material& material)
+{
+	uploadUniform(name + ".ambient", material.getAmbient());
+	uploadUniform(name + ".diffuse", material.getDiffuse());
+	uploadUniform(name + ".specular", material.getSpecular());
+	uploadUniform(name + ".shininess", material.getShininess());
+}
+
 void swap(ShaderProgram& lhs, ShaderProgram& rhs) noexcept
 {
 

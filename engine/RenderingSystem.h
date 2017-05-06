@@ -27,4 +27,6 @@ public:
 
 private:
 	GLuint lightSSBO;
+
+	Material defaultMaterial{ glm::vec3{1.f,1.f,1.f}, glm::vec3{1.f,1.f,1.f}, glm::vec3{1.f,1.f,1.f}, 64 };
 };

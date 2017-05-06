@@ -40,13 +40,24 @@ namespace engine
 
 		dumpInfo(std::cout);
 
+		//=====================================================================
+		// UI setup
+		//=====================================================================
+
 		uiManager = new userinterface::UIManager(window->getWidth(), window->getHeight());
+
+		userinterface::UILabel* coordsLabel = uiManager->addElement<userinterface::UILabel>("coords", 320, 32, 0, 1017-32);
+
+		coordsLabel->setBorder(4);
+		coordsLabel->setBorderColor(Color{ 0.2f });
+		coordsLabel->setFillColor(Color{ 0.5f});
+		coordsLabel->setTextColor(Color{ 0.f,0.f,0.f });
 
 		userinterface::UILabel* label = uiManager->addElement<userinterface::UILabel>("testRect", 320, 32, 0, 0);
 
 		label->setBorder(4);
 		label->setBorderColor(Color{ 0.2f });
-		label->setFillColor(Color{ 0.5f});
+		label->setFillColor(Color{ 0.5f });
 		label->setTextColor(Color{ 0.f,0.f,0.f });
 
 		userinterface::UIProgressBar* bar = uiManager->addElement<userinterface::UIProgressBar>("testBar", 128, 32, 0, 64, 50.f, 0.f, 100.f);
@@ -92,7 +103,7 @@ namespace engine
 		// EntityManager setup
 		//=====================================================================
 
-		entityManager = new EntityManager{ eventManager , assetManager };
+		entityManager = new EntityManager{ eventManager , assetManager, uiManager };
 
 		entityManager->registerComponent<TransformComponent>("TransformComponent");
 		entityManager->registerComponent<ModelComponent>("ModelComponent");
@@ -108,7 +119,8 @@ namespace engine
 		EntityHandle terrain = entityManager->createEntity();
 		EntityHandle entity2 = entityManager->createEntity();
 		EntityHandle entity3 = entityManager->createEntity();
-		EntityHandle lightSource = entityManager->createEntity();
+		EntityHandle lightSource1 = entityManager->createEntity();
+		EntityHandle lightSource2 = entityManager->createEntity();
 
 		entityManager->assignComponent<TransformComponent>(terrain, glm::vec3{ 0.f,0.f,0.f });
 		entityManager->assignComponent<TerrainComponent>(terrain, "basicTerrain");
@@ -131,14 +143,24 @@ namespace engine
 		TextureComponent* texComp3 = entityManager->getComponent<TextureComponent>(entity3);
 		texComp3->attach(0, "dirt");
 
-		entityManager->assignComponent<TransformComponent>(lightSource, glm::vec3{ 10.f, 10.f, 10.f });
-		entityManager->assignComponent<PointLightComponent>(lightSource, 
-			glm::vec3{ 0.7f, 0.7f, 0.7f },	// Ambient
-			glm::vec3{ 0.3f,0.3f,0.3f },	// Diffuse
-			glm::vec3{ 1.0f,1.0f,1.0f },	// Specular
+		entityManager->assignComponent<TransformComponent>(lightSource1, glm::vec3{ 10.f, 10.f, 10.f });
+		entityManager->assignComponent<PointLightComponent>(lightSource1, 
+			glm::vec3{ 0.7f, 0.0f, 0.0f },	// Ambient
+			glm::vec3{ 0.3f,0.0f,0.0f },	// Diffuse
+			glm::vec3{ 1.0f,0.0f,0.0f },	// Specular
 			1.f,							// Constant
 			0.01f,							// Linear
 			0.003f);						// Quadratic
+
+		entityManager->assignComponent<TransformComponent>(lightSource2, glm::vec3{ 50.f, 22.f, 32.f });
+		entityManager->assignComponent<PointLightComponent>(lightSource2,
+			glm::vec3{ 0.0f, 0.7f, 0.0f },	// Ambient
+			glm::vec3{ 0.0f,0.3f,0.0f },	// Diffuse
+			glm::vec3{ 0.0f,1.0f,0.0f },	// Specular
+			1.f,							// Constant
+			0.01f,							// Linear
+			0.003f);						// Quadratic
+
 
 		// Detta tar hand om instansiering och sånt.
 		entityManager->registerSystem<CameraController>();

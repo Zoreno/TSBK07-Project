@@ -17,6 +17,14 @@ struct Light
 	vec3 specular;
 };
 
+struct Material
+{
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
+	float shininess;
+};
+
 //=============================================================================
 // Input
 //=============================================================================
@@ -41,10 +49,14 @@ uniform sampler2D 	textureUnit;
 // Position of the camera during the render pass.
 uniform vec3 		viewPos;
 
-//uniform Light light;
-
+// Number of lights in scene
 uniform int numLights;
+
+// Light data. TODO: Variable length buffer with SSBO
 uniform Light lights[64];
+
+// Material Properties
+uniform Material material;
 
 //=============================================================================
 // Functions
@@ -72,23 +84,20 @@ void main()
 		vec3 lightDirection = normalize(lights[i].position - FragPos);
 
 		// Ambient light calculation
-		vec3 ambientColor = lights[i].ambient;
+		vec3 ambientColor = lights[i].ambient*material.ambient;
 	
 		// Diffuse light calculation
 		float diff = max(dot(norm, lightDirection), 0.0);
-		vec3 diffuseColor = lights[i].diffuse * diff;
+		vec3 diffuseColor = lights[i].diffuse * diff * material.diffuse;
 	
 		// Specular light calculation
 		vec3 reflectDir = reflect(-lightDirection, norm);
 		float lightDistance = length(lights[i].position - FragPos);
-		float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 64);
-		vec3 specularColor = lights[i].specular * spec;
-		
-		float attenuation = 1.0f/(lights[i].constant + lights[i].linear * lightDistance + 
-			lights[i].quadratic * pow(lightDistance, 2.0f));
+		float spec = pow(max(dot(viewDir, reflectDir), 0.0f), material.shininess);
+		vec3 specularColor = lights[i].specular * spec * material.specular;
 	
 		// Add the results to the resulting light color
-		resColor += (ambientColor + diffuseColor + specularColor)*attenuation;
+		resColor += (ambientColor + diffuseColor + specularColor)*calculateAttenuation(lightDistance, lights[i]);
 	}
 	
 	// Sample texture to get object color.

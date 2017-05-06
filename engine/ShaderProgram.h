@@ -16,6 +16,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "PointLight.h"
+#include "Material.h"
 
 /**
  * @brief Shader Program Exception
@@ -139,6 +140,13 @@ public:
 	 * @param pointLight PointLight object
 	 */
 	void uploadUniform(const std::string& name, const PointLight& pointLight);
+
+	/**
+	 * @brief Uploads a value as an uniform to the shader
+	 * @param name Name of the uniform
+	 * @param material Material object
+	 */
+	void uploadUniform(const std::string& name, const Material& material);
 
 	/**
 	 * @brief Swaps two shaders

@@ -14,6 +14,7 @@
 #include "TextureComponent.h"
 #include "PointLight.h"
 #include "PointLightComponent.h"
+#include "MaterialComponent.h"
 
 RenderingSystem::RenderingSystem(Window* window)
 	: window{ window } {}
@@ -101,6 +102,10 @@ void RenderingSystem::update(float dt)
 
 	em->each<TransformComponent, PointLightComponent>(getLights);
 
+	//=========================================================================
+	// Color render pass
+	//=========================================================================
+
 	shader->use();
 
 	for(int i = 0; i < lights.size(); ++i)
@@ -111,7 +116,12 @@ void RenderingSystem::update(float dt)
 		shader->uploadUniform(name, lights[i]);
 	}
 
-	shader->uploadUniform("numLights", (int)lights.size());
+	shader->uploadUniform("numLights", static_cast<int>(lights.size()));
+
+	shader->uploadUniform("material.ambient", glm::vec3{ 1.f,1.f,1.f });
+	shader->uploadUniform("material.diffuse", glm::vec3{ 1.f,1.f,1.f });
+	shader->uploadUniform("material.specular", glm::vec3{ 1.f,1.f,1.f });
+	shader->uploadUniform("material.shininess", 64.f);
 
 	auto renderTerrain = [&](EntityHandle entHandle, TransformComponent* tr, TerrainComponent* te)
 	{
@@ -132,6 +142,17 @@ void RenderingSystem::update(float dt)
 			{
 				am->fetch<Texture2D>(it.second)->bind(it.first);
 			}
+		}
+
+		MaterialComponent* mat = em->getComponent<MaterialComponent>(entHandle);
+
+		if(mat)
+		{
+			shader->uploadUniform("material", mat->material);
+		}
+		else
+		{
+			shader->uploadUniform("material", defaultMaterial);
 		}
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -160,6 +181,17 @@ void RenderingSystem::update(float dt)
 			{
 				am->fetch<Texture2D>(it.second)->bind(it.first);
 			}
+		}
+
+		MaterialComponent* mat = em->getComponent<MaterialComponent>(entHandle);
+
+		if (mat)
+		{
+			shader->uploadUniform("material", mat->material);
+		}
+		else
+		{
+			shader->uploadUniform("material", defaultMaterial);
 		}
 
 		am->fetch<RawModel>(mc->getID())->draw();
