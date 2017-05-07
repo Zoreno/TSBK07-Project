@@ -184,14 +184,6 @@ void RenderingSystem::update(float dt)
 
 	em->each<TransformComponent, PointLightComponent>(getLights);
 
-	//=========================================================================
-	// Depth render pass
-	//=========================================================================
-
-	//=========================================================================
-	// Color render pass
-	//=========================================================================
-
 	shader->use();
 
 	for (int i = 0; i < lights.size(); ++i)
@@ -203,6 +195,10 @@ void RenderingSystem::update(float dt)
 	}
 
 	shader->uploadUniform("numLights", static_cast<int>(lights.size()));
+
+	//=========================================================================
+	// Depth render pass
+	//=========================================================================
 
 	static constexpr GLfloat SHADOW_ASPECT = static_cast<GLfloat>(SHADOW_WIDTH) / static_cast<GLfloat>(SHADOW_HEIGHT);
 
@@ -304,6 +300,10 @@ void RenderingSystem::update(float dt)
 		shader->uploadUniform(std::string("depthMaps[") + std::to_string(i) + std::string("]"), static_cast<int>(i+1));
 		shader->uploadUniform("textureUnit", 0);
 	}
+
+	//=========================================================================
+	// Color render pass
+	//=========================================================================
 
 	glCullFace(GL_BACK);
 

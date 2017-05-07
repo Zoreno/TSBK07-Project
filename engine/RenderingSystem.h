@@ -6,7 +6,7 @@
 #include "Camera.h"
 #include "Window.h"
 
-#define MAX_LIGHTS 8
+#define MAX_LIGHTS 32
 
 class RenderingSystem : public System, public Subscriber<KeyEvent>
 {
