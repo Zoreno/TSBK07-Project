@@ -18,6 +18,7 @@
 
 #include <rapidxml/rapidxml.hpp>
 
+#include "ComponentAssignedEvent.h"
 #include "Component.h"
 #include "System.h"
 #include "Event.h"
@@ -1042,6 +1043,8 @@ EntityManager::assignComponent(EntityHandle entHandle, Args... args)
 	ePtr->_components.set(_typemap.getTypeID<T>());
 
 	createComponent<T>(entHandle, std::forward<Args>(args)...);
+
+	eventManager->postEvent(ComponentAssignedEvent<T>(entHandle));
 }
 
 template <typename T>

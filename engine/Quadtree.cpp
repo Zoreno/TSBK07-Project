@@ -7,9 +7,13 @@
 #define SW 3;
 #define SE 4;
 
-Quadtree::Quadtree(EntityManager* entMan, glm::vec2 pos, uint32_t width, uint32_t height) :
-	_enM{entMan}
+Quadtree::Quadtree(EntityManager* entMan, EventManager* evMan, glm::vec2 pos, uint32_t width, uint32_t height) :
+	_enM{entMan},
+	_evM{evMan}
 {
+	_evM->addSubscriber<EntityDestroyedEvent>(this);
+	_evM->addSubscriber<ComponentAssignedEvent<TransformComponent>>(this);
+
 	_quadtree = new Quadroot(entMan,
 		glm::vec2{ pos.x - width / 2,pos.y + height / 2 },
 		glm::vec2{ pos.x + width / 2,pos.y + height / 2 },
@@ -37,6 +41,20 @@ void Quadtree::pushEntity(EntityHandle ent)
 	_enM->assignComponent<QuadtreeComponent>(ent);
 
 	_quadtree->pushEnt(ent);
+}
+
+void Quadtree::handleEvent(const EntityDestroyedEvent& ev)
+{
+	if (_enM->hasComponent<QuadtreeComponent>(ev.entHandle))
+	{
+		_quadtree->delEnt(_enM->getComponent<QuadtreeComponent>(ev.entHandle)->getPosition(), ev.entHandle);
+	}
+}
+
+void Quadtree::handleEvent(const ComponentAssignedEvent<TransformComponent>& ev)
+{
+	_enM->assignComponent<QuadtreeComponent>(ev.entHandle);
+	_quadtree->pushEnt(ev.entHandle);
 }
 
 Quadroot::Quadroot(EntityManager* entMan, glm::vec2 nw, glm::vec2 ne, glm::vec2 sw, glm::vec2 se) :
@@ -573,3 +591,42 @@ void Quadroot::update()
 		}
 	}
 }
+
+void Quadroot::delEnt(uint32_t pos, EntityHandle ent)
+{
+	if(pos == 0)
+	{
+		std::cout << _entities.size() << std::endl;
+		for (auto i = _entities.begin(); i != _entities.end(); ++i)
+		{
+			if (*i == ent)
+			{
+				_entities.erase(i);
+				_entCount -= 1;
+				return;
+			}
+		}
+
+		throw Quadtree_error("Entity to be deleted not found in given quad position");
+	}
+
+	switch(pos & 0b11) // directions % 4, so se = 0, nw = 1, ne = 2, sw = 3
+	{
+	case 0:
+		_se->delEnt(pos >> 3, ent);
+		break;
+	case 1:
+		_nw->delEnt(pos >> 3, ent);
+		break;
+	case 2:
+		_ne->delEnt(pos >> 3, ent);
+		break;
+	case 3:
+		_sw->delEnt(pos >> 3, ent);
+		break;
+	default:
+		throw Quadtree_error("delEnt in quad other than 0,1,2,3. Should never happen");
+		break;
+	}
+}
+

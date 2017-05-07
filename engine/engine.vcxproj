@@ -163,6 +163,7 @@
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="ComponentAssignedEvent.h" />
     <ClInclude Include="EntityCreatedEvent.h" />
     <ClInclude Include="EntityDestroyedEvent.h" />
     <ClInclude Include="EntityManager.h" />

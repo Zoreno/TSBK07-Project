@@ -305,6 +305,9 @@
     <ClInclude Include="QuadtreeComponent.h">
       <Filter>Header Files\Standard Components</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentAssignedEvent.h">
+      <Filter>Header Files\Standard Events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ConfigFile.inl">

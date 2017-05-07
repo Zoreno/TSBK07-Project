@@ -3,6 +3,8 @@
 #include <vector>
 #include "TransformComponent.h"
 #include <stdexcept>
+#include "EntityDestroyedEvent.h"
+#include "ComponentAssignedEvent.h"
 
 
 //Error class
@@ -12,13 +14,16 @@ class Quadtree_error : public std::logic_error {
 class Quadroot;
 class Quadleaf;
 
-class Quadtree
+class Quadtree : public Subscriber<EntityDestroyedEvent>, public Subscriber<ComponentAssignedEvent<TransformComponent>>
 {
 public:
-	Quadtree(EntityManager* entMan, glm::vec2 position, uint32_t width, uint32_t height);
+	Quadtree(EntityManager* entMan, EventManager* evMan, glm::vec2 position, uint32_t width, uint32_t height);
 	~Quadtree();
 	void update();
 	void pushEntity(EntityHandle ent);
+
+	void handleEvent(const EntityDestroyedEvent& ev) override;
+	void handleEvent(const ComponentAssignedEvent<TransformComponent>& ev) override;
 
 	uint16_t getEntCount();
 	uint16_t getTotalEntCount();
@@ -26,6 +31,7 @@ public:
 private:
 	Quadroot* _quadtree;
 	EntityManager* _enM;
+	EventManager* _evM;
 };
 
 class Quadroot
@@ -37,6 +43,7 @@ public:
 	virtual void pushEnt(EntityHandle ent);
 	void placeEnt(EntityHandle ent);
 	virtual void update();
+	void delEnt(uint32_t pos, EntityHandle ent);
 
 	glm::vec2 _nwCorn{};
 	glm::vec2 _neCorn{};

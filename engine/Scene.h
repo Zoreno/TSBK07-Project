@@ -34,7 +34,7 @@ public:
 private:
 	Quadtree* quadtree;
 	AssetManager* AMptr;
-	EntityManager* EnMptr;
-	EventManager* EvMptr;
+	EntityManager* enM;
+	EventManager* evM;
 };
 
