@@ -308,6 +308,9 @@
     <ClInclude Include="ComponentAssignedEvent.h">
       <Filter>Header Files\Standard Events</Filter>
     </ClInclude>
+    <ClInclude Include="CollisionEvent.h">
+      <Filter>Header Files\Standard Events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ConfigFile.inl">

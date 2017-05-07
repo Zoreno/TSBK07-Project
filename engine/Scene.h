@@ -18,13 +18,16 @@
 #include "KeyEvent.h"
 #include "MouseEvent.h"
 #include "CameraController.h"
+#include "CollisionEvent.h"
 
-class Scene
+class Scene : public Subscriber<CollisionEvent>
 {
 public:
 	Scene() = delete;
 	explicit Scene(AssetManager* AsM);
 	~Scene();
+
+	void handleEvent(const CollisionEvent& ev) override;
 
 	AssetManager* getAssetManager() const;
 	EntityManager* getEntityManager() const;

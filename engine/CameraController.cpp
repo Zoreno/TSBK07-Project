@@ -4,6 +4,7 @@
 #include "CameraComponent.h"
 
 #include "EntityManager.h"
+#include "CollisionComponent.h"
 
 void CameraController::handleEvent(const KeyEvent& ev)
 {
@@ -74,6 +75,7 @@ void CameraController::startUp()
 
 	em->assignComponent<TransformComponent>(currentCamera, glm::vec3{ 0.f,0.f,0.f });
 	em->assignComponent<CameraComponent>(currentCamera);
+	em->assignComponent<CollisionComponent>(currentCamera, 1.f);
 }
 
 void CameraController::shutDown()

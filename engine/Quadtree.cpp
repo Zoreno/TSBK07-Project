@@ -1,6 +1,7 @@
 #include "Quadtree.h"
 #include "CollisionComponent.h"
 #include "QuadtreeComponent.h"
+#include "CollisionEvent.h"
 
 #define NW 1;
 #define NE 2;
@@ -14,7 +15,7 @@ Quadtree::Quadtree(EntityManager* entMan, EventManager* evMan, glm::vec2 pos, ui
 	_evM->addSubscriber<EntityDestroyedEvent>(this);
 	_evM->addSubscriber<ComponentAssignedEvent<TransformComponent>>(this);
 
-	_quadtree = new Quadroot(entMan,
+	_quadtree = new Quadroot(entMan, evMan, 
 		glm::vec2{ pos.x - width / 2,pos.y + height / 2 },
 		glm::vec2{ pos.x + width / 2,pos.y + height / 2 },
 		glm::vec2{ pos.x - width / 2,pos.y - height / 2 },
@@ -29,6 +30,7 @@ Quadtree::~Quadtree()
 void Quadtree::update()
 {
 	_quadtree->update();
+	_quadtree->collisionCheck();
 }
 
 void Quadtree::pushEntity(EntityHandle ent)
@@ -57,8 +59,9 @@ void Quadtree::handleEvent(const ComponentAssignedEvent<TransformComponent>& ev)
 	_quadtree->pushEnt(ev.entHandle);
 }
 
-Quadroot::Quadroot(EntityManager* entMan, glm::vec2 nw, glm::vec2 ne, glm::vec2 sw, glm::vec2 se) :
+Quadroot::Quadroot(EntityManager* entMan, EventManager* evMan, glm::vec2 nw, glm::vec2 ne, glm::vec2 sw, glm::vec2 se) :
 	_enM{ entMan },
+	_evM{ evMan },
 	_nw{ nullptr },
 	_ne{ nullptr },
 	_sw{ nullptr },
@@ -81,8 +84,8 @@ Quadroot::~Quadroot()
 	delete _ne;
 }
 
-Quadleaf::Quadleaf(EntityManager* entMan, Quadroot* par, uint8_t quad) :
-	Quadroot(entMan),
+Quadleaf::Quadleaf(EntityManager* entMan, EventManager* evMan, Quadroot* par, uint8_t quad) :
+	Quadroot(entMan, evMan),
 	_parent{par}
 {
 	_treePosition = par->_treePosition*8 + 4 + (quad % 4);
@@ -347,6 +350,56 @@ void Quadleaf::update()
 	}
 }
 
+void Quadleaf::collisionCheck()
+{
+	if (_sw != nullptr)
+	{
+		_nw->collisionCheck();
+		_ne->collisionCheck();
+		_sw->collisionCheck();
+		_se->collisionCheck();
+	}
+
+	for (auto i = _entities.begin(); i != _entities.end(); ++i)
+	{
+		if (!_enM->hasComponent<CollisionComponent>(*i))
+		{
+			continue;
+		}
+		for (auto j = i + 1; j != _entities.end(); ++j)
+		{
+			if (!_enM->hasComponent<CollisionComponent>(*j))
+			{
+				continue;
+			}
+
+			if (hasOverlap(*i, *j))
+			{
+				_evM->postEvent(CollisionEvent(*i, *j));
+			}
+		}
+		_parent->collideUp(*i);
+	}
+}
+
+void Quadleaf::collideUp(EntityHandle ent)
+{
+	for (auto j = _entities.begin(); j != _entities.end(); ++j)
+	{
+		if (!_enM->hasComponent<CollisionComponent>(*j))
+		{
+			continue;
+		}
+
+		if (hasOverlap(ent, *j))
+		{
+			_evM->postEvent(CollisionEvent(ent, *j));
+		}
+	}
+
+	_parent->collideUp(ent);
+}
+
 void Quadleaf::moveUp(EntityHandle ent)
 {
 	_parent->placeEnt(ent);
@@ -480,10 +533,10 @@ bool Quadroot::isInside(EntityHandle ent)
 void Quadroot::split()
 {
 	if (_sw != nullptr) return;
-	_nw = new Quadleaf(_enM, this, 1);
-	_ne = new Quadleaf(_enM, this, 2);
-	_sw = new Quadleaf(_enM, this, 3);
-	_se = new Quadleaf(_enM, this, 4);
+	_nw = new Quadleaf(_enM, _evM, this, 1);
+	_ne = new Quadleaf(_enM, _evM, this, 2);
+	_sw = new Quadleaf(_enM, _evM, this, 3);
+	_se = new Quadleaf(_enM, _evM, this, 4);
 
 	std::vector<EntityHandle> tmpEntities = _entities;
 	_entities.clear();
@@ -629,4 +682,71 @@ void Quadroot::delEnt(uint32_t pos, EntityHandle ent)
 		break;
 	}
 }
+
+void Quadroot::collisionCheck()
+{
+	if (_sw != nullptr)
+	{
+		_nw->collisionCheck();
+		_ne->collisionCheck();
+		_sw->collisionCheck();
+		_se->collisionCheck();
+	}
+
+	for (auto i = _entities.begin(); i != _entities.end(); ++i)
+	{
+		if(!_enM->hasComponent<CollisionComponent>(*i))
+		{
+			continue;
+		}
+		for (auto j = i + 1; j != _entities.end(); ++j)
+		{
+			if (!_enM->hasComponent<CollisionComponent>(*j))
+			{
+				continue;
+			}
+
+			if(hasOverlap(*i, *j))
+			{
+				_evM->postEvent(CollisionEvent(*i, *j));
+			}
+		}
+	}
+}
+
+void Quadroot::collideUp(EntityHandle ent)
+{
+	for (auto j = _entities.begin(); j != _entities.end(); ++j)
+	{
+		if (!_enM->hasComponent<CollisionComponent>(*j))
+		{
+			continue;
+		}
+
+		if (hasOverlap(ent, *j))
+		{
+			_evM->postEvent(CollisionEvent(ent, *j));
+		}
+	}
+}
+
+bool Quadroot::hasOverlap(EntityHandle ent1, EntityHandle ent2) const
+{
+	glm::vec3 pos1 = _enM->getComponent<TransformComponent>(ent1)->position;
+	float reach1 = _enM->getComponent<CollisionComponent>(ent1)->getReach();
+
+	glm::vec3 pos2 = _enM->getComponent<TransformComponent>(ent2)->position;
+	float reach2 = _enM->getComponent<CollisionComponent>(ent2)->getReach();
+
+	if (pos1.x - reach1 < pos2.x + reach2 &&
+		pos1.x + reach1 > pos2.x - reach2 &&
+		pos1.z - reach1 < pos2.z + reach2 &&
+		pos1.z + reach1 > pos2.y - reach2) 
+	{
+		return true;
+	}
+
+	return false;
+}
+
 

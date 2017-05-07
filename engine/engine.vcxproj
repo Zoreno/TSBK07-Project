@@ -161,6 +161,7 @@
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="Collada.h" />
     <ClInclude Include="CollisionComponent.h" />
+    <ClInclude Include="CollisionEvent.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentAssignedEvent.h" />

@@ -50,9 +50,11 @@ namespace engine
 
 		entityManager->assignComponent<TransformComponent>(entity2, glm::vec3{ 5.f,0.f,0.f }, 45.f);
 		entityManager->assignComponent<ModelComponent>(entity2, "bunneh");
+		entityManager->assignComponent<CollisionComponent>(entity2, 1.f);
 
 		entityManager->assignComponent<TransformComponent>(entity3, glm::vec3{ 10.f,0.f,0.f });
 		entityManager->assignComponent<ModelComponent>(entity3, "bunneh");
+		entityManager->assignComponent<CollisionComponent>(entity3, 1.f);
 
 		// Detta tar hand om instansiering och sånt.
 		entityManager->registerSystem<CameraController>();
@@ -71,6 +73,8 @@ namespace engine
 		while (!window->shouldClose())
 		{
 			Scene* currentScene = Scenes.find(activeScene)->second;
+
+			currentScene->update();
 			GLfloat timeDelta = timer.reset();
 			Timer dutyTimer{};
 

@@ -37,13 +37,17 @@ private:
 class Quadroot
 {
 public:
-	Quadroot(EntityManager* entMan, glm::vec2 nw = glm::vec2{}, glm::vec2 ne = glm::vec2{}, glm::vec2 sw = glm::vec2{}, glm::vec2 se = glm::vec2{});
+	Quadroot(EntityManager* entMan, EventManager* evMan, glm::vec2 nw = glm::vec2{}, glm::vec2 ne = glm::vec2{}, glm::vec2 sw = glm::vec2{}, glm::vec2 se = glm::vec2{});
 	virtual ~Quadroot();
 
 	virtual void pushEnt(EntityHandle ent);
 	void placeEnt(EntityHandle ent);
 	virtual void update();
 	void delEnt(uint32_t pos, EntityHandle ent);
+
+	virtual void collisionCheck();
+	virtual void collideUp(EntityHandle ent);
+	bool hasOverlap(EntityHandle ent1, EntityHandle ent2) const;
 
 	glm::vec2 _nwCorn{};
 	glm::vec2 _neCorn{};
@@ -60,8 +64,8 @@ protected:
 	bool isInside(EntityHandle ent);
 	void split();
 	
-
 	EntityManager* _enM;
+	EventManager* _evM;
 
 	std::vector<EntityHandle> _entities{};
 	uint8_t _entCount{ 0 };
@@ -74,7 +78,7 @@ protected:
 class Quadleaf : public Quadroot
 {
 public:
-	explicit Quadleaf(EntityManager* entMan, Quadroot* par, uint8_t quad);
+	explicit Quadleaf(EntityManager* entMan, EventManager* evMan, Quadroot* par, uint8_t quad);
 	~Quadleaf() = default;
 
 	bool moveDown(EntityHandle ent);
@@ -82,6 +86,9 @@ public:
 	void pushEnt(EntityHandle ent) override;
 
 	void update() override;
+
+	void collisionCheck() override;
+	void collideUp(EntityHandle ent) override;
 
 private:
 	void moveUp(EntityHandle ent);
@@ -101,7 +108,6 @@ inline uint16_t Quadroot::getTotalEntCount()
 
 	return _entCount;
 }
-
 inline uint16_t Quadtree::getEntCount()
 {
 	return _quadtree->getEntCount();
