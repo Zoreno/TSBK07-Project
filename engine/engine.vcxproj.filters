@@ -186,6 +186,9 @@
     <ClCompile Include="TextureComponent.cpp">
       <Filter>Source Files\Standard Components</Filter>
     </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source Files\OpenGL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioBuffer.h">
@@ -339,6 +342,15 @@
       <Filter>Header Files\Standard Components</Filter>
     </ClInclude>
     <ClInclude Include="TextureComponent.h">
+      <Filter>Header Files\Standard Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLightComponent.h">
+      <Filter>Header Files\Standard Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialComponent.h">
       <Filter>Header Files\Standard Components</Filter>
     </ClInclude>
   </ItemGroup>
