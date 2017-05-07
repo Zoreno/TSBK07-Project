@@ -135,7 +135,7 @@ namespace engine
 		entityManager->assignComponent<TransformComponent>(terrain, glm::vec3{ 0.f,0.f,0.f });
 		entityManager->assignComponent<TerrainComponent>(terrain, "basicTerrain");
 		entityManager->assignComponent<TextureComponent>(terrain);
-		entityManager->assignComponent<MaterialComponent>(terrain, glm::vec3{ 1.f,1.f,1.f }, glm::vec3{ 1.f,1.f,1.f }, glm::vec3{ 0.f,0.f,0.f }, 64);
+		entityManager->assignComponent<MaterialComponent>(terrain, glm::vec3{ 1.f,1.f,1.f }, glm::vec3{ 1.f,1.f,1.f }, glm::vec3{ 0.2f,0.2f,0.2f }, 64);
 
 		TextureComponent* texComp = entityManager->getComponent<TextureComponent>(terrain);
 		texComp->attach(0, "grass");
@@ -147,7 +147,7 @@ namespace engine
 		TextureComponent* texComp2 = entityManager->getComponent<TextureComponent>(entity2);
 		texComp2->attach(0, "grass");
 
-		entityManager->assignComponent<TransformComponent>(entity3, glm::vec3{ 10.f,0.f,0.f });
+		entityManager->assignComponent<TransformComponent>(entity3, glm::vec3{ 19.f,12.5f,117.f });
 		entityManager->assignComponent<ModelComponent>(entity3, "bunneh");
 		entityManager->assignComponent<TextureComponent>(entity3);
 
@@ -157,7 +157,7 @@ namespace engine
 		
 		entityManager->assignComponent<TransformComponent>(lightSource1, glm::vec3{ 10.f, 10.f, 10.f });
 		entityManager->assignComponent<PointLightComponent>(lightSource1, 
-			glm::vec3{ 0.7f, 0.7f, 0.7f },	// Ambient
+			glm::vec3{ 0.0f, 0.0f, 0.0f },	// Ambient
 			glm::vec3{ 0.3f,0.3f,0.3f },	// Diffuse
 			glm::vec3{ 1.0f,1.0f,1.0f },	// Specular
 			1.f,							// Constant
@@ -167,8 +167,8 @@ namespace engine
 		
 		entityManager->assignComponent<TransformComponent>(lightSource2, glm::vec3{ 19.f, 15.f, 111.f });
 		entityManager->assignComponent<PointLightComponent>(lightSource2,
-			glm::vec3{ 0.7f, 0.7f, 0.7f },	// Ambient
-			glm::vec3{ 0.3f,0.3f,0.3f },	// Diffuse
+			glm::vec3{ 0.2f, 0.2f, 0.2f },	// Ambient
+			glm::vec3{ 6.8f,6.8f,3.3f },	// Diffuse
 			glm::vec3{ 1.0f,1.0f,1.0f },	// Specular
 			1.f,							// Constant
 			0.01f,							// Linear
@@ -280,7 +280,7 @@ namespace engine
 
 			glDisable(GL_DEPTH_TEST);
 
-			uiManager->draw();
+			//uiManager->draw();
 
 			glEnable(GL_DEPTH_TEST);
 

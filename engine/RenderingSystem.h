@@ -38,4 +38,18 @@ private:
 
 	GLuint depthMapFBOs[MAX_LIGHTS];
 	GLuint depthMaps[MAX_LIGHTS];
+
+	GLuint hdrFBO;
+	GLuint rboDepth;
+	GLuint colorBuffers[2];
+	GLuint quadVAO;
+	GLuint quadVBO;
+
+	GLuint pingpongFBO[2];
+	GLuint pingpongColorbuffers[2];
+
+	bool hdr{ true };
+	bool bloom{ true };
+	float exposure{ 1.f };
+	float gamma{ 2.2f };
 };

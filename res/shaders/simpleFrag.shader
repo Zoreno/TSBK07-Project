@@ -37,7 +37,8 @@ in vec2 texCoords;
 // Output
 //=============================================================================
 
-out vec4 fragColor;
+layout (location = 0) out vec4 fragColor;
+layout (location = 1) out vec4 brightColor;
 
 //=============================================================================
 // Uniforms
@@ -151,10 +152,17 @@ void main()
 	}
 	
 	// Sample texture to get object color.
-	vec4 objColor = texture(textureUnit, texCoords);
+	vec3 objColor = texture(textureUnit, texCoords).rgb;
+	
+	vec3 outputColor = objColor * resColor;
+	
+	float brightness = dot(outputColor, vec3(0.2126,0.7152,0.0722));
 	
 	// Output color.
-	fragColor = objColor * vec4(resColor, 1.0f);
+	fragColor = vec4(outputColor, 1.0);
+	
+	if(brightness > 1.0)
+		brightColor = vec4(outputColor, 1.0);
 }
 
 //=============================================================================

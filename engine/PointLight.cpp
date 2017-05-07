@@ -16,12 +16,12 @@ PointLight::PointLight(
 	float linear,
 	float quadratic)
 	: position(position),
-	ambient(ambient),
-	diffuse(diffuse),
-	specular(specular),
 	constant(constant),
 	linear(linear),
-	quadratic(quadratic)
+	quadratic(quadratic),
+	ambient(ambient),
+	diffuse(diffuse),
+	specular(specular)
 {}
 
 glm::vec3 PointLight::getPosition() const
