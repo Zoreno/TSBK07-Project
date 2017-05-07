@@ -126,6 +126,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="Collada.cpp" />
+    <ClCompile Include="CollisionComponent.cpp" />
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="ConfigFile.cpp" />
     <ClCompile Include="Engine.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="Collada.h" />
+    <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="EntityCreatedEvent.h" />
@@ -175,6 +177,7 @@
     <ClInclude Include="PixelInfo.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Quadtree.h" />
+    <ClInclude Include="QuadtreeComponent.h" />
     <ClInclude Include="RawModel.h" />
     <ClInclude Include="RenderingSystem.h" />
     <ClInclude Include="Scene.h" />

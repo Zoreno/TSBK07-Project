@@ -45,10 +45,6 @@ namespace engine
 		Model* mod = LoadModelPlus("../res/models/bunny.obj");
 		assetManager->store("bunny", mod);
 
-		entityManager->registerComponent<TransformComponent>("TransformComponent");
-		entityManager->registerComponent<ModelComponent>("ModelComponent");
-		entityManager->registerComponent<CameraComponent>("CameraComponent");
-
 		EntityHandle entity2 = entityManager->createEntity();
 		EntityHandle entity3 = entityManager->createEntity();
 

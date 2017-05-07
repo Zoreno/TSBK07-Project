@@ -2,8 +2,11 @@
 
 #include "AssetManager.h"
 #include "EntityManager.h"
+#include "Quadtree.h"
 
 #include "TransformComponent.h"
+#include "CollisionComponent.h"
+#include "QuadtreeComponent.h"
 #include "Utils.h"
 
 #include "TransformPipeline3D.h"
@@ -26,7 +29,10 @@ public:
 	AssetManager* getAssetManager() const;
 	EntityManager* getEntityManager() const;
 	EventManager* getEventManager() const;
+
+	void update();
 private:
+	Quadtree* quadtree;
 	AssetManager* AMptr;
 	EntityManager* EnMptr;
 	EventManager* EvMptr;
