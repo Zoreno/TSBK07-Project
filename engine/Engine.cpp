@@ -27,6 +27,7 @@
 #include "TerrainComponent.h"
 #include "TextureComponent.h"
 #include "PointLightComponent.h"
+#include "MaterialComponent.h"
 
 namespace engine
 {
@@ -83,6 +84,14 @@ namespace engine
 		//=====================================================================
 
 		assetManager->load<RawModel>("bunneh", "../res/models/bunnyplus.obj");
+		assetManager->load<RawModel>("tree1", "../res/models/OC12_1.obj");
+		//assetManager->load<RawModel>("tree2", "../res/models/OC12_2.obj");
+		//assetManager->load<RawModel>("tree3", "../res/models/OC12_3.obj");
+		//assetManager->load<RawModel>("tree4", "../res/models/OC12_4.obj");
+		//assetManager->load<RawModel>("tree5", "../res/models/OC12_5.obj");
+		//assetManager->load<RawModel>("tree6", "../res/models/OC12_6.obj");
+		//assetManager->load<RawModel>("tree7", "../res/models/OC12_7.obj");
+		//assetManager->load<RawModel>("tree8", "../res/models/OC12_8.obj");
 		RawModel* bunModel = assetManager->fetch<RawModel>("bunneh");
 
 		assetManager->registerAsset<Model>();
@@ -111,6 +120,7 @@ namespace engine
 		entityManager->registerComponent<TerrainComponent>("TerrainComponent");
 		entityManager->registerComponent<TextureComponent>("TextureComponent");
 		entityManager->registerComponent<PointLightComponent>("PointLightComponent");
+		entityManager->registerComponent<MaterialComponent>("MaterialComponent");
 
 		//=====================================================================
 		// Load entities
@@ -125,16 +135,17 @@ namespace engine
 		entityManager->assignComponent<TransformComponent>(terrain, glm::vec3{ 0.f,0.f,0.f });
 		entityManager->assignComponent<TerrainComponent>(terrain, "basicTerrain");
 		entityManager->assignComponent<TextureComponent>(terrain);
+		entityManager->assignComponent<MaterialComponent>(terrain, glm::vec3{ 1.f,1.f,1.f }, glm::vec3{ 1.f,1.f,1.f }, glm::vec3{ 0.f,0.f,0.f }, 64);
 
 		TextureComponent* texComp = entityManager->getComponent<TextureComponent>(terrain);
 		texComp->attach(0, "grass");
 
-		entityManager->assignComponent<TransformComponent>(entity2, glm::vec3{ 5.f,0.f,0.f }, 45.f);
-		entityManager->assignComponent<ModelComponent>(entity2, "bunneh");
+		entityManager->assignComponent<TransformComponent>(entity2, glm::vec3{ 10.f,1.f,10.f }, glm::radians(270.f), glm::vec3{1.f,0.f,0.f});
+		entityManager->assignComponent<ModelComponent>(entity2, "tree1");
 		entityManager->assignComponent<TextureComponent>(entity2);
 
 		TextureComponent* texComp2 = entityManager->getComponent<TextureComponent>(entity2);
-		texComp2->attach(0, "conc");
+		texComp2->attach(0, "grass");
 
 		entityManager->assignComponent<TransformComponent>(entity3, glm::vec3{ 10.f,0.f,0.f });
 		entityManager->assignComponent<ModelComponent>(entity3, "bunneh");
@@ -143,24 +154,26 @@ namespace engine
 		TextureComponent* texComp3 = entityManager->getComponent<TextureComponent>(entity3);
 		texComp3->attach(0, "dirt");
 
+		
 		entityManager->assignComponent<TransformComponent>(lightSource1, glm::vec3{ 10.f, 10.f, 10.f });
 		entityManager->assignComponent<PointLightComponent>(lightSource1, 
-			glm::vec3{ 0.7f, 0.0f, 0.0f },	// Ambient
-			glm::vec3{ 0.3f,0.0f,0.0f },	// Diffuse
-			glm::vec3{ 1.0f,0.0f,0.0f },	// Specular
+			glm::vec3{ 0.7f, 0.7f, 0.7f },	// Ambient
+			glm::vec3{ 0.3f,0.3f,0.3f },	// Diffuse
+			glm::vec3{ 1.0f,1.0f,1.0f },	// Specular
 			1.f,							// Constant
 			0.01f,							// Linear
 			0.003f);						// Quadratic
-
-		entityManager->assignComponent<TransformComponent>(lightSource2, glm::vec3{ 50.f, 22.f, 32.f });
+			
+		
+		entityManager->assignComponent<TransformComponent>(lightSource2, glm::vec3{ 19.f, 15.f, 111.f });
 		entityManager->assignComponent<PointLightComponent>(lightSource2,
-			glm::vec3{ 0.0f, 0.7f, 0.0f },	// Ambient
-			glm::vec3{ 0.0f,0.3f,0.0f },	// Diffuse
-			glm::vec3{ 0.0f,1.0f,0.0f },	// Specular
+			glm::vec3{ 0.7f, 0.7f, 0.7f },	// Ambient
+			glm::vec3{ 0.3f,0.3f,0.3f },	// Diffuse
+			glm::vec3{ 1.0f,1.0f,1.0f },	// Specular
 			1.f,							// Constant
 			0.01f,							// Linear
 			0.003f);						// Quadratic
-
+			
 
 		// Detta tar hand om instansiering och sånt.
 		entityManager->registerSystem<CameraController>();
@@ -255,8 +268,6 @@ namespace engine
 				break;
 				}
 			}
-
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			entityManager->update(static_cast<float>(timeDelta));
 

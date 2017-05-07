@@ -53,14 +53,56 @@ uniform vec3 		viewPos;
 uniform int numLights;
 
 // Light data. TODO: Variable length buffer with SSBO
-uniform Light lights[64];
+uniform Light lights[32];
+
+// Shadow depth cube maps
+uniform samplerCube depthMaps[32];
 
 // Material Properties
 uniform Material material;
 
+// Far plane used by shadows
+uniform float far_plane;
+
 //=============================================================================
 // Functions
 //=============================================================================
+
+float calculateShadow(int i)
+{
+	vec3 fragToLight = FragPos - lights[i].position;
+	
+	float currentDepth = length(fragToLight);
+	
+	float cosTheta = clamp(dot(normalize(normal), normalize(-fragToLight)), 0, 1);
+	
+	float bias = 0.005*tan(acos(cosTheta));
+	bias = clamp(bias, 0.0, 0.01);
+	
+	float shadow = 0.0;
+	float samples = 4.0;
+	float offset = 0.1;
+	
+	for(float x = -offset; x < offset; x+= offset/(samples*0.5))
+	{
+		for(float y = -offset; y < offset; y+= offset/(samples*0.5))
+		{
+			for(float z = -offset; z < offset; z+= offset/(samples*0.5))
+			{
+				float closestDepth = texture(depthMaps[i], fragToLight + vec3(x,y,z)).r;
+				closestDepth *= far_plane;
+				if(currentDepth - bias > closestDepth)
+				{
+					shadow += 2.0;
+				}
+			}
+		}
+	}
+	
+	shadow /= pow(samples, 3.0);
+	
+	return shadow;
+}
 
 float calculateAttenuation(float distance, Light light)
 {
@@ -96,8 +138,16 @@ void main()
 		float spec = pow(max(dot(viewDir, reflectDir), 0.0f), material.shininess);
 		vec3 specularColor = lights[i].specular * spec * material.specular;
 	
+		// Calculate Shadow factor.
+		float shadow = calculateShadow(i);
+		
+		shadow = clamp(shadow, 0.0, 1.0);
+		
+		// Calulate Attenuatuon factor.
+		float attenuation = calculateAttenuation(lightDistance, lights[i]);
+	
 		// Add the results to the resulting light color
-		resColor += (ambientColor + diffuseColor + specularColor)*calculateAttenuation(lightDistance, lights[i]);
+		resColor += (ambientColor + (1.0 - shadow)*(diffuseColor + specularColor))*attenuation;
 	}
 	
 	// Sample texture to get object color.
