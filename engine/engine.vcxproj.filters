@@ -72,6 +72,7 @@
     </Filter>
     <Filter Include="Source Files\Quadtree">
       <UniqueIdentifier>{26110809-019e-436f-879f-b27583ea122e}</UniqueIdentifier>
+	</Filter>
     <Filter Include="Header Files\UI">
       <UniqueIdentifier>{dfd24f81-6d4e-42cd-a397-07e8e36548fa}</UniqueIdentifier>
     </Filter>
@@ -345,6 +346,7 @@
     </ClInclude>
     <ClInclude Include="CollisionEvent.h">
       <Filter>Header Files\Standard Events</Filter>
+	</ClInclude>
     <ClInclude Include="UIDetail.h">
       <Filter>Header Files\UI\Util</Filter>
     </ClInclude>
