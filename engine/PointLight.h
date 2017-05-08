@@ -14,10 +14,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "EngineDLL.h"
+
 /**
  * @brief Point light representation
  */
-class PointLight
+class ENGINE_API PointLight
 {
 public:
 	/**

@@ -10,7 +10,7 @@ namespace userinterface
 {
 	class UIManager;
 
-	class UIElement : public detail::IntRect
+	class ENGINE_API UIElement : public detail::IntRect
 	{
 	public:
 		UIElement() = delete;

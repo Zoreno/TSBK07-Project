@@ -20,7 +20,7 @@
  /**
   * @brief Class representing an OpenAL audio source
   */
-class AudioSource
+class ENGINE_API AudioSource
 {
 public:
 	/**

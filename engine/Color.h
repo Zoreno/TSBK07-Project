@@ -9,10 +9,12 @@
 
 #include <utility>
 
+#include "EngineDLL.h"
+
  /**
   * @brief Color class
   */
-class Color
+class ENGINE_API Color
 {
 public:
 

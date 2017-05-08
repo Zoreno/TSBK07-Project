@@ -15,7 +15,7 @@ uiM{nullptr}
 	evM = new EventManager{};
 	uiM = new userinterface::UIManager(window->getWidth(), window->getHeight());
 	enM = new EntityManager{ evM, asM, uiM };
-	quadtree = new Quadtree{enM, evM, glm::vec2{0, 0}, 100, 100};
+	quadtree = new Quadtree{enM, evM, glm::vec2{100, 150}, 200, 300};
 
 	evM->addSubscriber<CollisionEvent>(this);
 
@@ -28,6 +28,10 @@ uiM{nullptr}
 	enM->registerComponent<TextureComponent>("TextureComponent");
 	enM->registerComponent<PointLightComponent>("PointLightComponent");
 	enM->registerComponent<MaterialComponent>("MaterialComponent");
+
+	// Detta tar hand om instansiering och sånt.
+	enM->registerSystem<CameraController>();
+	enM->registerSystem<RenderingSystem>(window);
 }
 
 Scene::~Scene()

@@ -12,7 +12,7 @@
 /**
  * @brief TGA file representation. 
  */
-class TGA : public TextureFile
+class ENGINE_API TGA : public TextureFile
 {
 public:
 	

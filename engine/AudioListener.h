@@ -5,7 +5,7 @@
 
 #include "AudioException.h"
 
-class AudioListener
+class ENGINE_API AudioListener
 {
 public:
 	AudioListener();

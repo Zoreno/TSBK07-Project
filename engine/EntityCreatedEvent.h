@@ -6,7 +6,7 @@
 /**
 * @brief Event thrown by EventManager when a new entity is created.
 */
-class EntityCreatedEvent : public Event
+class ENGINE_API EntityCreatedEvent : public Event
 {
 public:
 	/**

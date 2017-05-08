@@ -16,7 +16,7 @@
  * @tparam T Event type.
  */
 template <typename T>
-class Subscriber
+class ENGINE_API Subscriber
 {
 public:
 

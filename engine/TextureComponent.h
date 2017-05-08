@@ -1,10 +1,11 @@
 #pragma once
 #include "Component.h"
+#include "EngineDLL.h"
 #include <GL/glew.h>
 #include <map>
 #include <rapidxml/rapidxml.hpp>
 
-class TextureComponent : public Component
+class ENGINE_API TextureComponent : public Component
 {
 public:
 	TextureComponent();

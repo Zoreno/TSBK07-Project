@@ -2,7 +2,7 @@
 
 #include "Event.h"
 
-class KeyEvent : public Event
+class ENGINE_API KeyEvent : public Event
 {
 public:
 	int key;

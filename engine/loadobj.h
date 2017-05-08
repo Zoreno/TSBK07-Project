@@ -1,5 +1,6 @@
 #ifndef loadobj_h
 #define loadobj_h
+#include "EngineDLL.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,25 +35,25 @@ extern "C" {
 
 	// Basic model loading
 
-	Model* LoadModel(char* name); // Old version, single part OBJ only!
-	Model** LoadModel2(char* name); // Multi-part OBJ!
+	ENGINE_API Model* LoadModel(char* name); // Old version, single part OBJ only!
+	ENGINE_API Model** LoadModel2(char* name); // Multi-part OBJ!
 
 									// Extended, load model and upload to arrays!
 									// DrawModel is for drawing such preloaded models.
 
-	void DrawModel(Model *m, GLuint program, char* vertexVariableName, char* normalVariableName, char* texCoordVariableName);
-	void DrawWireframeModel(Model *m, GLuint program, char* vertexVariableName, char* normalVariableName, char* texCoordVariableName);
+	ENGINE_API void DrawModel(Model *m, GLuint program, char* vertexVariableName, char* normalVariableName, char* texCoordVariableName);
+	ENGINE_API void DrawWireframeModel(Model *m, GLuint program, char* vertexVariableName, char* normalVariableName, char* texCoordVariableName);
 
-	Model* LoadModelPlus(char* name);
-	Model** LoadModel2Plus(char* name);
+	ENGINE_API Model* LoadModelPlus(char* name);
+	ENGINE_API Model** LoadModel2Plus(char* name);
 
 	// Utility functions that you may need if you want to modify the model.
 
-	void EnableModelForShader(Model *m, GLuint program, // NOT TESTED
+	ENGINE_API void EnableModelForShader(Model *m, GLuint program, // NOT TESTED
 		char* vertexVariableName,
 		char* normalVariableName,
 		char* texCoordVariableName);
-	Model* LoadDataToModel(
+	ENGINE_API Model* LoadDataToModel(
 		GLfloat *vertices,
 		GLfloat *normals,
 		GLfloat *texCoords,
@@ -60,11 +61,11 @@ extern "C" {
 		GLuint *indices,
 		int numVert,
 		int numInd);
-	void ReloadModelData(Model *m);
+	ENGINE_API void ReloadModelData(Model *m);
 
-	void CenterModel(Model *m);
-	void ScaleModel(Model *m, float sx, float sy, float sz);
-	void DisposeModel(Model *m);
+	ENGINE_API void CenterModel(Model *m);
+	ENGINE_API void ScaleModel(Model *m, float sx, float sy, float sz);
+	ENGINE_API void DisposeModel(Model *m);
 
 #ifdef __cplusplus
 }

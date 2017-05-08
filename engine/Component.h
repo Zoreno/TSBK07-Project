@@ -6,10 +6,12 @@
 */
 #pragma once
 
+#include "EngineDLL.h"
+
 /**
  * @brief Component base class.
  */
-class Component
+class ENGINE_API Component
 {
 public:
 	/**

@@ -9,10 +9,12 @@
 
 #include <stdexcept>
 
+#include "EngineDLL.h"
+
 /**
  * @brief Class for representing audio errors
  */
-class AudioException : public std::logic_error
+class ENGINE_API AudioException : public std::logic_error
 {
 public:
 	using std::logic_error::logic_error;

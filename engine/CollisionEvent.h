@@ -2,7 +2,7 @@
 #include "Event.h"
 #include "EntityManager.h"
 
-class CollisionEvent :
+class ENGINE_API CollisionEvent :
 	public Event
 {
 public:

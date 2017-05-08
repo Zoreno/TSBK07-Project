@@ -12,6 +12,8 @@
 #include <AL/al.h>
 #include <AL/alc.h>
 
+#include "EngineDLL.h"
+
 /**
  * @brief WAV File structure header.
  */
@@ -107,7 +109,7 @@ struct WAVHeader
 /**
  * @brief Internal representation of a Wave file.
  */
-class WaveFile
+class ENGINE_API WaveFile
 {
 public:
 	/**

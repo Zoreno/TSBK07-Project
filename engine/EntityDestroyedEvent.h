@@ -6,7 +6,7 @@
 /**
 * @brief Event thrown by EventManager when an entity is destroyed.
 */
-class EntityDestroyedEvent : public Event
+class ENGINE_API EntityDestroyedEvent : public Event
 {
 public:
 	/**

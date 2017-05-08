@@ -27,7 +27,7 @@ namespace userinterface
 		CharMap characters;
 	};
 
-	class UITextRenderer
+	class ENGINE_API UITextRenderer
 	{
 	public:
 		explicit UITextRenderer(unsigned int witdth, unsigned int height);

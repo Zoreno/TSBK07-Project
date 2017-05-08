@@ -8,7 +8,7 @@
 
 #define MAX_LIGHTS 32
 
-class RenderingSystem : public System, public Subscriber<KeyEvent>
+class ENGINE_API RenderingSystem : public System, public Subscriber<KeyEvent>
 {
 public:
 
@@ -25,7 +25,7 @@ public:
 	Window* window;
 	const GLfloat FOV{ glm::radians(45.f) };
 	const GLfloat NEAR_PLANE{ 0.1f };
-	const GLfloat FAR_PLANE{ 100.f };
+	const GLfloat FAR_PLANE{ 200.f };
 
 private:
 

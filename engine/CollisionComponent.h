@@ -1,7 +1,9 @@
 #pragma once
 #include "Component.h"
 #include <rapidxml/rapidxml.hpp>
-class CollisionComponent :
+#include "EngineDLL.h"
+
+class ENGINE_API CollisionComponent :
 	public Component
 {
 public:

@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Component.h"
-
+#include "EngineDLL.h"
 #include <string>
 #include <rapidxml/rapidxml.hpp>
 
-class ModelComponent : public Component
+class ENGINE_API ModelComponent : public Component
 {
 public:
 	explicit ModelComponent(const std::string& ID) : ID{ID} {}

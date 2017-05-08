@@ -9,10 +9,12 @@
 
 #include <glm/glm.hpp>
 
+#include "EngineDLL.h"
+
 /**
  * @brief Material representation
  */
-class Material
+class ENGINE_API Material
 {
 public:
 	/**

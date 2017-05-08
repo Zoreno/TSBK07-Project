@@ -18,7 +18,7 @@
 #include "VertexBufferObject.h"
 #include "ShaderProgram.h"
 
-class RawModel
+class ENGINE_API RawModel
 {
 public:
 	explicit RawModel(const char* fileName);

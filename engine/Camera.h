@@ -14,6 +14,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "EngineDLL.h"
+
 /**
  * @brief Enumeration of the directions the camera can travel.
  */
@@ -83,7 +85,7 @@ const GLfloat SENSITIVITY = 0.25f;
 /**
  * @brief Class representing a camera.
  */
-class Camera
+class ENGINE_API Camera
 {
 public:
 

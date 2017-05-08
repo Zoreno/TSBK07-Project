@@ -14,7 +14,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-class VertexBufferObject
+#include "EngineDLL.h"
+
+class ENGINE_API VertexBufferObject
 {
 public:
 	explicit VertexBufferObject(GLenum target);

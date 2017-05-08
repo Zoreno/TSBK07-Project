@@ -13,7 +13,7 @@
 
 namespace userinterface
 {
-	class UIManager
+	class ENGINE_API UIManager
 	{
 	public:
 		UIManager(int width, int height);

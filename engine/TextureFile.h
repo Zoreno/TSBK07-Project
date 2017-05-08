@@ -9,11 +9,12 @@
 
 #include <vector>
 #include "PixelInfo.h"
+#include "EngineDLL.h"
 
 /**
  * @brief Abstract base class for representing a texture file
  */
-class TextureFile
+class ENGINE_API TextureFile
 {
 public:
 

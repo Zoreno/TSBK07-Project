@@ -3,7 +3,7 @@
 
 namespace userinterface
 {
-	class UIProgressBar : public UIElement
+	class ENGINE_API UIProgressBar : public UIElement
 	{
 	public:
 		UIProgressBar(

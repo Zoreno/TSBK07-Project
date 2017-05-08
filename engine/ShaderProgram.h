@@ -21,7 +21,7 @@
 /**
  * @brief Shader Program Exception
  */
-class ShaderProgramException : public std::runtime_error
+class ENGINE_API ShaderProgramException : public std::runtime_error
 {
 public:
 	using std::runtime_error::runtime_error;

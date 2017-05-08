@@ -8,13 +8,13 @@
 
 
 //Error class
-class Quadtree_error : public std::logic_error {
+class ENGINE_API Quadtree_error : public std::logic_error {
 	using std::logic_error::logic_error;
 };
 class Quadroot;
 class Quadleaf;
 
-class Quadtree : public Subscriber<EntityDestroyedEvent>, public Subscriber<ComponentAssignedEvent<TransformComponent>>
+class ENGINE_API Quadtree : public Subscriber<EntityDestroyedEvent>, public Subscriber<ComponentAssignedEvent<TransformComponent>>
 {
 public:
 	Quadtree(EntityManager* entMan, EventManager* evMan, glm::vec2 position, uint32_t width, uint32_t height);
@@ -34,7 +34,7 @@ private:
 	EventManager* _evM;
 };
 
-class Quadroot
+class ENGINE_API Quadroot
 {
 public:
 	Quadroot(EntityManager* entMan, EventManager* evMan, glm::vec2 nw = glm::vec2{}, glm::vec2 ne = glm::vec2{}, glm::vec2 sw = glm::vec2{}, glm::vec2 se = glm::vec2{});
@@ -77,7 +77,7 @@ protected:
 	Quadleaf* _sw{ nullptr };
 };
 
-class Quadleaf : public Quadroot
+class ENGINE_API Quadleaf : public Quadroot
 {
 public:
 	explicit Quadleaf(EntityManager* entMan, EventManager* evMan, Quadroot* par, uint8_t quad);

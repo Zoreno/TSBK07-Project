@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include <rapidxml/rapidxml.hpp>
 
-class PointLightComponent : public Component
+class ENGINE_API PointLightComponent : public Component
 {
 public:
 	PointLightComponent(

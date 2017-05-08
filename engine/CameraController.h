@@ -5,7 +5,7 @@
 #include "Subscriber.h"
 #include "EntityManager.h"
 
-class CameraController : public System, public Subscriber<KeyEvent>, public Subscriber<MouseEvent>
+class ENGINE_API CameraController : public System, public Subscriber<KeyEvent>, public Subscriber<MouseEvent>
 {
 public:
 

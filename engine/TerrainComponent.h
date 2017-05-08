@@ -4,7 +4,7 @@
 #include "TerrainModel.h"
 #include <rapidxml/rapidxml.hpp>
 
-class TerrainComponent : public Component
+class ENGINE_API TerrainComponent : public Component
 {
 public:
 	explicit TerrainComponent(const std::string& ID) : ID{ ID } {}

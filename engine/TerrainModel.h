@@ -7,7 +7,7 @@
 
 class TGA;
 
-class TerrainModel
+class ENGINE_API TerrainModel
 {
 public:
 	explicit TerrainModel(const char* filePath);

@@ -1,9 +1,10 @@
 #pragma once
 #include "Component.h"
+#include "EngineDLL.h"
 #include <rapidxml/rapidxml.hpp>
 #include <cstdint>
 
-class QuadtreeComponent :
+class ENGINE_API QuadtreeComponent :
 	public Component
 {
 public:

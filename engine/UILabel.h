@@ -7,7 +7,7 @@ namespace userinterface
 {
 	class UIManager;
 
-	class UILabel : public UIElement
+	class ENGINE_API UILabel : public UIElement
 	{
 	public:
 		UILabel(UIManager* manager, const std::string& identifier, int width, int height, int posX, int posY);

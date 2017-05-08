@@ -11,7 +11,7 @@
 
 #include "TransformPipeline3D.h"
 
-class TransformComponent : public Component
+class ENGINE_API TransformComponent : public Component
 {
 public:
 	explicit TransformComponent(glm::vec3 position = glm::vec3{ 0.f,0.f,0.f }, float angle = 0.f, glm::vec3 rotationAxis = glm::vec3{ 0.f,1.f,0.f }, glm::vec3 scale = glm::vec3{ 1.f,1.f,1.f })

@@ -1,8 +1,9 @@
 #pragma once
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include "EngineDLL.h"
 
-class Timer
+class ENGINE_API Timer
 {
 public:
 	Timer();

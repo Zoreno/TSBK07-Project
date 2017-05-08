@@ -5,6 +5,7 @@
 #include <rapidxml/rapidxml.hpp>
 
 #include <vector>
+#include "EngineDLL.h"
 
 namespace collada
 {
@@ -189,35 +190,35 @@ namespace collada
 		ImagesLibrary imagesLibrary;
 	};
 
-	void loadFloatArray(Node* floatArrayNode, FloatArray* floatArray);
+	ENGINE_API void loadFloatArray(Node* floatArrayNode, FloatArray* floatArray);
 
-	void loadNameArray(Node* nameArrayNode, NameArray* nameArray);
+	ENGINE_API void loadNameArray(Node* nameArrayNode, NameArray* nameArray);
 
-	void loadParam(Node* paramNode, Param* param);
+	ENGINE_API void loadParam(Node* paramNode, Param* param);
 
-	void loadAccessor(Node* accessorNode, Accessor* accessor);
+	ENGINE_API void loadAccessor(Node* accessorNode, Accessor* accessor);
 
-	void loadTechnique_Common(Node* techniqueCommonNode, Technique_Common* techniqueCommon);
+	ENGINE_API void loadTechnique_Common(Node* techniqueCommonNode, Technique_Common* techniqueCommon);
 
-	void loadSource(Node* sourceNode, Source* source);
+	ENGINE_API void loadSource(Node* sourceNode, Source* source);
 
-	void loadInput(Node* inputNode, Input* input);
+	ENGINE_API void loadInput(Node* inputNode, Input* input);
 
-	void loadVertices(Node* verticesNode, Vertices* vertices);
+	ENGINE_API void loadVertices(Node* verticesNode, Vertices* vertices);
 
-	void loadP(Node* pNode, P* p);
+	ENGINE_API void loadP(Node* pNode, P* p);
 
-	void loadTriangles(Node* trianglesNode, Triangles* triangles);
+	ENGINE_API void loadTriangles(Node* trianglesNode, Triangles* triangles);
 
-	void loadVCount(Node* vCountNode, VCount* vCount);
+	ENGINE_API void loadVCount(Node* vCountNode, VCount* vCount);
 
-	void loadPolyList(Node* polyListNode, PolyList* polyList);
+	ENGINE_API void loadPolyList(Node* polyListNode, PolyList* polyList);
 
-	void loadMesh(Node* meshNode, Mesh* mesh);
+	ENGINE_API void loadMesh(Node* meshNode, Mesh* mesh);
 
-	void loadGeometry(Node* geometryNode, Geometry* geometry);
+	ENGINE_API void loadGeometry(Node* geometryNode, Geometry* geometry);
 
-	void loadGeometryLibrary(Node* geometryLibraryNode, GeometryLibrary* geometryLibrary);
+	ENGINE_API void loadGeometryLibrary(Node* geometryLibraryNode, GeometryLibrary* geometryLibrary);
 
-	void loadCOLLADA(const char* fileName, COLLADA* collada);
+	ENGINE_API void loadCOLLADA(const char* fileName, COLLADA* collada);
 }

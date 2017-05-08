@@ -75,7 +75,7 @@ EntityHandle getNextHandle();
 /**
  * @brief Class to represent an entity.
  */
-class Entity
+class ENGINE_API Entity
 {
 	friend EntityManager;
 public:
@@ -135,7 +135,7 @@ typedef Entity* EntityPtr;
 /**
  * @brief Base class for the component pools
  */
-class BasePool
+class ENGINE_API BasePool
 {
 public:
 	/**
@@ -264,7 +264,7 @@ private:
 /**
  * @brief Class containing all type IDs for components.
  */
-class ComponentTypeMap
+class ENGINE_API ComponentTypeMap
 {
 public:
 	/**
@@ -349,12 +349,12 @@ private:
 /**
  * @brief Class managing all entity-component based events.
  */
-class EventManager
+class ENGINE_API EventManager
 {
 	/**
 	 * @brief Base class representing an internal event channel.
 	 */
-	class InternalEventChannelBase
+	class ENGINE_API InternalEventChannelBase
 	{
 	public:
 		/**
@@ -493,7 +493,7 @@ private:
 /**
  * @brief Entity Manager Exception class.
  */
-class EntityManagerException : public std::logic_error
+class ENGINE_API EntityManagerException : public std::logic_error
 {
 public:
 	using std::logic_error::logic_error;
@@ -502,7 +502,7 @@ public:
 /**
  * @brief Manager for all entities, components and systems.
  */
-class EntityManager
+class ENGINE_API EntityManager
 {
 public:
 

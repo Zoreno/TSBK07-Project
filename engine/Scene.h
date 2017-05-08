@@ -20,7 +20,7 @@
 #include "CameraController.h"
 #include "CollisionEvent.h"
 
-class Scene : public Subscriber<CollisionEvent>
+class ENGINE_API Scene : public Subscriber<CollisionEvent>
 {
 public:
 	Scene() = delete;

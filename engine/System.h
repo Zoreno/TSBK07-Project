@@ -20,7 +20,7 @@ typedef uint32_t EntityHandle;
 /**
  * @brief System Base Class.
  */
-class System
+class ENGINE_API System
 {
 public:
 	/**

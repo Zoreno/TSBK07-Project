@@ -9,11 +9,12 @@
 
 #include <vector>
 #include "TextureFile.h"
+#include "EngineDLL.h"
 
 /**
  * @brief BMP (Bitmap) representation. 
  */
-class BMP : public TextureFile
+class ENGINE_API BMP : public TextureFile
 {
 public:
 

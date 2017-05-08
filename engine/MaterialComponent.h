@@ -5,7 +5,7 @@
 
 #include <rapidxml/rapidxml.hpp>
 
-class MaterialComponent : public Component
+class ENGINE_API MaterialComponent : public Component
 {
 public:
 	MaterialComponent(

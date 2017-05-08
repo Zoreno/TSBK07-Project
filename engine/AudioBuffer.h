@@ -12,11 +12,12 @@
 #include <AL/al.h>
 
 #include "AudioException.h"
+#include "EngineDLL.h"
 
 /**
  * @brief Class Representing an openAL audio buffer
  */
-class AudioBuffer
+class ENGINE_API AudioBuffer
 {
 public:
 	/**

@@ -10,7 +10,7 @@ namespace userinterface
 {
 	class UIManager;
 
-	class UI2DRenderingSurface
+	class ENGINE_API UI2DRenderingSurface
 	{
 	public:
 		UI2DRenderingSurface(UIManager* manager, int width, int height);

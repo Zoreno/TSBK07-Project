@@ -17,7 +17,7 @@
 #include "RawModel.h"
 
 //Error class
-class AssetManager_error : public std::logic_error {
+class ENGINE_API AssetManager_error : public std::logic_error {
 	using std::logic_error::logic_error;
 };
 
@@ -26,7 +26,7 @@ class AssetManager;
 /**
 * @brief Base class for the component pools
 */
-class AssetBase
+class ENGINE_API AssetBase
 {
 public:
 	/**
@@ -171,7 +171,7 @@ void AssetPool<T>::removeAsset(std::string assetID)
 	_assets.erase(it);
 }
 
-class AssetManager
+class ENGINE_API AssetManager
 {
 public:
 	//Only default constructor needed

@@ -5,7 +5,7 @@
 #include "Camera.h"
 #include <rapidxml/rapidxml.hpp>
 
-class CameraComponent : public Component
+class ENGINE_API CameraComponent : public Component
 {
 public:
 	CameraComponent() = default;

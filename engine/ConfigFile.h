@@ -12,10 +12,12 @@
 #include <stdexcept>
 #include <sstream>
 
+#include "EngineDLL.h"
+
 /**
  * @brief Configuration file key not found exception
  */
-class ConfigFileKeyException : std::logic_error
+class ENGINE_API ConfigFileKeyException : std::logic_error
 {
 public:
 	using std::logic_error::logic_error;
@@ -33,7 +35,7 @@ public:
  * Only one entry per line.
  * Blank lines and lines beginning with // are skipped.
  */
-class ConfigFile
+class ENGINE_API ConfigFile
 {
 public:
 	/**

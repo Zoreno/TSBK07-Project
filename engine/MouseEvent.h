@@ -2,7 +2,7 @@
 #include "Event.h"
 #include <GL/glew.h>
 
-class MouseEvent : public Event
+class ENGINE_API MouseEvent : public Event
 {
 public:
 	GLfloat posX;
