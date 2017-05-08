@@ -112,7 +112,7 @@ namespace engine
 				break;
 				case EventType::GAINED_FOCUS:
 				{
-					window->setCursorMode(CursorMode::HIDDEN);
+					window->setCursorMode(CursorMode::DISABLED);
 				}
 				break;
 				case EventType::LOST_FOCUS:
