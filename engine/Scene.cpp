@@ -1,14 +1,19 @@
 #include "Scene.h"
 #include <stdio.h>
+#include "TerrainComponent.h"
+#include "TextureComponent.h"
+#include "PointLightComponent.h"
+#include "MaterialComponent.h"
 
 
-Scene::Scene(AssetManager* AM) :
+Scene::Scene(AssetManager* AM, Window* window) :
 AMptr{AM},
 enM{nullptr},
 evM{nullptr}
 {
 	evM = new EventManager{};
-	enM = new EntityManager{evM, AMptr};
+	uiM = new userinterface::UIManager(window->getWidth(), window->getHeight());
+	enM = new EntityManager{ evM, AMptr, uiM};
 	quadtree = new Quadtree{enM, evM, glm::vec2{0, 0}, 100, 100};
 
 	evM->addSubscriber<CollisionEvent>(this);
@@ -18,6 +23,10 @@ evM{nullptr}
 	enM->registerComponent<ModelComponent>("ModelComponent");
 	enM->registerComponent<CameraComponent>("CameraComponent");
 	enM->registerComponent<QuadtreeComponent>("QuadtreeComponent");
+	enM->registerComponent<TerrainComponent>("TerrainComponent");
+	enM->registerComponent<TextureComponent>("TextureComponent");
+	enM->registerComponent<PointLightComponent>("PointLightComponent");
+	enM->registerComponent<MaterialComponent>("MaterialComponent");
 }
 
 Scene::~Scene()
@@ -44,6 +53,11 @@ EntityManager* Scene::getEntityManager() const
 EventManager* Scene::getEventManager() const
 {
 	return evM;
+}
+
+userinterface::UIManager * Scene::getUIManager() const
+{
+	return uiM;;
 }
 
 void Scene::update()

@@ -24,7 +24,7 @@ class Scene : public Subscriber<CollisionEvent>
 {
 public:
 	Scene() = delete;
-	explicit Scene(AssetManager* AsM);
+	explicit Scene(AssetManager* AsM, Window* window);
 	~Scene();
 
 	void handleEvent(const CollisionEvent& ev) override;
@@ -32,6 +32,7 @@ public:
 	AssetManager* getAssetManager() const;
 	EntityManager* getEntityManager() const;
 	EventManager* getEventManager() const;
+	userinterface::UIManager* getUIManager() const;
 
 	void update();
 private:
@@ -39,5 +40,6 @@ private:
 	AssetManager* AMptr;
 	EntityManager* enM;
 	EventManager* evM;
+	userinterface::UIManager* uiM;
 };
 

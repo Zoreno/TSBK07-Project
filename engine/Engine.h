@@ -7,7 +7,6 @@
 
 #include "Color.h"
 
-#include "TextRenderer.h"
 #include "Scene.h"
 #include "EntityManager.h"
 
@@ -52,9 +51,6 @@ namespace engine
 		SceneMap Scenes;
 		std::string activeScene;
 		AssetManager* assetManager{nullptr};
-
-
-		userinterface::UIManager* uiManager{};
 
 		Timer timer{};
 	};

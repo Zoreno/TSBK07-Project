@@ -41,11 +41,16 @@ namespace engine
 
 		dumpInfo(std::cout);
 
+		assetManager = new AssetManager{};
+		Scene* testScene = createScene("Test1");
+
+		EntityManager* entityManager = testScene->getEntityManager();
+		EventManager* eventManager = testScene->getEventManager();
+		userinterface::UIManager* uiManager = testScene->getUIManager();
+
 		//=====================================================================
 		// UI setup
 		//=====================================================================
-
-		uiManager = new userinterface::UIManager(window->getWidth(), window->getHeight());
 
 		userinterface::UILabel* coordsLabel = uiManager->addElement<userinterface::UILabel>("coords", 320, 32, 0, 1017-32);
 
@@ -68,12 +73,6 @@ namespace engine
 		bar->setFillColor(Color{ 0.5f });
 		bar->setBarColor(Color{ 1.f,0.f,0.f });
 		bar->setTextColor(Color{ 0.f,0.f,0.f });
-
-		assetManager = new AssetManager{};
-		Scene* testScene = createScene("Test1");
-
-		EntityManager* entityManager = testScene->getEntityManager();
-		EventManager* eventManager = testScene->getEventManager();
 
 		//=====================================================================
 		// AssetManager setup
@@ -114,15 +113,7 @@ namespace engine
 		// EntityManager setup
 		//=====================================================================
 
-		//entityManager = new EntityManager{ eventManager , assetManager, uiManager };
-
-		entityManager->registerComponent<TransformComponent>("TransformComponent");
-		entityManager->registerComponent<ModelComponent>("ModelComponent");
-		entityManager->registerComponent<CameraComponent>("CameraComponent");
-		entityManager->registerComponent<TerrainComponent>("TerrainComponent");
-		entityManager->registerComponent<TextureComponent>("TextureComponent");
-		entityManager->registerComponent<PointLightComponent>("PointLightComponent");
-		entityManager->registerComponent<MaterialComponent>("MaterialComponent");
+		// Görs i scene's konstruktor, registrerar alla saker där
 
 		//=====================================================================
 		// Load entities
@@ -195,6 +186,7 @@ namespace engine
 		while (!window->shouldClose())
 		{
 			Scene* currentScene = Scenes.find(activeScene)->second;
+			userinterface::UIManager* uiManager = currentScene->getUIManager();
 
 			currentScene->update();
 			GLfloat timeDelta = timer.reset();
@@ -312,7 +304,7 @@ namespace engine
 		if (assetManager == nullptr)
 			throw Engine_error("Cannot create scene. AssetManager is uninitialized");
 
-		Scene* scenePtr = new Scene{ assetManager };
+		Scene* scenePtr = new Scene{ assetManager, window };
 
 		Scenes.emplace(ID, scenePtr);
 
