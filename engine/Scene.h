@@ -37,7 +37,7 @@ public:
 	void update();
 private:
 	Quadtree* quadtree;
-	AssetManager* AMptr;
+	AssetManager* asM;
 	EntityManager* enM;
 	EventManager* evM;
 	userinterface::UIManager* uiM;

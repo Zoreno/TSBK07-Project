@@ -278,7 +278,7 @@ namespace engine
 
 			glDisable(GL_DEPTH_TEST);
 
-			//uiManager->draw();
+			uiManager->draw();
 
 			glEnable(GL_DEPTH_TEST);
 
