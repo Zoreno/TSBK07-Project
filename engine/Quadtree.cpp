@@ -683,6 +683,46 @@ void Quadroot::delEnt(uint32_t pos, EntityHandle ent)
 	}
 }
 
+void Quadroot::collapseCheck()
+{
+	if (_sw == nullptr) return;
+
+	if(_nw->getTotalEntCount() + _ne->getTotalEntCount() + _sw->getTotalEntCount() + _se->getTotalEntCount() + _entCount <= 3)
+	{
+		_entities = getAllEntities();
+		_entCount = _entities.size();
+		delete _nw;
+		delete _ne;
+		delete _sw;
+		delete _se;
+		_nw = nullptr;
+		_ne = nullptr;
+		_sw = nullptr;
+		_se = nullptr;
+	}
+}
+
+std::vector<EntityHandle> Quadroot::getAllEntities()
+{
+	std::vector<EntityHandle> tmpVec = _entities;
+
+	if (_sw == nullptr)
+		return tmpVec;
+	else
+	{
+		std::vector<EntityHandle> nwVec = _nw->getAllEntities();
+		tmpVec.insert(tmpVec.end(), nwVec.begin(), nwVec.end());
+		std::vector<EntityHandle> neVec = _ne->getAllEntities();
+		tmpVec.insert(tmpVec.end(), neVec.begin(), neVec.end());
+		std::vector<EntityHandle> swVec = _sw->getAllEntities();
+		tmpVec.insert(tmpVec.end(), swVec.begin(), swVec.end());
+		std::vector<EntityHandle> seVec = _se->getAllEntities();
+		tmpVec.insert(tmpVec.end(), seVec.begin(), seVec.end());
+
+		return tmpVec;
+	}
+}
+
 void Quadroot::collisionCheck()
 {
 	if (_sw != nullptr)

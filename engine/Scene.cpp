@@ -7,13 +7,14 @@
 
 
 Scene::Scene(AssetManager* AM, Window* window) :
-AMptr{AM},
+asM{AM},
 enM{nullptr},
-evM{nullptr}
+evM{nullptr},
+uiM{nullptr}
 {
 	evM = new EventManager{};
 	uiM = new userinterface::UIManager(window->getWidth(), window->getHeight());
-	enM = new EntityManager{ evM, AMptr, uiM};
+	enM = new EntityManager{ evM, asM, uiM };
 	quadtree = new Quadtree{enM, evM, glm::vec2{0, 0}, 100, 100};
 
 	evM->addSubscriber<CollisionEvent>(this);
@@ -33,6 +34,7 @@ Scene::~Scene()
 {
 	delete enM;
 	delete evM;
+	delete uiM;
 }
 
 void Scene::handleEvent(const CollisionEvent& ev)
@@ -42,7 +44,7 @@ void Scene::handleEvent(const CollisionEvent& ev)
 
 AssetManager* Scene::getAssetManager() const
 {
-	return AMptr;
+	return asM;
 }
 
 EntityManager* Scene::getEntityManager() const
