@@ -20,7 +20,6 @@ evM{nullptr}
 	enM->registerComponent<QuadtreeComponent>("QuadtreeComponent");
 }
 
-
 Scene::~Scene()
 {
 	delete enM;

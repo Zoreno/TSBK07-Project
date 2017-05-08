@@ -741,7 +741,7 @@ bool Quadroot::hasOverlap(EntityHandle ent1, EntityHandle ent2) const
 	if (pos1.x - reach1 < pos2.x + reach2 &&
 		pos1.x + reach1 > pos2.x - reach2 &&
 		pos1.z - reach1 < pos2.z + reach2 &&
-		pos1.z + reach1 > pos2.y - reach2) 
+		pos1.z + reach1 > pos2.z - reach2) 
 	{
 		return true;
 	}
