@@ -72,7 +72,7 @@
     </Filter>
     <Filter Include="Source Files\Quadtree">
       <UniqueIdentifier>{26110809-019e-436f-879f-b27583ea122e}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="Header Files\UI">
       <UniqueIdentifier>{dfd24f81-6d4e-42cd-a397-07e8e36548fa}</UniqueIdentifier>
     </Filter>
@@ -203,6 +203,12 @@
     </ClCompile>
     <ClCompile Include="Material.cpp">
       <Filter>Source Files\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentAssignedEvent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadtreeComponent.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -346,7 +352,7 @@
     </ClInclude>
     <ClInclude Include="CollisionEvent.h">
       <Filter>Header Files\Standard Events</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="UIDetail.h">
       <Filter>Header Files\UI\Util</Filter>
     </ClInclude>
@@ -391,5 +397,6 @@
     <None Include="ConfigFile.inl">
       <Filter>Inline Files</Filter>
     </None>
+    <None Include="engine.aps" />
   </ItemGroup>
 </Project>

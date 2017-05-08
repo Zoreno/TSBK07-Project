@@ -75,6 +75,7 @@ void RenderingSystem::startUp()
 	ShaderProgram* program = new ShaderProgram{
 		"../res/shaders/simpleVert.shader",
 		"../res/shaders/simpleFrag.shader" };
+
 	ShaderProgram* depthShader = new ShaderProgram{
 		"../res/shaders/depthVert.shader",
 		"../res/shaders/depthFrag.shader" ,
@@ -190,7 +191,13 @@ void RenderingSystem::startUp()
 
 		// Setup framebuffer
 		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBOs[i]);
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthMaps[i], 0);
+
+		glFramebufferTexture(
+			GL_FRAMEBUFFER, 
+			GL_DEPTH_ATTACHMENT, 
+			depthMaps[i], 
+			0);
+
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
 
@@ -212,37 +219,71 @@ void RenderingSystem::startUp()
 	// HDR
 	//=========================================================================
 
+	// Generate HDR Framebuffer
 	glGenFramebuffers(1, &hdrFBO);
 
+	// Generate Colorbuffers for color and bright color.
 	glGenTextures(2, colorBuffers);
 	glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
 
-
+	// Initiate textures and attach to frame buffer
 	for (int i = 0; i < 2; ++i)
 	{
 		glBindTexture(GL_TEXTURE_2D, colorBuffers[i]);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, window->getWidth(), window->getHeight(), 0, GL_RGBA, GL_FLOAT, NULL);
+
+		glTexImage2D(
+			GL_TEXTURE_2D,
+			0,
+			GL_RGBA16F,
+			window->getWidth(),
+			window->getHeight(),
+			0,
+			GL_RGBA,
+			GL_FLOAT,
+			NULL);
+
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, colorBuffers[i], 0);
+		glFramebufferTexture2D(
+			GL_FRAMEBUFFER, 
+			GL_COLOR_ATTACHMENT0 + i, 
+			GL_TEXTURE_2D, 
+			colorBuffers[i], 
+			0);
 	}
-
 
 	glGenRenderbuffers(1, &rboDepth);
 	glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, window->getWidth(), window->getHeight());
 
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
+	glRenderbufferStorage(
+		GL_RENDERBUFFER, 
+		GL_DEPTH_COMPONENT, 
+		window->getWidth(), 
+		window->getHeight());
 
-	GLuint attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+	glFramebufferRenderbuffer(
+		GL_FRAMEBUFFER, 
+		GL_DEPTH_ATTACHMENT, 
+		GL_RENDERBUFFER, 
+		rboDepth);
+
+	GLuint attachments[2] = 
+	{ 
+		GL_COLOR_ATTACHMENT0, 
+		GL_COLOR_ATTACHMENT1 
+	};
+
 	glDrawBuffers(2, attachments);
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	{
 		std::cout << "HDR framebuffer not complete!" << std::endl;
+	}
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	// Setup rendering quad
@@ -261,10 +302,27 @@ void RenderingSystem::startUp()
 	glBindVertexArray(quadVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices, GL_STATIC_DRAW);
+
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GL_FLOAT), (GLvoid*)0);
+
+	glVertexAttribPointer(
+		0, 
+		3, 
+		GL_FLOAT,
+		GL_FALSE, 
+		5 * sizeof(GL_FLOAT), 
+		(GLvoid*)0);
+
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+
+	glVertexAttribPointer(
+		1, 
+		2, 
+		GL_FLOAT,
+		GL_FALSE, 
+		5 * sizeof(GLfloat), 
+		(GLvoid*)(3 * sizeof(GLfloat)));
+
 	glBindVertexArray(0);
 
 	//=========================================================================
@@ -277,15 +335,35 @@ void RenderingSystem::startUp()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[i]);
 		glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[i]);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, window->getWidth(), window->getHeight(), 0, GL_RGB, GL_FLOAT, NULL);
+
+		glTexImage2D(
+			GL_TEXTURE_2D, 
+			0, 
+			GL_RGB16F, 
+			window->getWidth(), 
+			window->getHeight(), 
+			0, 
+			GL_RGB, 
+			GL_FLOAT, 
+			NULL);
+
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pingpongColorbuffers[i], 0);
+
+		glFramebufferTexture2D(
+			GL_FRAMEBUFFER, 
+			GL_COLOR_ATTACHMENT0, 
+			GL_TEXTURE_2D, 
+			pingpongColorbuffers[i], 
+			0);
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		{
 			std::cout << "PingPong FBO " << i << " not complete!" << std::endl;
+		}
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -558,46 +636,64 @@ void RenderingSystem::update(float dt)
 
 	GLboolean horizontal = true;
 	GLboolean first_iteration = true;
-	
+
 	GLuint amount = 10;
 
-	for(GLuint i = 0; i < amount; ++i)
+	for (GLuint i = 0; i < amount; ++i)
 	{
+		// Bind the pingpong framebuffer.
 		glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
 		bloomBlurShader->uploadUniform("horizontal", horizontal);
 		bloomBlurShader->uploadUniform("image", 0);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, first_iteration ? colorBuffers[1] : pingpongColorbuffers[!horizontal]);
+
+		// Bind the Colorbuffer the first time, and the other pingpong buffer
+		// all subsequent times.
+		glBindTexture(
+			GL_TEXTURE_2D, 
+			first_iteration ? colorBuffers[1] : pingpongColorbuffers[!horizontal]);
+
+		// Render Quad
 		glBindVertexArray(quadVAO);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		glBindVertexArray(0);
+
+		// Switch direction of Blur pass
 		horizontal = !horizontal;
+
+		// Indicate that we want to use pingpong buffer as source instead of source image.
 		if (first_iteration)
 			first_iteration = false;
 	}
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 	//=========================================================================
 	// Screen render pass
 	//=========================================================================
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	ShaderProgram* hdrShader = am->fetch<ShaderProgram>("hdrShader");
 
 	hdrShader->use();
+
+	// Bind Normal light buffer
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, colorBuffers[0]);
 	hdrShader->uploadUniform("hdrBuffer", 0);
+
+	// Bind the last pingpong buffer, which will contain the blurred bright image.
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[!horizontal]);
 	hdrShader->uploadUniform("bloomBuffer", 1);
+
 	hdrShader->uploadUniform("hdr", hdr);
 	hdrShader->uploadUniform("bloom", bloom);
 	hdrShader->uploadUniform("exposure", exposure);
 	hdrShader->uploadUniform("gamma", gamma);
 
+	// Render the image on screen.
 	glBindVertexArray(quadVAO);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	glBindVertexArray(0);

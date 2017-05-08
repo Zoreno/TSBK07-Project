@@ -31,8 +31,8 @@ private:
 
 	Material defaultMaterial{ glm::vec3{1.f,1.f,1.f}, glm::vec3{1.f,1.f,1.f}, glm::vec3{1.f,1.f,1.f}, 64 };
 
-	static constexpr GLuint SHADOW_WIDTH{ 1024 };
-	static constexpr GLuint SHADOW_HEIGHT{ 1024 };
+	static constexpr GLuint SHADOW_WIDTH{ 2048 };
+	static constexpr GLuint SHADOW_HEIGHT{ 2048 };
 	static constexpr GLfloat SHADOW_NEAR_PLANE{ 1.f };
 	static constexpr GLfloat SHADOW_FAR_PLANE{ 250.f };
 

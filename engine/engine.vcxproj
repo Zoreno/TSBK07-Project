@@ -127,6 +127,7 @@
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="Collada.cpp" />
     <ClCompile Include="CollisionComponent.cpp" />
+    <ClCompile Include="ComponentAssignedEvent.cpp" />
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="ConfigFile.cpp" />
     <ClCompile Include="Engine.cpp" />
@@ -135,6 +136,7 @@
     <ClCompile Include="ModelComponent.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Quadtree.cpp" />
+    <ClCompile Include="QuadtreeComponent.cpp" />
     <ClCompile Include="RawModel.cpp" />
     <ClCompile Include="RenderingSystem.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -221,6 +223,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ConfigFile.inl" />
+    <None Include="engine.aps" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

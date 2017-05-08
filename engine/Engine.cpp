@@ -141,10 +141,17 @@ namespace engine
 		TextureComponent* texComp2 = entityManager->getComponent<TextureComponent>(entity2);
 		texComp2->attach(0, "grass");
 
-		entityManager->assignComponent<TransformComponent>(entity3, glm::vec3{ 19.f,12.5f,117.f });
+		entityManager->assignComponent<TransformComponent>(entity3, glm::vec3{ 92.f,0.5f,165.f });
 		entityManager->assignComponent<ModelComponent>(entity3, "bunneh");
 		entityManager->assignComponent<CollisionComponent>(entity3, 1.f);
 		entityManager->assignComponent<TextureComponent>(entity3);
+		entityManager->assignComponent<PointLightComponent>(entity3,
+			glm::vec3{ 0.2f, 0.2f, 0.2f },	// Ambient
+			glm::vec3{ 26.8f,2.8f,3.3f },	// Diffuse
+			glm::vec3{ 1.0f,1.0f,1.0f },	// Specular
+			1.f,							// Constant
+			0.01f,							// Linear
+			0.003f);						// Quadratic
 
 		TextureComponent* texComp3 = entityManager->getComponent<TextureComponent>(entity3);
 		texComp3->attach(0, "dirt");
@@ -160,10 +167,11 @@ namespace engine
 			0.003f);						// Quadratic
 			
 		
-		entityManager->assignComponent<TransformComponent>(lightSource2, glm::vec3{ 19.f, 15.f, 111.f });
+		entityManager->assignComponent<TransformComponent>(lightSource2, glm::vec3{ 92.f, 0.5f, 170.f }, glm::radians(180.f));
+		entityManager->assignComponent<ModelComponent>(lightSource2, "bunneh");
 		entityManager->assignComponent<PointLightComponent>(lightSource2,
 			glm::vec3{ 0.2f, 0.2f, 0.2f },	// Ambient
-			glm::vec3{ 6.8f,6.8f,3.3f },	// Diffuse
+			glm::vec3{ 2.8f,0.8f,26.3f },	// Diffuse
 			glm::vec3{ 1.0f,1.0f,1.0f },	// Specular
 			1.f,							// Constant
 			0.01f,							// Linear
@@ -278,7 +286,7 @@ namespace engine
 
 			glDisable(GL_DEPTH_TEST);
 
-			//uiManager->draw();
+			uiManager->draw();
 
 			glEnable(GL_DEPTH_TEST);
 
