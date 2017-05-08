@@ -12,6 +12,8 @@
 #include "EntityManager.h"
 
 #include "AssetManager.h"
+
+#include "UIManager.h"
 #include "Timer.h"
 
 typedef std::map<std::string, Scene*> SceneMap;
@@ -47,11 +49,12 @@ namespace engine
 
 		Window* window{ nullptr };
 
-		TextRenderer* text{ nullptr };
-
 		SceneMap Scenes;
 		std::string activeScene;
 		AssetManager* assetManager{nullptr};
+
+
+		userinterface::UIManager* uiManager{};
 
 		Timer timer{};
 	};

@@ -1,3 +1,10 @@
+/**
+ * @file	PointLight.cpp
+ * @Author	Joakim Bertils
+ * @date	2017-05-06
+ * @brief	Point Light Representation.
+ */
+
 #include "PointLight.h"
 
 PointLight::PointLight(
@@ -9,12 +16,12 @@ PointLight::PointLight(
 	float linear,
 	float quadratic)
 	: position(position),
-	ambient(ambient),
-	diffuse(diffuse),
-	specular(specular),
 	constant(constant),
 	linear(linear),
-	quadratic(quadratic)
+	quadratic(quadratic),
+	ambient(ambient),
+	diffuse(diffuse),
+	specular(specular)
 {}
 
 glm::vec3 PointLight::getPosition() const
@@ -50,4 +57,44 @@ glm::vec3 PointLight::getDiffuse() const
 glm::vec3 PointLight::getSpecular() const
 {
 	return specular;
+}
+
+void PointLight::setPosition(const glm::vec3& value)
+{
+	position = value;
+}
+
+void PointLight::setConstant(float value)
+{
+	constant = value;
+}
+
+void PointLight::setLinear(float value)
+{
+	linear = value;
+}
+
+void PointLight::setQuadratic(float value)
+{
+	quadratic = value;
+}
+
+void PointLight::setAmbient(const glm::vec3& value)
+{
+	ambient = value;
+}
+
+void PointLight::setDiffuse(const glm::vec3& value)
+{
+	diffuse = value;
+}
+
+void PointLight::setSpecular(const glm::vec3& value)
+{
+	specular = value;
+}
+
+float PointLight::calculateAttenuation(float distance)
+{
+	return 1.f / (constant + linear*distance + quadratic*distance*distance);
 }

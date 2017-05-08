@@ -7,6 +7,7 @@
 
 #pragma once
 #include "AssetManager.h"
+#include "UIManager.h"
 
 class EntityManager;
 class EventManager;
@@ -33,7 +34,13 @@ public:
 	 * @param ev Pointer to Event Manager
 	 * @param am Pointer to Asset Manager
 	 */
-	virtual void registerManagers(EntityManager* em, EventManager* ev, AssetManager* am) { this->em = em; this->ev = ev; this->am = am; }
+	virtual void registerManagers(EntityManager* em, EventManager* ev, AssetManager* am, userinterface::UIManager* ui) 
+	{
+		this->em = em; 
+		this->ev = ev; 
+		this->am = am; 
+		this->ui = ui;
+	}
 
 	/**
 	 * @brief Startup Function. Called before system goes live.
@@ -66,4 +73,9 @@ protected:
 	 * @brief Pointer to Asset Manager.
 	 */
 	AssetManager* am{ nullptr };
+
+	/**
+	 *
+	 */
+	userinterface::UIManager* ui{ nullptr };
 };
