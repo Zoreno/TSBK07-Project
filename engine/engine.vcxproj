@@ -207,6 +207,7 @@
     <ClInclude Include="Utils.h" />
     <ClInclude Include="VertexArrayObject.h" />
     <ClInclude Include="VertexBufferObject.h" />
+    <ClInclude Include="WaterComponent.h" />
     <ClInclude Include="WaveFile.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

@@ -28,6 +28,7 @@
 #include "TextureComponent.h"
 #include "PointLightComponent.h"
 #include "MaterialComponent.h"
+#include "WaterComponent.h"
 
 namespace engine
 {
@@ -84,7 +85,8 @@ namespace engine
 		//=====================================================================
 
 		assetManager->load<RawModel>("bunneh", "../res/models/bunnyplus.obj");
-		assetManager->load<RawModel>("tree1", "../res/models/OC12_1.obj");
+		//assetManager->load<RawModel>("tree1", "../res/models/OC12_1.obj");
+		//assetManager->load<RawModel>("house1", "../res/models/Medieval_House.obj");
 		//assetManager->load<RawModel>("tree2", "../res/models/OC12_2.obj");
 		//assetManager->load<RawModel>("tree3", "../res/models/OC12_3.obj");
 		//assetManager->load<RawModel>("tree4", "../res/models/OC12_4.obj");
@@ -107,6 +109,7 @@ namespace engine
 		assetManager->load<Texture2D>("grass", "../res/textures/grass.tga");
 		assetManager->load<Texture2D>("conc", "../res/textures/conc.tga");
 		assetManager->load<Texture2D>("dirt", "../res/textures/dirt.tga");
+		assetManager->load<Texture2D>("houseTexture", "../res/textures/Medieval_House_Diff.tga");
 
 		//=====================================================================
 		// EntityManager setup
@@ -121,6 +124,7 @@ namespace engine
 		entityManager->registerComponent<TextureComponent>("TextureComponent");
 		entityManager->registerComponent<PointLightComponent>("PointLightComponent");
 		entityManager->registerComponent<MaterialComponent>("MaterialComponent");
+		entityManager->registerComponent<WaterComponent>("WaterComponent");
 
 		//=====================================================================
 		// Load entities
@@ -131,6 +135,8 @@ namespace engine
 		EntityHandle entity3 = entityManager->createEntity();
 		EntityHandle lightSource1 = entityManager->createEntity();
 		EntityHandle lightSource2 = entityManager->createEntity();
+		EntityHandle house = entityManager->createEntity();
+		EntityHandle waterSurface = entityManager->createEntity();
 
 		entityManager->assignComponent<TransformComponent>(terrain, glm::vec3{ 0.f,0.f,0.f });
 		entityManager->assignComponent<TerrainComponent>(terrain, "basicTerrain");
@@ -141,18 +147,30 @@ namespace engine
 		texComp->attach(0, "grass");
 
 		entityManager->assignComponent<TransformComponent>(entity2, glm::vec3{ 10.f,1.f,10.f }, glm::radians(270.f), glm::vec3{1.f,0.f,0.f});
-		entityManager->assignComponent<ModelComponent>(entity2, "tree1");
+		entityManager->assignComponent<ModelComponent>(entity2, "bunneh");
 		entityManager->assignComponent<TextureComponent>(entity2);
 
 		TextureComponent* texComp2 = entityManager->getComponent<TextureComponent>(entity2);
 		texComp2->attach(0, "grass");
 
-		entityManager->assignComponent<TransformComponent>(entity3, glm::vec3{ 19.f,12.5f,117.f });
+		entityManager->assignComponent<TransformComponent>(entity3, glm::vec3{ 46.f,13.f,65.f });
 		entityManager->assignComponent<ModelComponent>(entity3, "bunneh");
 		entityManager->assignComponent<TextureComponent>(entity3);
 
 		TextureComponent* texComp3 = entityManager->getComponent<TextureComponent>(entity3);
 		texComp3->attach(0, "dirt");
+
+		/*
+		float houseScale = 0.01;
+
+		entityManager->assignComponent<TransformComponent>(house, glm::vec3{ 30.f,10.f,117.f }, 0.f, glm::vec3{0.f, 1.f, 0.f}, glm::vec3{houseScale, houseScale, houseScale});
+		entityManager->assignComponent<ModelComponent>(house, "house1");
+		entityManager->assignComponent<TextureComponent>(house);
+
+		TextureComponent* texComp4 = entityManager->getComponent<TextureComponent>(house);
+		texComp4->attach(0, "houseTexture");
+
+		*/
 
 		
 		entityManager->assignComponent<TransformComponent>(lightSource1, glm::vec3{ 10.f, 10.f, 10.f });
@@ -165,15 +183,18 @@ namespace engine
 			0.003f);						// Quadratic
 			
 		
-		entityManager->assignComponent<TransformComponent>(lightSource2, glm::vec3{ 19.f, 15.f, 111.f });
+		entityManager->assignComponent<TransformComponent>(lightSource2, glm::vec3{ 39.f, 15.f, 43.f });
 		entityManager->assignComponent<PointLightComponent>(lightSource2,
 			glm::vec3{ 0.2f, 0.2f, 0.2f },	// Ambient
-			glm::vec3{ 6.8f,6.8f,3.3f },	// Diffuse
+			glm::vec3{ 0.8f,0.3f,0.3f },	// Diffuse
 			glm::vec3{ 1.0f,1.0f,1.0f },	// Specular
 			1.f,							// Constant
 			0.01f,							// Linear
 			0.003f);						// Quadratic
 			
+
+		entityManager->assignComponent<TransformComponent>(waterSurface, glm::vec3{ 30.f,11.f,43.f }, 0.f, glm::vec3{0.f,1.f,1.f}, glm::vec3{30.f,1.f,30.f});
+		entityManager->assignComponent<WaterComponent>(waterSurface);
 
 		// Detta tar hand om instansiering och sånt.
 		entityManager->registerSystem<CameraController>();
@@ -280,7 +301,7 @@ namespace engine
 
 			glDisable(GL_DEPTH_TEST);
 
-			//uiManager->draw();
+			uiManager->draw();
 
 			glEnable(GL_DEPTH_TEST);
 

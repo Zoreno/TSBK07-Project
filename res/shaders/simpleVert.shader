@@ -22,6 +22,7 @@ out vec2 texCoords;
 
 uniform mat4 transform;
 uniform mat4 model;
+uniform vec4 clippingPlane;
 
 //=============================================================================
 // Functions
@@ -33,11 +34,16 @@ uniform mat4 model;
 
 void main()
 {
+
+	const vec4 pos = transform*vec4(vertex_position, 1.0);
+
+	gl_ClipDistance[0] = dot(pos, clippingPlane);
+	
 	// Invert-transpose model to find normal transformations
 	normal = mat3(transpose(inverse(model)))*vertex_normal;
 	
 	// Output Vertex position
-	gl_Position = transform*vec4(vertex_position, 1.0);
+	gl_Position = pos;
 	
 	// Pass Fragment position
 	FragPos = vec3(model*vec4(vertex_position, 1.0));

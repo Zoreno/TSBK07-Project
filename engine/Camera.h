@@ -176,6 +176,17 @@ public:
 	 */
 	GLfloat getMouseSensitivity() const;
 
+	/**
+	 * @brief Inverts the pitch
+	 */
+	void invertPitch();
+
+	/**
+	 * @brief Mirrors the y position around given level.
+	 * @param y_level Midpoint of mirror.
+	 */
+	void mirrorY(float y_level);
+
 private:
 
 	/**

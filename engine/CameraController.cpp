@@ -73,7 +73,7 @@ void CameraController::startUp()
 
 	currentCamera = em->createEntity();
 
-	em->assignComponent<TransformComponent>(currentCamera, glm::vec3{ 0.f,0.f,0.f });
+	em->assignComponent<TransformComponent>(currentCamera, glm::vec3{ 19.f, 20.f, 106.f});
 	em->assignComponent<CameraComponent>(currentCamera);
 }
 

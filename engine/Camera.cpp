@@ -1,3 +1,10 @@
+/**
+ * @file	Camera.cpp
+ * @Author	Joakim Bertils
+ * @date	2017-05-07
+ * @brief	Camera Class
+ */
+
 #include "Camera.h"
 
 #include <iostream>
@@ -107,6 +114,17 @@ GLfloat Camera::getMovementSpeed() const
 GLfloat Camera::getMouseSensitivity() const
 {
 	return mouseSensitivity;
+}
+
+void Camera::invertPitch()
+{
+	pitch = -pitch;
+	updateCameraVectors();
+}
+
+void Camera::mirrorY(float y_level)
+{
+	position.y -= 2 * (position.y - y_level);
 }
 
 void Camera::updateCameraVectors()

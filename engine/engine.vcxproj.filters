@@ -353,6 +353,9 @@
     <ClInclude Include="MaterialComponent.h">
       <Filter>Header Files\Standard Components</Filter>
     </ClInclude>
+    <ClInclude Include="WaterComponent.h">
+      <Filter>Header Files\Standard Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ConfigFile.inl">

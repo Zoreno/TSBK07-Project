@@ -34,7 +34,7 @@ private:
 	static constexpr GLuint SHADOW_WIDTH{ 1024 };
 	static constexpr GLuint SHADOW_HEIGHT{ 1024 };
 	static constexpr GLfloat SHADOW_NEAR_PLANE{ 1.f };
-	static constexpr GLfloat SHADOW_FAR_PLANE{ 250.f };
+	static constexpr GLfloat SHADOW_FAR_PLANE{ 100.f };
 
 	GLuint depthMapFBOs[MAX_LIGHTS];
 	GLuint depthMaps[MAX_LIGHTS];
@@ -52,4 +52,10 @@ private:
 	bool bloom{ true };
 	float exposure{ 1.f };
 	float gamma{ 2.2f };
+
+	GLuint waterFBOs[2];
+	GLuint waterColorBuffers[2];
+
+	GLuint waterVAO{};
+	GLuint waterVBO{};
 };

@@ -65,6 +65,9 @@ uniform Material material;
 // Far plane used by shadows
 uniform float far_plane;
 
+// If shadow calculations should be performed
+uniform bool shouldShadow;
+
 //=============================================================================
 // Functions
 //=============================================================================
@@ -140,9 +143,12 @@ void main()
 		vec3 specularColor = lights[i].specular * spec * material.specular;
 	
 		// Calculate Shadow factor.
-		float shadow = calculateShadow(i);
+		float shadow = 0;
+		if(shouldShadow)
+			shadow = calculateShadow(i);
 		
 		shadow = clamp(shadow, 0.0, 1.0);
+		
 		
 		// Calulate Attenuatuon factor.
 		float attenuation = calculateAttenuation(lightDistance, lights[i]);
@@ -163,6 +169,8 @@ void main()
 	
 	if(brightness > 1.0)
 		brightColor = vec4(outputColor, 1.0);
+	else
+		brightColor = vec4(0.0,0.0,0.0, 1.0);
 }
 
 //=============================================================================

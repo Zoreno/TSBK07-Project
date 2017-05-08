@@ -15,6 +15,7 @@
 #include "PointLight.h"
 #include "PointLightComponent.h"
 #include "MaterialComponent.h"
+#include "WaterComponent.h"
 
 RenderingSystem::RenderingSystem(Window* window)
 	: window{ window } {}
@@ -88,6 +89,10 @@ void RenderingSystem::startUp()
 	"../res/shaders/bloomBlurVert.shader",
 	"../res/shaders/bloomBlurFrag.shader" };
 
+	ShaderProgram* waterShader = new ShaderProgram{
+	"../res/shaders/waterVert.shader",
+	"../res/shaders/waterFrag.shader" };
+
 	try
 	{
 		program->compile();
@@ -136,12 +141,24 @@ void RenderingSystem::startUp()
 		std::cerr << ex.what() << std::endl;
 	}
 
+	try
+	{
+		waterShader->compile();
+		waterShader->bindAttribLocation(0, "position");
+		waterShader->link();
+	}
+	catch (const ShaderProgramException& ex)
+	{
+		std::cerr << ex.what() << std::endl;
+	}
+
 	am->registerAsset<ShaderProgram>();
 
 	am->store("simpleShader", program);
 	am->store("depthShader", depthShader);
 	am->store("hdrShader", hdrShader);
 	am->store("bloomBlurShader", bloomBlurShader);
+	am->store("waterShader", waterShader);
 
 	//=========================================================================
 	// Setup Depth Rendering
@@ -231,7 +248,6 @@ void RenderingSystem::startUp()
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, colorBuffers[i], 0);
 	}
 
-
 	glGenRenderbuffers(1, &rboDepth);
 	glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, window->getWidth(), window->getHeight());
@@ -286,9 +302,56 @@ void RenderingSystem::startUp()
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 			std::cout << "PingPong FBO " << i << " not complete!" << std::endl;
+
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	//=========================================================================
+	// Water Rendering
+	//=========================================================================
+
+	glGenFramebuffers(2, waterFBOs);
+	glGenTextures(2, waterColorBuffers);
+
+	for (int i = 0; i < 2; ++i)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, waterFBOs[i]);
+		glBindTexture(GL_TEXTURE_2D, waterColorBuffers[i]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, 600, 480, 0, GL_RGB, GL_FLOAT, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, waterColorBuffers[i], 0);
+
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			std::cout << "Water FBO " << i << " not complete!" << std::endl;
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	static GLfloat waterQuadVertices[] = {
+		// Positions
+		0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+	};
+
+	glGenVertexArrays(1, &waterVAO);
+	glBindVertexArray(waterVAO);
+
+	glGenBuffers(1, &waterVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, waterVBO);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(waterQuadVertices), waterQuadVertices, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+
+	glBindVertexArray(0);
+
+	std::cout << "Rendering system setup done" << std::endl;
 }
 
 void RenderingSystem::shutDown()
@@ -297,23 +360,31 @@ void RenderingSystem::shutDown()
 	ev->removeSubscriber<KeyEvent>(this);
 	am->dispose<ShaderProgram>("simpleShader");
 	am->dispose<ShaderProgram>("depthShader");
+	am->dispose<ShaderProgram>("hdrShader");
+	am->dispose<ShaderProgram>("bloomBlurShader");
 }
 
 void RenderingSystem::update(float dt)
 {
+	glEnable(GL_DEPTH_TEST);
+
 	glm::mat4 proj = glm::perspective(FOV, window->getAspectRatio(), NEAR_PLANE, FAR_PLANE);
 
 	glm::mat4 view;
 	glm::vec3 view_pos;
 
+	Camera* camera;
+
 	// This is hax
 	auto updateCamera = [&](EntityHandle entHandle, TransformComponent* tr, CameraComponent* ca)
 	{
-		view = ca->camera.getViewMatrix();
-		view_pos = tr->position;
+		camera = &ca->camera;
 	};
 
 	em->each<TransformComponent, CameraComponent>(updateCamera);
+
+	view = camera->getViewMatrix();
+	view_pos = camera->getPosition();
 
 	ShaderProgram* shader = am->fetch<ShaderProgram>("simpleShader");
 	ShaderProgram* depthShader = am->fetch<ShaderProgram>("depthShader");
@@ -543,8 +614,96 @@ void RenderingSystem::update(float dt)
 		am->fetch<RawModel>(mc->getID())->draw();
 	};
 
+	shader->uploadUniform("shouldShadow", true);
+
 	em->each<TransformComponent, TerrainComponent>(renderTerrain);
 	em->each<TransformComponent, ModelComponent>(renderModels);
+
+	//=========================================================================
+	// Water rendering
+	//=========================================================================
+
+	ShaderProgram* waterShader = am->fetch<ShaderProgram>("waterShader");
+
+	auto renderWater = [&](EntityHandle entHandle, TransformComponent* tr, WaterComponent* wc)
+	{
+		//=====================================================================
+		// Render Refraction
+		//=====================================================================
+
+		glBindFramebuffer(GL_FRAMEBUFFER, waterFBOs[0]);
+
+		glViewport(0, 0, 600, 480);
+
+		glEnable(GL_CLIP_DISTANCE0);
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		shader->use();
+		shader->uploadUniform("clippingPlane", glm::vec4{ 0.0, -1.0, 0.0, tr->position.y });
+		em->each<TransformComponent, TerrainComponent>(renderTerrain);
+		em->each<TransformComponent, ModelComponent>(renderModels);
+
+		//=====================================================================
+		// Render Reflection
+		//=====================================================================
+
+		glBindFramebuffer(GL_FRAMEBUFFER, waterFBOs[1]);
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		camera->invertPitch();
+		camera->mirrorY(tr->position.y);
+
+		view = camera->getViewMatrix();
+		view_pos = camera->getPosition();
+
+		shader->use();
+
+		shader->uploadUniform("clippingPlane", glm::vec4{ 0.0, 1.0, 0.0, tr->position.y });
+		em->each<TransformComponent, TerrainComponent>(renderTerrain);
+		em->each<TransformComponent, ModelComponent>(renderModels);
+
+		camera->invertPitch();
+		camera->mirrorY(tr->position.y);
+
+		view = camera->getViewMatrix();
+		view_pos = camera->getPosition();
+
+		glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+
+		glDisable(GL_CLIP_DISTANCE0);
+
+		glViewport(0, 0, window->getWidth(), window->getHeight());
+
+		// Render water quad
+
+		TransformPipeline3D pipe = tr->getPipeline();
+
+		pipe.setProj(proj);
+		pipe.setView(view);
+
+		waterShader->use();
+
+		waterShader->uploadUniform("model", pipe.getModelTransform());
+		waterShader->uploadUniform("projection", proj);
+		waterShader->uploadUniform("view", view);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, waterColorBuffers[0]);
+		waterShader->uploadUniform("refractionTexture", 0);
+
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, waterColorBuffers[1]);
+		waterShader->uploadUniform("reflectionTexture", 1);
+
+		glBindVertexArray(waterVAO);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		glBindVertexArray(0);
+	};
+
+	shader->uploadUniform("shouldShadow", false);
+
+	em->each<TransformComponent, WaterComponent>(renderWater);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -558,10 +717,10 @@ void RenderingSystem::update(float dt)
 
 	GLboolean horizontal = true;
 	GLboolean first_iteration = true;
-	
+
 	GLuint amount = 10;
 
-	for(GLuint i = 0; i < amount; ++i)
+	for (GLuint i = 0; i < amount; ++i)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
 		bloomBlurShader->uploadUniform("horizontal", horizontal);
