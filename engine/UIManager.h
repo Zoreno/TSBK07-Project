@@ -1,3 +1,10 @@
+/**
+ * @file	UIManager.h
+ * @Author	Joakim Bertils
+ * @date	2017-05-08
+ * @brief	UI Manager
+ */
+
 #pragma once
 
 #include "UIDetail.h"
@@ -13,29 +20,76 @@
 
 namespace userinterface
 {
+	/**
+	 * @brief User Interface manager.
+	 */
 	class UIManager
 	{
 	public:
+
+		/**
+		 * @brief Constructor
+		 * @param width Width of surface
+		 * @param height Height of surface
+		 */
 		UIManager(int width, int height);
+
+		/**
+		 * @brief Destructor
+		 */
 		~UIManager();
 
+		/**
+		 * @brief Gets the element with by identifier.
+		 * @tparam T Element type
+		 * @param identifier Name of element
+		 * @return Pointer to element if present, otherwise nullptr
+		 */
 		template <typename T>
 		typename std::enable_if<std::is_base_of<UIElement, T>::value, T*>::type
 			getElement(const std::string& identifier);
 
+		/**
+		 * @brief Adds an element to the UI
+		 * @tparam T Type of element
+		 * @tparam Args Types of arguments to forward.
+		 * @param identifier Name of element
+		 * @param args Arguments to forward.
+		 * @return Pointer to element
+		 */
 		template <typename T, typename ... Args>
 		typename std::enable_if<std::is_base_of<UIElement, T>::value, T*>::type
 			addElement(const std::string& identifier, Args ... args);
 
+		/**
+		 * @brief Draw the elements to the surface.
+		 */
 		void draw();
 	private:
+
+		/**
+		 * @brief Type definition of entries in queue.
+		 */
 		typedef std::pair<std::string, UIElement*> Entry;
 
+		/**
+		 * @brief Contained elements.
+		 */
 		std::deque<Entry> _children;
 
+		/**
+		 * @brief Width of screen
+		 */
 		int _screenWidth;
+
+		/**
+		 * @brief Height of screen
+		 */
 		int _screenHeight;
 
+		/**
+		 * @brief Surface to draw to.
+		 */
 		UI2DRenderingSurface _surface;
 	};
 
@@ -62,4 +116,3 @@ namespace userinterface
 		return dynamic_cast<T*>(_children.front().second);
 	}
 }
-

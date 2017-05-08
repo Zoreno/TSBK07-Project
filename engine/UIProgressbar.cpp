@@ -1,3 +1,10 @@
+/**
+ * @file	UIProgressbar.cpp
+ * @Author	Joakim Bertils
+ * @date	2017-05-08
+ * @brief	UI Progress bar
+ */
+
 #include "UIProgressBar.h"
 
 namespace userinterface
@@ -13,7 +20,13 @@ namespace userinterface
 		float minValue,
 		float maxValue)
 		:
-		UIElement(manager, identifier, width, height, posX, posY),
+		UIElement(
+			manager, 
+			identifier,
+			width,
+			height, 
+			posX, 
+			posY),
 		_minValue(minValue),
 		_maxValue(maxValue),
 		_value(initialValue)
@@ -31,15 +44,36 @@ namespace userinterface
 
 		if (_border != 0)
 		{
-			surface->renderQuad(_posX, _posY, _width, _height, _borderColor);
+			surface->renderQuad(
+				_posX,
+				_posY,
+				_width, 
+				_height, 
+				_borderColor);
 		}
-		surface->renderQuad(_posX + _border, _posY + _border, _width - 2 * _border, _height - 2 * _border, _fillColor);
+
+		surface->renderQuad(
+			_posX + _border, 
+			_posY + _border, 
+			_width - 2 * _border, 
+			_height - 2 * _border, 
+			_fillColor);
 
 		float fillLevel = (_value - _minValue) / (_maxValue - _minValue);
 
-		surface->renderQuad(_posX + _border, _posY + _border, (_width - 2 * _border) * fillLevel, _height - 2 * _border, _barColor);
+		surface->renderQuad(
+			_posX + _border, 
+			_posY + _border, 
+			(_width - 2 * _border) * fillLevel,
+			_height - 2 * _border, 
+			_barColor);
 
-		surface->renderText(_text, _posX + 2 * _border + 4, _posY + (_height >> 1) - 8, 1.f, _textColor);
+		surface->renderText(
+			_text,
+			_posX + 2 * _border + 4,
+			_posY + (_height >> 1) - 8, 
+			1.f,
+			_textColor);
 	}
 
 	void UIProgressBar::setFillColor(Color color)

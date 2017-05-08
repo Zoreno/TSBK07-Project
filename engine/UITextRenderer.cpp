@@ -1,8 +1,16 @@
+/**
+ * @file	UITextRenderer.cpp
+ * @Author	Joakim Bertils
+ * @date	2017-05-08
+ * @brief	UI Text Rendering Helper Class
+ */
+
 #include "UITextRenderer.h"
 
 #include <iostream>
 
 // https://learnopengl.com/#!In-Practice/Text-Rendering
+
 namespace userinterface
 {
 	UITextRenderer::UITextRenderer(unsigned int width, unsigned int height)
@@ -49,7 +57,7 @@ namespace userinterface
 		FT_Done_FreeType(_ft);
 	}
 
-	void UITextRenderer::loadFont(const char* fontPath, unsigned int size, Font* font)
+	void UITextRenderer::loadFont(const char* fontPath, unsigned int size, Font* font) const
 	{
 		FT_Face face;
 		if (FT_New_Face(_ft, fontPath, 0, &face))
@@ -144,12 +152,16 @@ namespace userinterface
 		glBindVertexArray(0);
 	}
 
-	void UITextRenderer::setScreenDimensions(unsigned width, unsigned height)
+	void UITextRenderer::setScreenDimensions(unsigned int width, unsigned int height)
 	{
 		_screenWidth = width;
 		_screenHeight = height;
 
-		_projection = glm::ortho(0.f, static_cast<GLfloat>(_screenWidth), 0.f, static_cast<GLfloat>(_screenHeight));
+		_projection = glm::ortho(
+			0.f, 
+			static_cast<GLfloat>(_screenWidth), 
+			0.f,
+			static_cast<GLfloat>(_screenHeight));
 	}
 
 }

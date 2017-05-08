@@ -1,3 +1,10 @@
+/**
+ * @file	UI2DRenderingSurface.cpp
+ * @Author	Joakim Bertils
+ * @date	2017-05-08
+ * @brief	2D Rendering Surface
+ */
+
 #include "UI2DRenderingSurface.h"
 
 #include <iostream>

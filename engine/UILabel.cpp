@@ -1,9 +1,29 @@
+/**
+ * @file	UILabel.cpp
+ * @Author	Joakim Bertils
+ * @date	2017-05-08
+ * @brief	UI Label class
+ */
+
 #include "UILabel.h"
 
 namespace userinterface
 {
-	UILabel::UILabel(UIManager* manager, const std::string& identifier, int width, int height, int posX, int posY)
-		: UIElement{ manager, identifier, width, height, posX, posY }
+	UILabel::UILabel(
+		UIManager* manager,
+		const std::string& identifier,
+		int width,
+		int height,
+		int posX,
+		int posY)
+		:
+		UIElement{
+			manager,
+			identifier,
+			width,
+			height,
+			posX,
+			posY }
 	{
 
 	}
@@ -18,13 +38,29 @@ namespace userinterface
 		if (!visible)
 			return;
 
-		if(_border != 0)
+		if (_border != 0)
 		{
-			surface->renderQuad(_posX, _posY, _width, _height, _borderColor);
+			surface->renderQuad(
+				_posX,
+				_posY,
+				_width,
+				_height,
+				_borderColor);
 		}
-		surface->renderQuad(_posX + _border, _posY + _border, _width - 2 * _border, _height - 2 * _border, _fillColor);
 
-		surface->renderText(_text, _posX + 2 *_border + 4, _posY + (_height >> 1) - 8, 1.f, _textColor);
+		surface->renderQuad(
+			_posX + _border,
+			_posY + _border,
+			_width - 2 * _border,
+			_height - 2 * _border,
+			_fillColor);
+
+		surface->renderText(
+			_text,
+			_posX + 2 * _border + 4,
+			_posY + (_height >> 1) - 8,
+			1.f,
+			_textColor);
 	}
 
 	void UILabel::setFillColor(Color color)

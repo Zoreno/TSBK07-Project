@@ -1,3 +1,10 @@
+/**
+ * @file	RenderingSystem.cpp
+ * @Author	Joakim Bertils
+ * @date	2017-05-08
+ * @brief	System for rendering stuff to screen
+ */
+
 #include "RenderingSystem.h"
 #include "CameraComponent.h"
 #include "TransformComponent.h"

@@ -81,7 +81,7 @@ float calculateShadow(int i)
 	bias = clamp(bias, 0.0, 0.01);
 	
 	float shadow = 0.0;
-	float samples = 8.0;
+	float samples = 4.0;
 	float offset = 0.1;
 	
 	for(float x = -offset; x < offset; x+= offset/(samples*0.5))
@@ -94,7 +94,7 @@ float calculateShadow(int i)
 				closestDepth *= far_plane;
 				if(currentDepth - bias > closestDepth)
 				{
-					shadow += 2.0;
+					shadow += 1.0;
 				}
 			}
 		}

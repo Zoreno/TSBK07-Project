@@ -1,3 +1,10 @@
+/**
+ * @file	UIDetail.h
+ * @Author	Joakim Bertils
+ * @date	2017-05-08
+ * @brief	UI Helper classes
+ */
+
 #pragma once
 
 #include <glm/glm.hpp>
@@ -13,16 +20,35 @@ namespace userinterface {
 		// Vector
 		//=================================================================
 
+		/**
+		 * @brief Compare strategy class
+		 * @tparam T Types to compare
+		 */
 		template <typename T>
 		class Compare
 		{
 		public:
+			/**
+			 * @brief Compares two objects
+			 * @param first First object
+			 * @param second Second object
+			 * @return True if equal
+			 */
 			bool operator()(const T& first, const T& second);
 		};
 
+		/**
+		 * @brief Arbitary sized vector
+		 * @tparam T Data type
+		 * @tparam SIZE Size of vector
+		 * @tparam CMP Compare strategy object
+		 */
 		template <typename T, size_t SIZE, class CMP = Compare<T>>
 		class Vector
 		{
+			/**
+			 * @brief Type definition of compare object.
+			 */
 			typedef CMP compare_type;
 
 		public:
@@ -30,54 +56,129 @@ namespace userinterface {
 			// Constructors
 			//=================================================================
 
+			/**
+			 * @brief Default constructor.
+			 */
 			Vector();
+
+			/**
+			 * @brief Initializer list constructor
+			 * @param args Arguments to initialize object
+			 */
 			Vector(std::initializer_list<T> args);
+
+			/**
+			 * @brief Copy constructor
+			 * @tparam OTHER_SIZE Size of source object
+			 * @param other Source object
+			 */
 			template <size_t OTHER_SIZE, typename = typename std::enable_if<SIZE >= OTHER_SIZE>::type>
 			explicit Vector(const Vector<T, OTHER_SIZE, CMP>& other);
+
+			/**
+			 * @brief Move constructor
+			 * @param other Source object
+			 */
 			explicit Vector(Vector<T, SIZE, CMP>&& other) noexcept;
 
 			//=================================================================
 			// Destructor
 			//=================================================================
 
+			/**
+			 * @brief Destructor
+			 */
 			virtual ~Vector();
 
 			//=================================================================
 			// Assignment Operators
 			//=================================================================
 
+			/**
+			 * @brief Copy assignment operator
+			 * @tparam OTHER_SIZE Size of other vector
+			 * @param other Source object
+			 * @return Reference to self.
+			 */
 			template <size_t OTHER_SIZE, typename = typename std::enable_if<SIZE >= OTHER_SIZE>::type>
 			Vector <T, SIZE, CMP>& operator=(const Vector<T, OTHER_SIZE, CMP>& other) &;
 
+			/**
+			 * @brief Move assignment operator
+			 * @param other Source object
+			 * @return Reference to self.
+			 */
 			Vector<T, SIZE, CMP>& operator=(Vector<T, SIZE, CMP>&& other) & noexcept;
 
 			//=================================================================
 			// Swap
 			//=================================================================
 
+			/**
+			 * @brief Member swap function
+			 * @param other Source object
+			 */
 			void swap(Vector<T, SIZE, CMP>& other) noexcept;
+
+			/**
+			 * @brief Non-member swap function
+			 * @param first First object
+			 * @param second Second object
+			 */
 			friend void swap(Vector<T, SIZE, CMP>& first, Vector<T, SIZE, CMP>& second) noexcept;
 
 			//=================================================================
 			// Member Access
 			//=================================================================
 
+			/**
+			 * @brief Getter for element at a specific location in vector
+			 * @param i 
+			 * @return 
+			 */
 			T at(size_t i) const;
 			
+			/**
+			 * @brief Shortcut for accessing the first element
+			 * @return First element
+			 */
 			T X() const;
 
+			/**
+			* @brief Shortcut for accessing the second element
+			* @return Second element
+			*/
 			T Y() const;
 
+			/**
+			* @brief Shortcut for accessing the Third element
+			* @return Third element
+			*/
 			T Z() const;				
 
 			//=================================================================
 			// Relational Operators
 			//=================================================================
 
+			/**
+			 * @brief Equality operator
+			 * @param rhs Other object
+			 * @return True if equal
+			 */
 			bool operator==(const Vector<T, SIZE, CMP>& rhs) const;
+
+			/**
+			 * @brief Inequality operator
+			 * @param rhs Other object
+			 * @return True if not equal.
+			 */
 			bool operator!=(const Vector<T, SIZE, CMP>& rhs) const;
 
 		protected:
+
+			/**
+			 * @brief Array containing the data
+			 */
 			T data[SIZE];
 		};
 
@@ -85,28 +186,84 @@ namespace userinterface {
 		// Vector type specializations
 		//=================================================================
 
+		/**
+		 * @brief Type specification of a vector of 2 ints.
+		 */
 		typedef Vector<int, 2> Vector2i;
+
+		/**
+		* @brief Type specification of a vector of 3 ints.
+		*/
 		typedef Vector<int, 3> Vector3i;
 
+		/**
+		* @brief Type specification of a point of 2 ints.
+		*/
 		typedef Vector<int, 2> Point2i;
+
+		/**
+		* @brief Type specification of a point of 3 ints.
+		*/
 		typedef Vector<int, 3> Point3i;
 
+		/**
+		* @brief Type specification of a vector of 2 unsigned ints.
+		*/
 		typedef Vector<unsigned int, 2> Vector2u;
+
+		/**
+		* @brief Type specification of a vector of 3 unsigned ints.
+		*/
 		typedef Vector<unsigned int, 3> Vector3u;
 
+		/**
+		* @brief Type specification of a point of 2 unsigned ints.
+		*/
 		typedef Vector<unsigned int, 2> Point2u;
+
+		/**
+		* @brief Type specification of a point of 3 unsigned ints.
+		*/
 		typedef Vector<unsigned int, 3> Point3u;
 
+		/**
+		* @brief Type specification of a vector of 2 floats.
+		*/
 		typedef Vector<float, 2> Vector2f;
+
+		/**
+		* @brief Type specification of a vector of 3 floats.
+		*/
 		typedef Vector<float, 3> Vector3f;
 
+		/**
+		* @brief Type specification of a point of 2 floats.
+		*/
 		typedef Vector<float, 2> Point2f;
+
+		/**
+		* @brief Type specification of a point of 3 floats.
+		*/
 		typedef Vector<float, 3> Point3f;
 
+		/**
+		* @brief Type specification of a vector of 2 doubles.
+		*/
 		typedef Vector<double, 2> Vector2d;
+
+		/**
+		* @brief Type specification of a vector of 3 doubles.
+		*/
 		typedef Vector<double, 3> Vector3d;
 
+		/**
+		* @brief Type specification of a point of 2 doubles.
+		*/
 		typedef Vector<double, 2> Point2d;
+
+		/**
+		* @brief Type specification of a point of 3 doubles.
+		*/
 		typedef Vector<double, 3> Point3d;
 
 		//=================================================================
@@ -251,7 +408,7 @@ namespace userinterface {
 		}
 
 		template<typename T, size_t SIZE, class CMP>
-		void swap(Vector<T, SIZE, CMP>& first, Vector<T, SIZE, CMP>& second) noexcept
+		inline void swap(Vector<T, SIZE, CMP>& first, Vector<T, SIZE, CMP>& second) noexcept
 		{
 			std::swap(first.data, second.data);
 		}
@@ -260,6 +417,10 @@ namespace userinterface {
 		// Rectangle
 		//=================================================================
 
+		/**
+		 * @brief Class Representing a rectangle
+		 * @tparam T Data type
+		 */
 		template <typename T>
 		class Rectangle
 		{
@@ -269,66 +430,206 @@ namespace userinterface {
 			// Constructors
 			//=================================================================
 
+			/**
+			 * @brief Default constructor.
+			 */
 			Rectangle() = default;
+
+			/**
+			 * @brief Constructor
+			 * @param width Width of the rectangle
+			 * @param height Height of the rectangle
+			 */
 			Rectangle(T width, T height);
+
+			/**
+			 * @brief Constructor
+			 * @param width Width of the rectangle
+			 * @param height Height of the rectangle
+			 * @param posX X-position of the bottom left corner.
+			 * @param posY Y-position of the bottom left corner.
+			 */
 			Rectangle(T width, T height, T posX, T posY);
+
+			/**
+			 * @brief Copy Constructor
+			 * @param other Source object
+			 */
 			explicit Rectangle(const Rectangle<T>& other);
+
+			/**
+			 * @brief Move Constructor
+			 * @param other Source object
+			 */
 			explicit Rectangle(Rectangle<T>&& other) noexcept;
 
 			//=================================================================
 			// Destructor
 			//=================================================================
 
+			/**
+			 * @brief Destructor
+			 */
 			virtual ~Rectangle();
 
 			//=================================================================
 			// Assignment Operators
 			//=================================================================
 
+			/**
+			 * @brief Copy assignment operator.
+			 * @param other Source object
+			 * @return Reference to self.
+			 */
 			Rectangle<T>& operator=(const Rectangle<T>& other) &;
+
+			/**
+			 * @brief Move assignment operator.
+			 * @param other Source object
+			 * @return Reference to self.
+			 */
 			Rectangle<T>& operator=(Rectangle<T>&& other) & noexcept;
 
 			//=================================================================
 			// Swap
 			//=================================================================
 
+			/**
+			 * @brief Member swap function.
+			 * @param other Source object.
+			 */
 			void swap(Rectangle<T>& other) noexcept;
+
+			/**
+			 * @brief Non-member swap function
+			 * @param first First object
+			 * @param second Second object
+			 */
 			friend void swap(Rectangle<T>& first, Rectangle<T>& second) noexcept;
 
 			//=================================================================
 			// Member Access
 			//=================================================================
 
+			/**
+			 * @brief Getter for rectangle width
+			 * @return Width
+			 */
 			T getWidth() const;
+
+			/**
+			 * @brief Getter for rectangle height
+			 * @return Height
+			 */
 			T getHeight() const;
+			
+			/**
+			 * @brief Getter for rectangle x position
+			 * @return X position
+			 */
 			T getPosX() const;
+			
+			/**
+			 * @brief Getter for rectangle y position
+			 * @return Y position
+			 */
 			T getPosY() const;
 
+			/**
+			 * @brief Setter for width
+			 * @param width New Width
+			 */
 			void setWidth(T width);
+			
+			/**
+			 * @brief Setter for height
+			 * @param height New height.
+			 */
 			void setHeight(T height);
+			
+			/**
+			 * @brief Setter for x-postion
+			 * @param posX New position
+			 */
 			void setPosX(T posX);
+			
+			/**
+			 * @brief Setter for y-position
+			 * @param posY New position
+			 */
 			void setPosY(T posY);
 
+			/**
+			 * @brief Gets the size of the object
+			 * @return Vector containing size
+			 */
 			Vector<T, 2> getSize() const;
+			
+			/**
+			 * @brief Gets the position of the object
+			 * @return Vector containing position
+			 */
 			Vector<T, 2> getPosition() const;
 
+			/**
+			 * @brief Sets the size.
+			 * @param size New size.
+			 */
 			void setSize(const Vector<T, 2>& size);
+			
+			/**
+			 * @brief Sets the position
+			 * @param position New position
+			 */
 			void setPosition(const Vector<T, 2>& position);
 
 			//=================================================================
 			// Other
 			//=================================================================
 
+			/**
+			 * @brief Checks whether the rectangle contains the point p
+			 * @param point Point to check
+			 * @return True if check passed.
+			 */
 			bool contains(const Vector<T, 2>& point) const;
 
+			/**
+			 * @brief Checks if the rectangle intersects another rectangle.
+			 * @param other Other rectangle
+			 * @return True if intersects
+			 */
 			bool intersects(const Rectangle<T>& other) const;
+
+			/**
+			 * @brief Checks if the rectangle intersects another rectangle and 
+			 * returns intersection size.
+			 * 
+			 * @param other Other rectangle.
+			 * @param intersection Rectangle to fill in intersection data in.
+			 * @return True if intersects.
+			 */
 			bool intersects(const Rectangle<T>& other, Rectangle<T>& intersection) const;
 
 		protected:
+			/**
+			 * @brief Width of rectangle
+			 */
 			T _width{};
+
+			/**
+			 * @brief Height of rectangle
+			 */
 			T _height{};
 
+			/**
+			 * @brief X-position of rectangle.
+			 */
 			T _posX{};
+
+			/**
+			 * @brief Y-position of rectangle.
+			 */
 			T _posY{};
 		};
 
@@ -336,7 +637,14 @@ namespace userinterface {
 		// Rectangle type specializations.
 		//=================================================================
 
+		/**
+		 * @brief Type definition of a rectangle of ints.
+		 */
 		typedef Rectangle<int> IntRect;
+
+		/**
+		 * @brief Type definition of a rectangle of floats.
+		 */
 		typedef Rectangle<float> FloatRect;
 
 		//=================================================================
@@ -522,7 +830,7 @@ namespace userinterface {
 		}
 
 		template <typename T>
-		void swap(Rectangle<T>& first, Rectangle<T>& second) noexcept
+		inline void swap(Rectangle<T>& first, Rectangle<T>& second) noexcept
 		{
 			std::swap(first._width, second._width);
 			std::swap(first._height, second._height);

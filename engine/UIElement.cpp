@@ -1,3 +1,10 @@
+/**
+ * @file	UIElement.cpp
+ * @Author	Joakim Bertils
+ * @date	2017-05-08
+ * @brief	User interface element base class
+ */
+
 #include "UIElement.h"
 
 namespace userinterface

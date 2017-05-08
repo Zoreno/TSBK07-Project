@@ -1,3 +1,10 @@
+/**
+ * @file	UIManager.cpp
+ * @Author	Joakim Bertils
+ * @date	2017-05-08
+ * @brief	UI Manager
+ */
+
 #include "UIManager.h"
 
 #include <iostream>
@@ -8,7 +15,6 @@
 
 namespace userinterface
 {
-
 	UIManager::UIManager(int width, int height)
 		:
 		_screenWidth{ width },
@@ -27,7 +33,10 @@ namespace userinterface
 
 	void UIManager::draw()
 	{
-		for (std::deque<Entry>::reverse_iterator it = _children.rbegin(); it != _children.rend(); ++it)
+		for (
+			std::deque<Entry>::reverse_iterator it = _children.rbegin(); 
+			it != _children.rend(); 
+			++it)
 		{
 			it->second->draw(&_surface);
 		}
