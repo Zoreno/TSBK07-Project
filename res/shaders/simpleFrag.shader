@@ -163,6 +163,8 @@ void main()
 	
 	if(brightness > 1.0)
 		brightColor = vec4(outputColor, 1.0);
+	else
+		brightColor = vec4(0.0, 0.0, 0.0, 1.0);
 }
 
 //=============================================================================

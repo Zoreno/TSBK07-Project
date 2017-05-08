@@ -38,17 +38,17 @@ EventManager::~EventManager()
 
 EntityManager::~EntityManager()
 {
-	while(_pools.size() > 0)
-	{
-		delete _pools.begin()->second;
-		_pools.erase(_pools.begin());
-	}
-
 	while(_systems.size() > 0)
 	{
 		_systems.back()->shutDown();
 		delete _systems.back();
 		_systems.pop_back();
+	}
+
+	while (_pools.size() > 0)
+	{
+		delete _pools.begin()->second;
+		_pools.erase(_pools.begin());
 	}
 }
 
