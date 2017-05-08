@@ -18,6 +18,7 @@
 
 #include <rapidxml/rapidxml.hpp>
 
+#include "ComponentAssignedEvent.h"
 #include "Component.h"
 #include "System.h"
 #include "Event.h"
@@ -710,6 +711,13 @@ public:
 	void each(typename std::identity<std::function<void(EntityHandle, Args*...)>>::type f);
 
 	/**
+	* @brief Gets an entity associated with handle.
+	* @param entHandle Entity Handle.
+	* @return Pointer to entity associated with handle.
+	*/
+	EntityPtr getEntity(EntityHandle entHandle);
+
+	/**
 	 * @brief Run a update step accounting for time dt(in seconds.s)
 	 * @param dt Step time.
 	 */
@@ -778,13 +786,6 @@ private:
 	 */
 	template <typename Func, typename Tup>
 	void invoke(EntityHandle entHandle, Func&& func, Tup&& tup);
-
-	/**
-	 * @brief Gets an entity associated with handle.
-	 * @param entHandle Entity Handle.
-	 * @return Pointer to entity associated with handle.
-	 */
-	EntityPtr getEntity(EntityHandle entHandle);
 
 	/**
 	 * @brief Adds and removes pending entities.
@@ -1048,6 +1049,8 @@ EntityManager::assignComponent(EntityHandle entHandle, Args... args)
 	ePtr->_components.set(_typemap.getTypeID<T>());
 
 	createComponent<T>(entHandle, std::forward<Args>(args)...);
+
+	eventManager->postEvent(ComponentAssignedEvent<T>(entHandle));
 }
 
 template <typename T>

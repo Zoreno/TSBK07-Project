@@ -69,9 +69,11 @@ namespace engine
 		bar->setBarColor(Color{ 1.f,0.f,0.f });
 		bar->setTextColor(Color{ 0.f,0.f,0.f });
 
-		eventManager = new EventManager{};
-
 		assetManager = new AssetManager{};
+		Scene* testScene = createScene("Test1");
+
+		EntityManager* entityManager = testScene->getEntityManager();
+		EventManager* eventManager = testScene->getEventManager();
 
 		//=====================================================================
 		// AssetManager setup
@@ -112,7 +114,7 @@ namespace engine
 		// EntityManager setup
 		//=====================================================================
 
-		entityManager = new EntityManager{ eventManager , assetManager, uiManager };
+		//entityManager = new EntityManager{ eventManager , assetManager, uiManager };
 
 		entityManager->registerComponent<TransformComponent>("TransformComponent");
 		entityManager->registerComponent<ModelComponent>("ModelComponent");
@@ -143,12 +145,14 @@ namespace engine
 		entityManager->assignComponent<TransformComponent>(entity2, glm::vec3{ 10.f,1.f,10.f }, glm::radians(270.f), glm::vec3{1.f,0.f,0.f});
 		entityManager->assignComponent<ModelComponent>(entity2, "tree1");
 		entityManager->assignComponent<TextureComponent>(entity2);
+		entityManager->assignComponent<CollisionComponent>(entity2, 1.f);
 
 		TextureComponent* texComp2 = entityManager->getComponent<TextureComponent>(entity2);
 		texComp2->attach(0, "grass");
 
 		entityManager->assignComponent<TransformComponent>(entity3, glm::vec3{ 19.f,12.5f,117.f });
 		entityManager->assignComponent<ModelComponent>(entity3, "bunneh");
+		entityManager->assignComponent<CollisionComponent>(entity3, 1.f);
 		entityManager->assignComponent<TextureComponent>(entity3);
 
 		TextureComponent* texComp3 = entityManager->getComponent<TextureComponent>(entity3);
@@ -173,7 +177,6 @@ namespace engine
 			1.f,							// Constant
 			0.01f,							// Linear
 			0.003f);						// Quadratic
-			
 
 		// Detta tar hand om instansiering och sånt.
 		entityManager->registerSystem<CameraController>();
@@ -191,6 +194,9 @@ namespace engine
 
 		while (!window->shouldClose())
 		{
+			Scene* currentScene = Scenes.find(activeScene)->second;
+
+			currentScene->update();
 			GLfloat timeDelta = timer.reset();
 			Timer dutyTimer{};
 
@@ -214,7 +220,7 @@ namespace engine
 					new_event.key = ev.key.key;
 					new_event.action = (int)ev.key.action;
 
-					eventManager->postEvent(new_event);
+					currentScene->getEventManager()->postEvent(new_event);
 
 					// Just for testing
 					// TODO: Remove
@@ -234,7 +240,7 @@ namespace engine
 					new_event.posX = ev.mouse.posx;
 					new_event.posY = ev.mouse.posy;
 
-					eventManager->postEvent(new_event);
+					currentScene->getEventManager()->postEvent(new_event);
 
 					//std::cout << ev.mouse.posx << " " << ev.mouse.posy << std::endl;
 				}
@@ -250,7 +256,7 @@ namespace engine
 				break;
 				case EventType::GAINED_FOCUS:
 				{
-					window->setCursorMode(CursorMode::HIDDEN);
+					window->setCursorMode(CursorMode::DISABLED);
 				}
 				break;
 				case EventType::LOST_FOCUS:
@@ -269,7 +275,7 @@ namespace engine
 				}
 			}
 
-			entityManager->update(static_cast<float>(timeDelta));
+			currentScene->getEntityManager()->update(static_cast<float>(timeDelta));
 
 			GLfloat tickTime = dutyTimer.reset();
 
@@ -292,21 +298,64 @@ namespace engine
 	{
 		delete window;
 
-		delete entityManager;
-
-		delete eventManager;
+		for (auto& i : Scenes) delete i.second;
 
 		delete assetManager;
 	}
 
-	EntityManager* Engine::getEntityManager() const
+	Scene* Engine::createScene(std::string ID)
 	{
-		return entityManager;
+		auto sc = Scenes.find(ID);
+		if (sc != Scenes.end())
+			throw Engine_error(std::string("Scene ID '").append(ID).append("' already exist"));
+
+		if (assetManager == nullptr)
+			throw Engine_error("Cannot create scene. AssetManager is uninitialized");
+
+		Scene* scenePtr = new Scene{ assetManager };
+
+		Scenes.emplace(ID, scenePtr);
+
+		if (activeScene == "") activeScene = ID;
+
+		return scenePtr;
 	}
 
-	EventManager* Engine::geteventManager() const
+	Scene * Engine::getScene(std::string ID) const
 	{
-		return eventManager;
+		auto sc = Scenes.find(ID);
+
+		if (sc == Scenes.end())
+			throw Engine_error(std::string("Scene ID '").append(ID).append("' not found"));
+
+		return sc->second;
+	}
+
+	void Engine::setActiveScene(std::string sceneID)
+	{
+		if(Scenes.find(sceneID) == Scenes.end())
+
+		activeScene = sceneID;
+	}
+
+	EntityManager* Engine::getEntityManager(std::string sceneID) const
+	{
+		auto sc = Scenes.find(sceneID);
+
+		if (sc == Scenes.end())
+			throw Engine_error(std::string("Scene ID '").append(sceneID).append("' not found"));
+
+		return sc->second->getEntityManager();
+	}
+
+	EventManager* Engine::getEventManager(std::string sceneID) const
+	{
+		auto sc = Scenes.find(sceneID);
+
+		if (sc == Scenes.end())
+			throw Engine_error(std::string("Scene ID '").append(sceneID).append("' not found"));
+
+		return sc->second->getEventManager();
 	}
 
 	AssetManager* Engine::getAssetManager() const

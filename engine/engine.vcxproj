@@ -126,6 +126,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="Collada.cpp" />
+    <ClCompile Include="CollisionComponent.cpp" />
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="ConfigFile.cpp" />
     <ClCompile Include="Engine.cpp" />
@@ -133,8 +134,10 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="ModelComponent.cpp" />
     <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="RawModel.cpp" />
     <ClCompile Include="RenderingSystem.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="TerrainModel.cpp" />
     <ClCompile Include="TextureComponent.cpp" />
@@ -165,8 +168,11 @@
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="Collada.h" />
+    <ClInclude Include="CollisionComponent.h" />
+    <ClInclude Include="CollisionEvent.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="ComponentAssignedEvent.h" />
     <ClInclude Include="EntityCreatedEvent.h" />
     <ClInclude Include="EntityDestroyedEvent.h" />
     <ClInclude Include="EntityManager.h" />
@@ -182,6 +188,8 @@
     <ClInclude Include="MouseEvent.h" />
     <ClInclude Include="PixelInfo.h" />
     <ClInclude Include="PointLight.h" />
+    <ClInclude Include="Quadtree.h" />
+    <ClInclude Include="QuadtreeComponent.h" />
     <ClInclude Include="PointLightComponent.h" />
     <ClInclude Include="RawModel.h" />
     <ClInclude Include="TerrainComponent.h" />
@@ -190,6 +198,7 @@
     <ClInclude Include="UI2DRenderingSurface.h" />
     <ClInclude Include="UIDetail.h" />
     <ClInclude Include="RenderingSystem.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Subscriber.h" />
     <ClInclude Include="System.h" />
