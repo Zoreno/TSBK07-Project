@@ -1,3 +1,10 @@
+/**
+ * @file	CameraController.cpp
+ * @Author	Joakim Bertils
+ * @date	2017-05-09
+ * @brief	Camera controller
+ */
+
 #include "CameraController.h"
 
 #include "TransformComponent.h"

@@ -14,23 +14,64 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+/**
+ * @brief Vertex Array Object abstraction
+ */
 class VertexArrayObject
 {
 public:
+
+	/**
+	 * @brief Constructor
+	 */
 	VertexArrayObject();
+
+	/**
+	 * @brief Destructor.
+	 */
 	~VertexArrayObject();
 
-	// Implement when needed
+	/**
+	 * @brief Constructor.
+	 */
 	explicit VertexArrayObject(const VertexArrayObject&) = delete;
+
+	/**
+	* @brief Constructor.
+	*/
 	explicit VertexArrayObject(VertexArrayObject&&) = delete;
+
+	/**
+	 * @brief Assignment operator
+	 * @return Ref. to self.
+	 */
 	const VertexArrayObject& operator=(const VertexArrayObject&) = delete;
+
+	/**
+	* @brief Assignment operator
+	* @return Ref. to self.
+	*/
 	VertexArrayObject& operator=(VertexArrayObject&&) = delete;
 
+	/**
+	 * @brief Bind the VAO for use.
+	 */
 	void bind();
+
+	/**
+	* @brief Unbinds the VAO
+	*/
 	void unbind();
 
+	/**
+	 * @brief Handle getter.
+	 * @return OpenGL handle.
+	 */
 	GLuint getHandle() const;
 private:
 
+	/**
+	 * @brief OpenGL handle.
+	 */
 	GLuint vao;
 };

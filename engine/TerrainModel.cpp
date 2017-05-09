@@ -1,3 +1,10 @@
+/**
+ * @file	TerrainModel.cpp
+ * @Author	Joakim Bertils
+ * @date	2017-05-09
+ * @brief	Terrain Model
+ */
+
 #include "TerrainModel.h"
 #include "TGA.h"
 #include <list>

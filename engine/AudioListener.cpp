@@ -1,3 +1,10 @@
+/**
+ * @file	AudioListener.cpp
+ * @Author	Joakim Bertils
+ * @date	2017-05-09
+ * @brief	Audio Listener exception
+ */
+
 #include "AudioListener.h"
 
 AudioListener::AudioListener()

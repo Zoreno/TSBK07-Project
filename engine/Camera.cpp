@@ -1,3 +1,10 @@
+/**
+ * @file	Camera.cpp
+ * @Author	Joakim Bertils
+ * @date	2017-05-09
+ * @brief	Camera Class
+ */
+
 #include "Camera.h"
 
 #include <iostream>

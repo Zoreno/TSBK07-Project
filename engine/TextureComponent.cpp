@@ -1,3 +1,10 @@
+/**
+ * @file	TextureComponent.cpp
+ * @Author	Joakim Bertils
+ * @date	2017-05-09
+ * @brief	Texture Component
+ */
+
 #include "TextureComponent.h"
 
 TextureComponent::TextureComponent()

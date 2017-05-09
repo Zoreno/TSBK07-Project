@@ -320,6 +320,9 @@ enum class TEXTURE_2D_DATATYPE
 	INVALID_VALUE
 };
 
+/**
+ * @brief Class Representing a 2D Texture
+ */
 class ENGINE_API Texture2D
 {
 public:

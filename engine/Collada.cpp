@@ -1,3 +1,10 @@
+/**
+ * @file	Collada.cpp
+ * @Author	Joakim Bertils
+ * @date	2017-05-09
+ * @brief	COLLADA file parser
+ */
+
 #include "Collada.h"
 
 #include <rapidxml/rapidxml.hpp>

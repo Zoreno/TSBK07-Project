@@ -1,78 +1,158 @@
+/**
+ * @file	BMP.cpp
+ * @Author	Joakim Bertils
+ * @date	2017-05-09
+ * @brief	Bitmap Class
+ */
+
 #include "BMP.h"
 
 #include <fstream>
 #include <string>
 
+
+ /**
+  * @brief Macro for bitcount of 1.
+  */
 #define BI_BITCOUNT_1			1
+
+  /**
+  * @brief Macro for bitcount of 4.
+  */
 #define BI_BITCOUNT_4			4
+
+  /**
+  * @brief Macro for bitcount of 8.
+  */
 #define BI_BITCOUNT_8			8
+
+  /**
+  * @brief Macro for bitcount of 16.
+  */
 #define BI_BITCOUNT_16			16
+
+  /**
+  * @brief Macro for bitcount of 24.
+  */
 #define BI_BITCOUNT_24			24
+
+  /**
+  * @brief Macro for bitcount of 32.
+  */
 #define BI_BITCOUNT_32			32
 
+  /**
+  * @brief Macro for no compression.
+  */
 #define BI_COMPRESSION_NONE		0
+
+  /**
+  * @brief Macro for RLE8 compression.
+  */
 #define BI_COMPRESSION_RLE8		1
+
+  /**
+  * @brief Macro for RLE4 compression.
+  */
 #define BI_COMPRESSION_RLE4		2
+
+  /**
+  * @brief Macro for bitfield compression.
+  */
 #define BI_COMPRESSION_BITFIELD	3
 
-// Pack the structs to avoid destructive padding.
+  // Pack the structs to avoid destructive padding.
 #pragma pack(push, 1)
 
-// The bitmap file header.
+/**
+ * @brief Bitmap file header
+ */
 struct BitmapFileHeader
 {
-	// Signature. Should be "BM"
+	/**
+	 * @brief  Signature. Should be "BM"
+	 */
 	char bfType[2];
 
-	// Size of the file in bytes.
+	/**
+	 * @brief Size of the file in bytes.
+	 */
 	uint32_t bfSize;
 
-	// Reserved bytes. Should be zero and not touched.
+	/**
+	 * @brief Reserved bytes. Should be zero and not touched.
+	 */
 	uint32_t bfReserved;
 
-	// Offset to start of pixel array.
+	/**
+	 * @brief Offset to start of pixel array.
+	 */
 	uint32_t bfOffBits;
 };
 
-// The bitmap image header.
+/**
+ * @brief The bitmap image header.
+ */
 struct BitmapImageHeader
 {
-	// Header size in bytes.
+	/**
+	 * @brief Header size in bytes.
+	 */
 	uint32_t biSize;
 
-	// Image width in pixels.
+	/**
+	 * @brief Image width in pixels.
+	 */
 	uint32_t biWidth;
 
-	// Image height in pixels.
+	/**
+	 * @brief Image height in pixels.
+	 */
 	uint32_t biHeigth;
 
-	// Number of image planes in file. Should be 1.
+	/**
+	 * @brief Number of image planes in file. Should be 1.
+	 */
 	uint16_t biPlanes;
 
-	// Bits per pixel.
-	// 1, 4, 8, 16, 24 or 32
+	/**
+	 * @brief Bits per pixel.
+	 */
 	uint32_t biBitCount;
 
-	// Compression type
-	// 0 - Uncompressed.
-	// 1 - RLE-8
-	// 2 - RLE-4
-	// 3 - Bitfields
+
+	/**
+	 * @brief  Compression type
+	 * 0 - Uncompressed.
+	 * 1 - RLE-8
+	 * 2 - RLE-4
+	 * 3 - Bitfields
+	 */
 	uint32_t biCompression;
 
-	// Image size. Set to 0 if biCompression is 0. Then size is biWidth*biHeight.
+	/**
+	 * @brief Image size. Set to 0 if biCompression is 0. Then size is biWidth*biHeight.
+	 */
 	uint32_t biSizeImage;
 
-	// Preferred resolution in pixels per meter.
+	/**
+	 * @brief Preferred resolution in pixels per meter.
+	 */
 	uint32_t biXPelsPerMeter;
 
-	// Preferred resolution in pixels per meter.
+	/**
+	 * @brief Preferred resolution in pixels per meter.
+	 */
 	uint32_t biYPelsPerMeter;
 
-	// Number of color map entries that are actually used.
+	/**
+	 * @brief Number of color map entries that are actually used.
+	 */
 	uint32_t biClrUsed;
 
-	// Number of significant colors
+	/**
+	 * @brief Number of significant colors
+	 */
 	uint32_t biClrImportant;
 };
 
@@ -118,7 +198,7 @@ BMP::BMP(const char* filePath)
 		throw std::invalid_argument(std::string("Invalid file format in file (") + filePath + "). Expected 24 or 32 bit image.");
 	}
 
-	if(imageHeader.biCompression != BI_COMPRESSION_NONE)
+	if (imageHeader.biCompression != BI_COMPRESSION_NONE)
 	{
 		hFile.close();
 		throw std::invalid_argument(std::string("File (") + filePath + ") is compressed.");
