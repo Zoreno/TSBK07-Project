@@ -338,7 +338,7 @@ void Quadleaf::update()
 
 	for (auto i : entsToRemove)
 	{
-		for (auto j = _entities.begin(); j == _entities.end(); ++j)
+		for (auto j = _entities.begin(); j != _entities.end(); ++j)
 		{
 			if (i == *j)
 			{
@@ -636,7 +636,7 @@ void Quadroot::update()
 	std::cout << getEntCount() << std::endl;
 	for (auto i : entsToRemove)
 	{
-		for(auto j = _entities.begin(); j == _entities.end(); ++j)
+		for(auto j = _entities.begin(); j != _entities.end(); ++j)
 		{
 			if(i == *j)
 			{

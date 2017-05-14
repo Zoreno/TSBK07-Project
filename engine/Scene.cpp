@@ -7,10 +7,10 @@
 
 
 Scene::Scene(AssetManager* AM, Window* window) :
-asM{AM},
-enM{nullptr},
-evM{nullptr},
-uiM{nullptr}
+	asM{ AM },
+	enM{ nullptr },
+	evM{ nullptr },
+	uiM{ nullptr }
 {
 	evM = new EventManager{};
 	uiM = new userinterface::UIManager(window->getWidth(), window->getHeight());

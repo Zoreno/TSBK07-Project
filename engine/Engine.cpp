@@ -35,9 +35,9 @@ namespace engine
 	{
 		WindowSettings settings = getDefaultWindowSettings();
 
-		settings.maximized = true;
+		//settings.maximized = true;
 
-		window = new Window{ 1920, 1080, "MyWindow" , settings };
+		window = new Window{ 1280, 768, "MyWindow" , settings };
 
 		dumpInfo(std::cout);
 

@@ -8,6 +8,7 @@
 
 int main()
 {
+	/*
 	engine::Engine engine;
 
 	engine.init();
@@ -15,4 +16,6 @@ int main()
 	engine.run();
 
 	engine.cleanup();
+
+	*/
 }
