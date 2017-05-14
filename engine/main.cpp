@@ -128,6 +128,7 @@ int main()
 
 
 			entityManager->assignComponent<TransformComponent>(lightSource1, glm::vec3{ 10.f, 10.f, 10.f });
+			//entityManager->assignComponent<ModelComponent>(lightSource1, "bunneh");
 			entityManager->assignComponent<PointLightComponent>(lightSource1,
 				glm::vec3{ 0.0f, 0.0f, 0.0f },	// Ambient
 				glm::vec3{ 0.3f,0.3f,0.3f },	// Diffuse
@@ -138,7 +139,7 @@ int main()
 
 
 			entityManager->assignComponent<TransformComponent>(lightSource2, glm::vec3{ 92.f, 20.f, 170.f }, glm::radians(180.f));
-			//entityManager->assignComponent<ModelComponent>(lightSource2, "bunneh");
+			entityManager->assignComponent<ModelComponent>(lightSource2, "bunneh");
 			entityManager->assignComponent<PointLightComponent>(lightSource2,
 				glm::vec3{ 0.3f, 0.3f, 0.2f },	// Ambient
 				glm::vec3{ 3.8f,3.8f,1.3f },	// Diffuse

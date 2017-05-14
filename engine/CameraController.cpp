@@ -13,6 +13,7 @@
 #include "EntityManager.h"
 #include "CollisionComponent.h"
 #include "UILabel.h"
+#include "PointLightComponent.h"
 
 void CameraController::handleEvent(const KeyEvent& ev)
 {

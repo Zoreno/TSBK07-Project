@@ -96,6 +96,10 @@ void RenderingSystem::startUp()
 	"../res/shaders/bloomBlurVert.shader",
 	"../res/shaders/bloomBlurFrag.shader" };
 
+	ShaderProgram* skyboxShader = new ShaderProgram{
+	"../res/shaders/skyboxVert.shader",
+	"../res/shaders/skyboxFrag.shader" };
+
 	try
 	{
 		program->compile();
@@ -144,12 +148,29 @@ void RenderingSystem::startUp()
 		std::cerr << ex.what() << std::endl;
 	}
 
+	try
+	{
+		skyboxShader->compile();
+		skyboxShader->bindAttribLocation(0, "vertex_position");
+		skyboxShader->bindAttribLocation(1, "vertex_normal");
+		skyboxShader->bindAttribLocation(2, "vertex_texture_coordinates");
+		skyboxShader->link();
+	}
+	catch (const ShaderProgramException& ex)
+	{
+		std::cerr << ex.what() << std::endl;
+	}
+
 	am->registerAsset<ShaderProgram>();
 
 	am->store("simpleShader", program);
 	am->store("depthShader", depthShader);
 	am->store("hdrShader", hdrShader);
 	am->store("bloomBlurShader", bloomBlurShader);
+	am->store("skyboxShader", skyboxShader);
+
+	am->load<Texture2D>("skybox", "../res/textures/skybox512.tga");
+	am->load<RawModel>("skybox", "../res/models/skybox.obj");
 
 	//=========================================================================
 	// Setup Depth Rendering
@@ -445,7 +466,9 @@ void RenderingSystem::update(float dt)
 
 	auto renderTerrainDepth = [&](EntityHandle entHandle, TransformComponent* tr, TerrainComponent* te)
 	{
-		glm::mat4 model = glm::translate(glm::mat4{ 1.f }, tr->position);
+		//glm::mat4 model = glm::translate(glm::mat4{ 1.f }, tr->position);
+
+		glm::mat4 model = tr->getPipeline().getModelTransform();
 		depthShader->uploadUniform("model", model);
 
 		am->fetch<TerrainModel>(te->getID())->draw(*depthShader);
@@ -453,7 +476,9 @@ void RenderingSystem::update(float dt)
 
 	auto renderModelsDepth = [&](EntityHandle entHandle, TransformComponent* tr, ModelComponent* mc)
 	{
-		glm::mat4 model = glm::translate(glm::mat4{ 1.f }, tr->position);
+		//glm::mat4 model = glm::translate(glm::mat4{ 1.f }, tr->position);
+
+		glm::mat4 model = tr->getPipeline().getModelTransform();
 		depthShader->uploadUniform("model", model);
 
 		am->fetch<RawModel>(mc->getID())->draw();
@@ -543,15 +568,41 @@ void RenderingSystem::update(float dt)
 	//=========================================================================
 	// Color render pass
 	//=========================================================================
-
-	glCullFace(GL_BACK);
-
-	// Restore default framebuffer
+	
+	// Set Framebuffer
 	glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glViewport(0, 0, window->getWidth(), window->getHeight());
+
+	// Draw Skybox
+
+	glm::mat4 skyboxModel = glm::translate(glm::mat4{ 1.f }, view_pos);
+	glm::mat4 skyboxView = view;
+
+	skyboxView[0][3] = 0;
+	skyboxView[1][3] = 0;
+	skyboxView[2][3] = 0;
+
+	glm::mat4 skyboxTransform = proj*skyboxView*skyboxModel;
+
+	ShaderProgram* skyboxShader = am->fetch<ShaderProgram>("skyboxShader");
+	Texture2D* skyboxTexture = am->fetch<Texture2D>("skybox");
+	RawModel* skyboxRawModel = am->fetch<RawModel>("skybox");
+
+	skyboxShader->use();
+	skyboxShader->uploadUniform("transform", skyboxTransform);
+	skyboxShader->uploadUniform("model", skyboxModel);
+	skyboxShader->uploadUniform("texUnit", 0);
+	
+	skyboxTexture->bind(0);
+
+	glDisable(GL_DEPTH_TEST);
+	glCullFace(GL_FRONT);
+	skyboxRawModel->draw();
+	glCullFace(GL_BACK);
+	glEnable(GL_DEPTH_TEST);
 
 	auto renderTerrain = [&](EntityHandle entHandle, TransformComponent* tr, TerrainComponent* te)
 	{
