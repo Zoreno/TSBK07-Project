@@ -15,7 +15,7 @@ Scene::Scene(AssetManager* AM, Window* window) :
 	evM = new EventManager{};
 	uiM = new userinterface::UIManager(window->getWidth(), window->getHeight());
 	enM = new EntityManager{ evM, asM, uiM };
-	//quadtree = new Quadtree{enM, evM, glm::vec2{100, 100}, 300, 300};
+	quadtree = new Quadtree{enM, evM, glm::vec2{100, 100}, 300, 300};
 
 	evM->addSubscriber<CollisionEvent>(this);
 
@@ -69,5 +69,5 @@ userinterface::UIManager * Scene::getUIManager() const
 
 void Scene::update()
 {
-	//quadtree->update();
+	quadtree->update();
 }
