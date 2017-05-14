@@ -127,6 +127,12 @@ public:
 	 * @return The current camera position.
 	 */
 	glm::vec3 getPosition() const;
+
+	/**
+	 * @brief Position Setter
+	 * @param newPos New camera position.
+	 */
+	void setPosition(const glm::vec3& newPos);
 	
 	/**
 	 * @brief Front vector getter. 

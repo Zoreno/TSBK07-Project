@@ -94,9 +94,11 @@ void CameraController::startUp()
 
 	currentCamera = em->createEntity();
 
-	em->assignComponent<TransformComponent>(currentCamera, glm::vec3{ 0.f,0.f,0.f });
+	em->assignComponent<TransformComponent>(currentCamera, glm::vec3{ 92.f, 20.f, 170.f });
 	em->assignComponent<CameraComponent>(currentCamera);
 	//em->assignComponent<CollisionComponent>(currentCamera, 1.f);
+
+	em->getComponent<CameraComponent>(currentCamera)->camera.setPosition(em->getComponent<TransformComponent>(currentCamera)->position);
 
 	std::cout << "Camera handle: " << currentCamera << std::endl;
 }
