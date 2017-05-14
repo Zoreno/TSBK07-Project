@@ -76,6 +76,11 @@ glm::vec3 Camera::getPosition() const
 	return position;
 }
 
+void Camera::setPosition(const glm::vec3& newPos)
+{
+	position = newPos;
+}
+
 glm::vec3 Camera::getFrontVector() const
 {
 	return front;
