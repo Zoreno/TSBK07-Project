@@ -29,6 +29,7 @@ public:
 	uint16_t getTotalEntCount();
 
 private:
+	std::vector<EntityHandle> _entToRemove{};
 	Quadroot* _quadtree;
 	EntityManager* _enM;
 	EventManager* _evM;

@@ -65,10 +65,10 @@ int main()
 			assetManager->load<RawModel>("tree2", "../res/models/OC12_2.obj");
 			assetManager->load<RawModel>("tree3", "../res/models/OC12_3.obj");
 			assetManager->load<RawModel>("tree4", "../res/models/OC12_4.obj");
-			assetManager->load<RawModel>("tree5", "../res/models/OC12_5.obj");
-			assetManager->load<RawModel>("tree6", "../res/models/OC12_6.obj");
-			assetManager->load<RawModel>("tree7", "../res/models/OC12_7.obj");
-			assetManager->load<RawModel>("tree8", "../res/models/OC12_8.obj");
+			//assetManager->load<RawModel>("tree5", "../res/models/OC12_5.obj");
+			//assetManager->load<RawModel>("tree6", "../res/models/OC12_6.obj");
+			//assetManager->load<RawModel>("tree7", "../res/models/OC12_7.obj");
+			//assetManager->load<RawModel>("tree8", "../res/models/OC12_8.obj");
 			RawModel* bunModel = assetManager->fetch<RawModel>("bunneh");
 
 			assetManager->registerAsset<Model>();
@@ -148,7 +148,6 @@ int main()
 				0.003f);						// Quadratic
 		}
 	}
-	std::cout << (7 >> 3) << std::endl;
 	engine.run();
 
 	engine.cleanup();
@@ -158,7 +157,8 @@ void createSomeTrees(EntityManager* entityManager)
 {
 	int max1 = 130; int min1 = 80; int range1 = max1 - min1 + 1;
 	int max2 = 180; int min2 = 120; int range2 = max2 - min2 + 1;
-	int max3 = 8; int min3 = 1; int range3 = max3 - min3 + 1;
+	int max3 = 4; int min3 = 1; int range3 = max3 - min3 + 1;
+	srand(std::time(NULL));
 	int num = rand() % range1 + min1;
 	for (int i = 0; i < 20; ++i)
 	{
