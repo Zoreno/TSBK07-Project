@@ -15,7 +15,7 @@ uiM{nullptr}
 	evM = new EventManager{};
 	uiM = new userinterface::UIManager(window->getWidth(), window->getHeight());
 	enM = new EntityManager{ evM, asM, uiM };
-	quadtree = new Quadtree{enM, evM, glm::vec2{0, 0}, 100, 100};
+	//quadtree = new Quadtree{enM, evM, glm::vec2{100, 100}, 300, 300};
 
 	evM->addSubscriber<CollisionEvent>(this);
 
@@ -28,18 +28,23 @@ uiM{nullptr}
 	enM->registerComponent<TextureComponent>("TextureComponent");
 	enM->registerComponent<PointLightComponent>("PointLightComponent");
 	enM->registerComponent<MaterialComponent>("MaterialComponent");
+
+	// Detta tar hand om instansiering och sånt.
+	enM->registerSystem<CameraController>();
+	enM->registerSystem<RenderingSystem>(window);
 }
 
 Scene::~Scene()
 {
 	delete enM;
+	delete quadtree;
 	delete evM;
 	delete uiM;
 }
 
 void Scene::handleEvent(const CollisionEvent& ev)
 {
-	std::cout << "Collision!!" << ev.entHandle1 << ", " << ev.entHandle2 << std::endl;
+
 }
 
 AssetManager* Scene::getAssetManager() const
@@ -64,5 +69,5 @@ userinterface::UIManager * Scene::getUIManager() const
 
 void Scene::update()
 {
-	quadtree->update();
+	//quadtree->update();
 }

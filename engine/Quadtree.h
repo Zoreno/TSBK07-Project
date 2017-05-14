@@ -44,7 +44,7 @@ public:
 	void placeEnt(EntityHandle ent);
 	virtual void update();
 	void delEnt(uint32_t pos, EntityHandle ent);
-	void collapseCheck();
+	bool collapseCheck();
 	std::vector<EntityHandle> getAllEntities();
 
 	virtual void collisionCheck();

@@ -173,7 +173,6 @@ bool Quadleaf::moveDown(EntityHandle ent)
 				placeEnt(ent);
 			}
 		}
-
 		else
 		{
 			uint8_t quad = whichQuad(tmpPos);
@@ -181,16 +180,16 @@ bool Quadleaf::moveDown(EntityHandle ent)
 			switch (quad)
 			{
 			case 1:
-				_nw->moveDown(ent);
+				_nw->pushEnt(ent);
 				break;
 			case 2:
-				_ne->moveDown(ent);
+				_ne->pushEnt(ent);
 				break;
 			case 3:
-				_sw->moveDown(ent);
+				_sw->pushEnt(ent);
 				break;
 			case 4:
-				_se->moveDown(ent);
+				_se->pushEnt(ent);
 				break;
 			default:
 				break;;
@@ -273,6 +272,8 @@ void Quadleaf::pushEnt(EntityHandle ent)
 
 void Quadleaf::update()
 {
+	collapseCheck();
+
 	if (_sw != nullptr)
 	{
 		_nw->update();
@@ -335,15 +336,14 @@ void Quadleaf::update()
 		}
 	}
 
-	for (auto i = _entities.begin(); i == _entities.end(); ++i)
+	for (auto i : entsToRemove)
 	{
 		for (auto j = _entities.begin(); j == _entities.end(); ++j)
 		{
-			if (*i._Ptr == *j._Ptr)
+			if (i == *j)
 			{
-				i = _entities.erase(i);
-				--i;
-				entsToRemove.erase(j);
+				_entities.erase(j);
+				_entCount -= 1;
 				break;
 			}
 		}
@@ -532,6 +532,8 @@ bool Quadroot::isInside(EntityHandle ent)
 
 void Quadroot::split()
 {
+	std::cout << "split!" << std::endl;
+
 	if (_sw != nullptr) return;
 	_nw = new Quadleaf(_enM, _evM, this, 1);
 	_ne = new Quadleaf(_enM, _evM, this, 2);
@@ -569,6 +571,8 @@ void Quadroot::split()
 
 void Quadroot::update()
 {
+	collapseCheck();
+
 	if(_sw != nullptr)
 	{
 		_nw->update();
@@ -629,16 +633,15 @@ void Quadroot::update()
 			// Kan inte flytta upp den. Är i roten. Låt vara.
 		}
 	}
-
-	for (auto i = _entities.begin(); i == _entities.end(); ++i)
+	std::cout << getEntCount() << std::endl;
+	for (auto i : entsToRemove)
 	{
 		for(auto j = _entities.begin(); j == _entities.end(); ++j)
 		{
-			if(*i._Ptr == *j._Ptr)
+			if(i == *j)
 			{
-				i = _entities.erase(i);
-				--i;
-				entsToRemove.erase(j);
+				_entities.erase(j);
+				_entCount -= 1;
 				break;
 			}
 		}
@@ -649,7 +652,6 @@ void Quadroot::delEnt(uint32_t pos, EntityHandle ent)
 {
 	if(pos == 0)
 	{
-		std::cout << _entities.size() << std::endl;
 		for (auto i = _entities.begin(); i != _entities.end(); ++i)
 		{
 			if (*i == ent)
@@ -662,6 +664,8 @@ void Quadroot::delEnt(uint32_t pos, EntityHandle ent)
 
 		throw Quadtree_error("Entity to be deleted not found in given quad position");
 	}
+
+	if (pos & 0b11 != 0 && _sw == nullptr) std::cout << "Illa illa, här ska vi inte vara!" << std::endl;
 
 	switch(pos & 0b11) // directions % 4, so se = 0, nw = 1, ne = 2, sw = 3
 	{
@@ -683,13 +687,17 @@ void Quadroot::delEnt(uint32_t pos, EntityHandle ent)
 	}
 }
 
-void Quadroot::collapseCheck()
+bool Quadroot::collapseCheck()
 {
-	if (_sw == nullptr) return;
+	if (_sw == nullptr) return false;
 
-	if(_nw->getTotalEntCount() + _ne->getTotalEntCount() + _sw->getTotalEntCount() + _se->getTotalEntCount() + _entCount <= 3)
+	if(getTotalEntCount() <= 3)
 	{
 		_entities = getAllEntities();
+		for (auto i : _entities)
+		{
+			_enM->getComponent<QuadtreeComponent>(i)->setPosition(_treePosition);
+		}
 		_entCount = _entities.size();
 		delete _nw;
 		delete _ne;
@@ -699,7 +707,10 @@ void Quadroot::collapseCheck()
 		_ne = nullptr;
 		_sw = nullptr;
 		_se = nullptr;
+		std::cout << "collapsing" << std::endl;
+		return true;
 	}
+	return false;
 }
 
 std::vector<EntityHandle> Quadroot::getAllEntities()
@@ -732,7 +743,7 @@ void Quadroot::collisionCheck()
 		_sw->collisionCheck();
 		_se->collisionCheck();
 	}
-
+	int counter = 0;
 	for (auto i = _entities.begin(); i != _entities.end(); ++i)
 	{
 		if(!_enM->hasComponent<CollisionComponent>(*i))
@@ -748,6 +759,8 @@ void Quadroot::collisionCheck()
 
 			if(hasOverlap(*i, *j))
 			{
+				++counter;
+				if (counter % 100 == 0) std::cout << "another 100 collisions" << std::endl;
 				_evM->postEvent(CollisionEvent(*i, *j));
 			}
 		}

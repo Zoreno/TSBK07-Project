@@ -33,6 +33,12 @@ void CameraController::handleEvent(const KeyEvent& ev)
 		case GLFW_KEY_D:
 			d_pressed = true;
 			break;
+		case GLFW_KEY_SPACE:
+			space_pressed = true;
+			break;
+		case GLFW_KEY_LEFT_SHIFT:
+			shift_pressed = true;
+			break;
 		default:
 			break;
 		}
@@ -51,6 +57,12 @@ void CameraController::handleEvent(const KeyEvent& ev)
 			break;
 		case GLFW_KEY_D:
 			d_pressed = false;
+			break;
+		case GLFW_KEY_SPACE:
+			space_pressed = false;
+			break;
+		case GLFW_KEY_LEFT_SHIFT:
+			shift_pressed = false;
 			break;
 		default:
 			break;
@@ -107,7 +119,10 @@ void CameraController::update(float dt)
 		ca->camera.processKeyboard(CameraMovement::BACKWARD, dt);
 	if (d_pressed)
 		ca->camera.processKeyboard(CameraMovement::RIGHT, dt);
-
+	if (space_pressed)
+		ca->camera.processKeyboard(CameraMovement::ABSUP, dt);
+	if (shift_pressed)
+		ca->camera.processKeyboard(CameraMovement::ABSDOWN, dt);
 	GLfloat xOffset = mousePosX - lastMousePosX;
 	GLfloat yOffset = lastMousePosY - mousePosY;
 

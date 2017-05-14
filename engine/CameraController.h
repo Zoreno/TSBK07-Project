@@ -74,6 +74,16 @@ public:
 	bool d_pressed{ false };
 
 	/**
+	* @brief Flag to indicate space key status
+	*/
+	bool space_pressed{ false };
+
+	/**
+	* @brief Flag to indicate shift key status
+	*/
+	bool shift_pressed{ false };
+
+	/**
 	 * @brief Current mouse x-position
 	 */
 	GLfloat mousePosX{ 0.f };

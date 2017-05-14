@@ -72,7 +72,7 @@ uniform float far_plane;
 float calculateShadow(int i)
 {
 	vec3 fragToLight = FragPos - lights[i].position;
-	
+		
 	float currentDepth = length(fragToLight);
 	
 	float cosTheta = clamp(dot(normalize(normal), normalize(-fragToLight)), 0, 1);
