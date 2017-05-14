@@ -135,6 +135,7 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="ModelComponent.cpp" />
     <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="ProjectileMovement.cpp" />
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="RawModel.cpp" />
     <ClCompile Include="RenderingSystem.cpp" />
@@ -189,6 +190,8 @@
     <ClInclude Include="MouseEvent.h" />
     <ClInclude Include="PixelInfo.h" />
     <ClInclude Include="PointLight.h" />
+    <ClInclude Include="ProjectileComponent.h" />
+    <ClInclude Include="ProjectileMovement.h" />
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="QuadtreeComponent.h" />
     <ClInclude Include="PointLightComponent.h" />

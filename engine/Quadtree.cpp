@@ -32,7 +32,7 @@ void Quadtree::update()
 {
 	for (auto ent : _entToRemove)
 	{
-		_quadtree->delEnt(_enM->getComponent<QuadtreeComponent>(ent)->getPosition(), ent);
+		_quadtree->delEnt(ent.second, ent.first);
 	}
 	_entToRemove.clear();
 
@@ -56,7 +56,7 @@ void Quadtree::handleEvent(const EntityDestroyedEvent& ev)
 {
 	if (_enM->hasComponent<QuadtreeComponent>(ev.entHandle))
 	{
-		_entToRemove.push_back(ev.entHandle);
+		_entToRemove.push_back(std::pair<EntityHandle, uint32_t>{ ev.entHandle, _enM->getComponent<QuadtreeComponent>(ev.entHandle)->getPosition() });
 	}
 }
 
@@ -79,7 +79,8 @@ Quadroot::Quadroot(EntityManager* entMan, EventManager* evMan, glm::vec2 nw, glm
 	_seCorn{ se },
 	_width{ std::abs(_neCorn.x - _nwCorn.x)},
 	_height{ std::abs(_nwCorn.y - _swCorn.y) },
-	_treePosition{0}
+	_treePosition{0},
+	_depth{0}
 {
 }
 
@@ -95,7 +96,11 @@ Quadleaf::Quadleaf(EntityManager* entMan, EventManager* evMan, Quadroot* par, ui
 	Quadroot(entMan, evMan),
 	_parent{par}
 {
-	_treePosition = par->_treePosition*8 + 4 + (quad % 4);
+	_depth = par->_depth + 1;
+	
+	_treePosition = par->_treePosition + (4 + (quad % 4))*std::pow(8, _depth - 1);
+
+	std::cout << "New leaf with position: " << _treePosition << std::endl;
 
 	_width = par->_width / 2;
 	_height = par->_height / 2;
@@ -341,8 +346,8 @@ void Quadleaf::update()
 			moveUp(i);
 			entsToRemove.push_back(i);
 		}
-	}
-
+	} 
+	 
 	for (auto i : entsToRemove)
 	{
 		for (auto j = _entities.begin(); j != _entities.end(); ++j)
@@ -511,7 +516,6 @@ uint8_t Quadroot::whichQuad(glm::vec3 position) const
 
 bool Quadroot::isInside(EntityHandle ent)
 {
-	//Kod hהההההההr. TODO TODO!!
 	glm::vec3 tmpPos = _enM->getComponent<TransformComponent>(ent)->position;
 
 	if(_enM->hasComponent<CollisionComponent>(ent))
@@ -667,6 +671,8 @@ void Quadroot::delEnt(uint32_t pos, EntityHandle ent)
 
 		throw Quadtree_error("Entity to be deleted not found in given quad position");
 	}
+	std::cout << "position to be deleted" << pos << std::endl;
+	if (_sw == nullptr) throw Quadtree_error("Position in delEnt says deeper but there are no more levels");
 
 	switch(pos & 0b11) // directions % 4, so se = 0, nw = 1, ne = 2, sw = 3
 	{

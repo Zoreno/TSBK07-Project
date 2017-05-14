@@ -95,7 +95,9 @@ void CameraController::startUp()
 
 	em->assignComponent<TransformComponent>(currentCamera, glm::vec3{ 0.f,0.f,0.f });
 	em->assignComponent<CameraComponent>(currentCamera);
-	em->assignComponent<CollisionComponent>(currentCamera, 1.f);
+	//em->assignComponent<CollisionComponent>(currentCamera, 1.f);
+
+	std::cout << "Camera handle: " << currentCamera << std::endl;
 }
 
 void CameraController::shutDown()

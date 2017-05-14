@@ -4,6 +4,8 @@
 #include "TextureComponent.h"
 #include "PointLightComponent.h"
 #include "MaterialComponent.h"
+#include "ProjectileMovement.h"
+#include "ProjectileComponent.h"
 
 
 Scene::Scene(AssetManager* AM, Window* window) :
@@ -28,10 +30,12 @@ uiM{nullptr}
 	enM->registerComponent<TextureComponent>("TextureComponent");
 	enM->registerComponent<PointLightComponent>("PointLightComponent");
 	enM->registerComponent<MaterialComponent>("MaterialComponent");
+	enM->registerComponent<ProjectileComponent>("ProjectileComponent");
 
 	// Detta tar hand om instansiering och sånt.
 	enM->registerSystem<CameraController>();
 	enM->registerSystem<RenderingSystem>(window);
+	enM->registerSystem<ProjectileMovement>();
 }
 
 Scene::~Scene()
