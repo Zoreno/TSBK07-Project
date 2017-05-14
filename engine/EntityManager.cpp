@@ -116,6 +116,7 @@ EntityHandle EntityManager::createEntityFromFile(const char* filePath)
 
 void EntityManager::destroyEntity(EntityHandle entHandle)
 {
+	for (auto i : _ent_to_remove) if (i == entHandle) return;
 	_ent_to_remove.push_back(entHandle);
 
 	eventManager->postEvent(EntityDestroyedEvent(entHandle));

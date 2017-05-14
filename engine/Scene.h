@@ -20,7 +20,7 @@
 #include "CameraController.h"
 #include "CollisionEvent.h"
 
-class Scene : public Subscriber<CollisionEvent>
+class Scene : public Subscriber<CollisionEvent>, public Subscriber<KeyEvent>
 {
 public:
 	Scene() = delete;
@@ -28,6 +28,7 @@ public:
 	~Scene();
 
 	void handleEvent(const CollisionEvent& ev) override;
+	void handleEvent(const KeyEvent& ev) override;
 
 	AssetManager* getAssetManager() const;
 	EntityManager* getEntityManager() const;
