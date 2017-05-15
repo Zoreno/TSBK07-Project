@@ -37,6 +37,9 @@ namespace engine
 
 		//settings.maximized = true;
 
+		settings.version_major = 3;
+		settings.version_minor = 3;
+
 		window = new Window{ 1280, 768, "MyWindow" , settings };
 
 		dumpInfo(std::cout);

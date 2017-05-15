@@ -60,10 +60,11 @@ int main()
 		//=====================================================================
 		{
 			assetManager->load<RawModel>("bunneh", "../res/models/bunnyplus.obj");
-			assetManager->load<RawModel>("tree1", "../res/models/OC12_1.obj");
-			assetManager->load<RawModel>("tree2", "../res/models/OC12_2.obj");
-			assetManager->load<RawModel>("tree3", "../res/models/OC12_3.obj");
-			assetManager->load<RawModel>("tree4", "../res/models/OC12_4.obj");
+			assetManager->load<RawModel>("lowpolytree", "../res/models/lowpolytree.obj");
+			//assetManager->load<RawModel>("tree1", "../res/models/OC12_1.obj");
+			//assetManager->load<RawModel>("tree2", "../res/models/OC12_2.obj");
+			//assetManager->load<RawModel>("tree3", "../res/models/OC12_3.obj");
+			//assetManager->load<RawModel>("tree4", "../res/models/OC12_4.obj");
 			//assetManager->load<RawModel>("tree5", "../res/models/OC12_5.obj");
 			//assetManager->load<RawModel>("tree6", "../res/models/OC12_6.obj");
 			//assetManager->load<RawModel>("tree7", "../res/models/OC12_7.obj");
@@ -157,14 +158,15 @@ void createSomeTrees(EntityManager* entityManager)
 {
 	int max1 = 130; int min1 = 80; int range1 = max1 - min1 + 1;
 	int max2 = 180; int min2 = 120; int range2 = max2 - min2 + 1;
-	int max3 = 4; int min3 = 1; int range3 = max3 - min3 + 1;
+	int max3 = 1; int min3 = 1; int range3 = max3 - min3 + 1;
 	srand(time(NULL));
 	int num = rand() % range1 + min1;
 	for (int i = 0; i < 20; ++i)
 	{
 		EntityHandle tree1 = entityManager->createEntity();
-		entityManager->assignComponent<TransformComponent>(tree1, glm::vec3{ float(rand() % range1 + min1),0.0f,float(rand() % range2 + min2) }, glm::radians(270.f), glm::vec3{ 1.f,0.f,0.f });
-		entityManager->assignComponent<ModelComponent>(tree1, std::string("tree").append(std::to_string(rand()  % range3 + min3)));
+		entityManager->assignComponent<TransformComponent>(tree1, glm::vec3{ float(rand() % range1 + min1),0.0f,float(rand() % range2 + min2) }, glm::radians(0.f), glm::vec3{ 1.f,0.f,0.f });
+		//entityManager->assignComponent<ModelComponent>(tree1, std::string("tree").append(std::to_string(rand()  % range3 + min3)));
+		entityManager->assignComponent<ModelComponent>(tree1, "lowpolytree");
 		entityManager->assignComponent<TextureComponent>(tree1);
 		entityManager->assignComponent<CollisionComponent>(tree1, 1.f);
 		TextureComponent* texComp2 = entityManager->getComponent<TextureComponent>(tree1);

@@ -63,8 +63,9 @@ void Scene::handleEvent(const KeyEvent & ev)
 	srand(time(NULL));
 	int num = rand() % range1 + min1;
 	EntityHandle tree1 = enM->createEntity();
-	enM->assignComponent<TransformComponent>(tree1, glm::vec3{ float(rand() % range1 + min1),0.0f,float(rand() % range2 + min2) }, glm::radians(270.f), glm::vec3{ 1.f,0.f,0.f });
-	enM->assignComponent<ModelComponent>(tree1, std::string("tree").append(std::to_string(rand() % range3 + min3)));
+	enM->assignComponent<TransformComponent>(tree1, glm::vec3{ float(rand() % range1 + min1),0.0f,float(rand() % range2 + min2) }, glm::radians(0.f), glm::vec3{ 1.f,0.f,0.f });
+	//enM->assignComponent<ModelComponent>(tree1, std::string("tree").append(std::to_string(rand() % range3 + min3)));
+	enM->assignComponent<ModelComponent>(tree1, "lowpolytree");
 	enM->assignComponent<TextureComponent>(tree1);
 	enM->assignComponent<CollisionComponent>(tree1, 1.f);
 	TextureComponent* texComp2 = enM->getComponent<TextureComponent>(tree1);

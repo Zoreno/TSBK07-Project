@@ -7,6 +7,7 @@
 #include "CameraComponent.h"
 #include "PointLightComponent.h"
 #include <ctime>
+#include "MaterialComponent.h"
 
 
 void ProjectileMovement::handleEvent(const KeyEvent & ev)
@@ -21,6 +22,7 @@ void ProjectileMovement::handleEvent(const KeyEvent & ev)
 		em->assignComponent<ModelComponent>(newProjectile, "bunneh");
 		em->assignComponent<CollisionComponent>(newProjectile, 1.f);
 		em->assignComponent<ProjectileComponent>(newProjectile, 60, cameraComponent->camera.getFrontVector());
+		em->assignComponent<MaterialComponent>(newProjectile, glm::vec3{ 10.f,1.f,1.f }, glm::vec3{ 10.f,1.f,1.f }, glm::vec3{1.f,1.f,1.f}, 64);
 		em->assignComponent<PointLightComponent>(newProjectile,
 			glm::vec3{ 0.0f, 0.0f, 0.0f },	// Ambient
 			glm::vec3{ ((float)rand() / (RAND_MAX))*2,((float)rand() / (RAND_MAX))*2,((float)rand() / (RAND_MAX))*2 },	// Diffuse
