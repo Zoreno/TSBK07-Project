@@ -1,4 +1,4 @@
-#version 450 core
+#version 330 core
 
 //=============================================================================
 // Structs
@@ -72,7 +72,7 @@ uniform float far_plane;
 float calculateShadow(int i)
 {
 	vec3 fragToLight = FragPos - lights[i].position;
-	
+		
 	float currentDepth = length(fragToLight);
 	
 	float cosTheta = clamp(dot(normalize(normal), normalize(-fragToLight)), 0, 1);
@@ -81,7 +81,7 @@ float calculateShadow(int i)
 	bias = clamp(bias, 0.0, 0.01);
 	
 	float shadow = 0.0;
-	float samples = 4.0;
+	float samples = 2.0;
 	float offset = 0.1;
 	
 	for(float x = -offset; x < offset; x+= offset/(samples*0.5))

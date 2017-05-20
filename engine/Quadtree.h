@@ -29,6 +29,7 @@ public:
 	uint16_t getTotalEntCount();
 
 private:
+	std::vector<std::pair<EntityHandle, uint32_t>> _entToRemove{};
 	Quadroot* _quadtree;
 	EntityManager* _enM;
 	EventManager* _evM;
@@ -44,7 +45,7 @@ public:
 	void placeEnt(EntityHandle ent);
 	virtual void update();
 	void delEnt(uint32_t pos, EntityHandle ent);
-	void collapseCheck();
+	bool collapseCheck();
 	std::vector<EntityHandle> getAllEntities();
 
 	virtual void collisionCheck();
@@ -58,6 +59,7 @@ public:
 	float _width{};
 	float _height{};
 	uint32_t _treePosition{0};
+	uint8_t _depth{0};
 
 	uint16_t getEntCount();
 	uint16_t getTotalEntCount();

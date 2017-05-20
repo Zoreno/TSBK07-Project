@@ -13,7 +13,7 @@
 #include "Camera.h"
 #include "Window.h"
 
-#define MAX_LIGHTS 32
+#define MAX_LIGHTS 8
 
 /**
  * @brief System for rendering stuff to screen
@@ -85,12 +85,12 @@ private:
 	/**
 	 * @brief Width of shadow texture
 	 */
-	static constexpr GLuint SHADOW_WIDTH{ 2048 };
+	static constexpr GLuint SHADOW_WIDTH{ 512 };
 
 	/**
 	 * @brief Height of shadow texture
 	 */
-	static constexpr GLuint SHADOW_HEIGHT{ 2048 };
+	static constexpr GLuint SHADOW_HEIGHT{ 512 };
 
 	/**
 	 * @brief Shadow projection near plane

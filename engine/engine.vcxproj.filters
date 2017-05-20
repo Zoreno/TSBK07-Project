@@ -165,9 +165,6 @@
     <ClCompile Include="Timer.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="CameraController.cpp">
-      <Filter>Source Files\Standard Components</Filter>
-    </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
@@ -204,11 +201,14 @@
     <ClCompile Include="Material.cpp">
       <Filter>Source Files\OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentAssignedEvent.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="QuadtreeComponent.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ProjectileMovement.cpp">
+      <Filter>Source Files\Standard Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraController.cpp">
+      <Filter>Source Files\Standard Systems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -391,6 +391,12 @@
     </ClInclude>
     <ClInclude Include="MaterialComponent.h">
       <Filter>Header Files\Standard Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectileComponent.h">
+      <Filter>Header Files\Standard Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectileMovement.h">
+      <Filter>Header Files\Standard Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

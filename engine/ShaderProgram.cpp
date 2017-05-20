@@ -130,7 +130,7 @@ void ShaderProgram::link() const
 	if (!success) {
 		glGetProgramInfoLog(shaderProgramHandle, 512, NULL, infoLog);
 		std::string errorMessage;
-		errorMessage = std::string{ "Error linking shader program\n" } +std::string{ infoLog };
+		errorMessage = std::string{ "Error linking shader program " } + vertexShaderPath + "\n" + std::string{ infoLog };
 		throw ShaderProgramException(errorMessage);
 	}
 }

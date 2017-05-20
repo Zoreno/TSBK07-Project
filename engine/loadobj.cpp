@@ -1202,7 +1202,7 @@ void DrawModel(Model *m, GLuint program, char* vertexVariableName, char* normalV
 			else
 				ReportRerror("DrawModel", texCoordVariableName);
 		}
-
+		
 		glDrawElements(GL_TRIANGLES, m->numIndices, GL_UNSIGNED_INT, 0L);
 	}
 }

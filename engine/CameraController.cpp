@@ -13,6 +13,7 @@
 #include "EntityManager.h"
 #include "CollisionComponent.h"
 #include "UILabel.h"
+#include "PointLightComponent.h"
 
 void CameraController::handleEvent(const KeyEvent& ev)
 {
@@ -33,6 +34,12 @@ void CameraController::handleEvent(const KeyEvent& ev)
 		case GLFW_KEY_D:
 			d_pressed = true;
 			break;
+		case GLFW_KEY_SPACE:
+			space_pressed = true;
+			break;
+		case GLFW_KEY_LEFT_SHIFT:
+			shift_pressed = true;
+			break;
 		default:
 			break;
 		}
@@ -51,6 +58,12 @@ void CameraController::handleEvent(const KeyEvent& ev)
 			break;
 		case GLFW_KEY_D:
 			d_pressed = false;
+			break;
+		case GLFW_KEY_SPACE:
+			space_pressed = false;
+			break;
+		case GLFW_KEY_LEFT_SHIFT:
+			shift_pressed = false;
 			break;
 		default:
 			break;
@@ -81,9 +94,13 @@ void CameraController::startUp()
 
 	currentCamera = em->createEntity();
 
-	em->assignComponent<TransformComponent>(currentCamera, glm::vec3{ 0.f,0.f,0.f });
+	em->assignComponent<TransformComponent>(currentCamera, glm::vec3{ 92.f, 20.f, 170.f });
 	em->assignComponent<CameraComponent>(currentCamera);
-	em->assignComponent<CollisionComponent>(currentCamera, 1.f);
+	//em->assignComponent<CollisionComponent>(currentCamera, 1.f);
+
+	em->getComponent<CameraComponent>(currentCamera)->camera.setPosition(em->getComponent<TransformComponent>(currentCamera)->position);
+
+	std::cout << "Camera handle: " << currentCamera << std::endl;
 }
 
 void CameraController::shutDown()
@@ -107,7 +124,10 @@ void CameraController::update(float dt)
 		ca->camera.processKeyboard(CameraMovement::BACKWARD, dt);
 	if (d_pressed)
 		ca->camera.processKeyboard(CameraMovement::RIGHT, dt);
-
+	if (space_pressed)
+		ca->camera.processKeyboard(CameraMovement::ABSUP, dt);
+	if (shift_pressed)
+		ca->camera.processKeyboard(CameraMovement::ABSDOWN, dt);
 	GLfloat xOffset = mousePosX - lastMousePosX;
 	GLfloat yOffset = lastMousePosY - mousePosY;
 
