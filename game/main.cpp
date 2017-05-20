@@ -8,6 +8,9 @@
 
 int main()
 {
+	// OBS! Denna fil används inte för tillfället då vi inte fått till DLL-länkning ordentligt. 
+	// Se main.cpp i engine
+
 	/*
 	engine::Engine engine;
 

@@ -1,3 +1,10 @@
+/**
+ * @file	AssetManager.h
+ * @Author	Kevin Kjellén
+ * @date	2017-05-20
+ * @brief	Asset Manager Interface
+ */
+
 #pragma once
 
 #include <string>
