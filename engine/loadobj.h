@@ -1,3 +1,5 @@
+// This file is modified to run with MSVC C++ compiler. No change in functionality. 
+
 #ifndef loadobj_h
 #define loadobj_h
 

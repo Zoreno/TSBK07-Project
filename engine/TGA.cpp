@@ -1,3 +1,10 @@
+/**
+ * @file	TGA.cpp
+ * @Author	Joakim Bertils
+ * @date	2017-05-21
+ * @brief	TGA Texture file Implementation
+ */
+
 #include "TGA.h"
 
 #include <fstream>

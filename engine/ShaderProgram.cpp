@@ -1,3 +1,10 @@
+/**
+ * @file	ShaderProgram.cpp
+ * @Author	Joakim Bertils
+ * @date	2017-05-21
+ * @brief	Shader Program implementation
+ */
+
 #include "ShaderProgram.h"
 
 #include "Utils.h"

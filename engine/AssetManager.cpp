@@ -1,3 +1,10 @@
+/**
+ * @file	AssetManager.cpp
+ * @Author	Kevin Kjellén
+ * @date	2017-05-21
+ * @brief	AssetManager
+ */
+
 #include "AssetManager.h"
 #include "iostream"
 
