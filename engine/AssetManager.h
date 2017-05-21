@@ -24,6 +24,9 @@
 #include "RawModel.h"
 
 //Error class
+/**
+ * \brief asset manager error class
+ */
 class AssetManager_error : public std::logic_error {
 	using std::logic_error::logic_error;
 };

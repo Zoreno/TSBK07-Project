@@ -8,6 +8,9 @@
 
 class MouseEvent;
 
+/**
+ * \brief Projectile movement system
+ */
 class ProjectileMovement : public System, public Subscriber<KeyEvent>, public Subscriber<CollisionEvent>
 {
 	friend class CameraController;

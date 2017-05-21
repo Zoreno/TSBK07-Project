@@ -2,6 +2,9 @@
 #include "Event.h"
 #include "EntityManager.h"
 
+/**
+ * \brief Collision event
+ */
 class CollisionEvent :
 	public Event
 {
@@ -15,7 +18,14 @@ public:
 
 	~CollisionEvent() = default;
 
+	/**
+	 * \brief Handle to entity in the collision
+	 */
 	EntityHandle entHandle1;
+
+	/**
+	 * \brief Handle to entity in the collision
+	 */
 	EntityHandle entHandle2;
 };
 
