@@ -1,3 +1,10 @@
+/**
+* @file	ProjectileMovement.h
+* @Author	Kevin Kjellén
+* @date	    2017-05-15
+* @brief	Projectile movement system
+*/
+
 #pragma once
 #include "System.h"
 #include "Subscriber.h"

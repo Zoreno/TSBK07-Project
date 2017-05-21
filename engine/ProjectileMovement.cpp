@@ -1,3 +1,10 @@
+/**
+* @file	ProjectileMovement.cpp
+* @Author	Kevin Kjellén
+* @date	    2017-05-15
+* @brief	Projectile movement system
+*/
+
 #include "ProjectileMovement.h"
 #include "CollisionComponent.h"
 #include "TextureComponent.h"

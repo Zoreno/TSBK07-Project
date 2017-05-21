@@ -1,3 +1,10 @@
+/**
+* @file	ComponentAssignedEvent.h
+* @Author	Kevin Kjellén
+* @date	    2017-05-12
+* @brief	Event for when a component was assigned to an entity
+*/
+
 #pragma once
 #include "Event.h"
 #include "EntityManager.h"

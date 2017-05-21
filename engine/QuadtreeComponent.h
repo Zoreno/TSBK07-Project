@@ -1,3 +1,10 @@
+/**
+* @file	QuadtreeComponent.h
+* @Author	Kevin Kjellén
+* @date	    2017-05-12
+* @brief	Quadtree component
+*/
+
 #pragma once
 #include "Component.h"
 #include <rapidxml/rapidxml.hpp>

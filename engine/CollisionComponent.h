@@ -1,3 +1,10 @@
+/**
+* @file	CollisionComponent.h
+* @Author	Kevin Kjellén
+* @date	    2017-05-12
+* @brief	Collision component
+*/
+
 #pragma once
 #include "Component.h"
 #include <rapidxml/rapidxml.hpp>

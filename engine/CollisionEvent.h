@@ -1,3 +1,10 @@
+/**
+* @file	CollisionEvent.h
+* @Author	Kevin Kjellén
+* @date	    2017-05-12
+* @brief	Collision event
+*/
+
 #pragma once
 #include "Event.h"
 #include "EntityManager.h"

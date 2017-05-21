@@ -1,3 +1,10 @@
+/**
+* @file	EntityDestroyedEvent.h
+* @Author	Joakim Bertils
+* @date	    2017-05-12
+* @brief	Event for when an enitiy was destroyed
+*/
+
 #pragma once
 
 #include "Event.h"
