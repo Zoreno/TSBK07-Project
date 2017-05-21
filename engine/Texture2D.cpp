@@ -1,3 +1,10 @@
+/**
+ * @file	Texture2D.cpp
+ * @Author	Joakim Bertils
+ * @date	2017-05-21
+ * @brief	Texture 2D implementation
+ */
+
 #include "Texture2D.h"
 
 #include "TGA.h"

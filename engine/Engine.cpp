@@ -1,3 +1,10 @@
+/**
+ * @file	Engine.cpp
+ * @Author	Joakim Bertils
+ * @date	2017-05-21
+ * @brief	Engine implementation
+ */
+
 #include "Engine.h"
 
 #include "RawModel.h"
@@ -168,7 +175,7 @@ namespace engine
 		delete assetManager;
 	}
 
-	Scene* Engine::createScene(std::string ID)
+	Scene* Engine::createScene(const std::string& ID)
 	{
 		auto sc = Scenes.find(ID);
 		if (sc != Scenes.end())
@@ -186,7 +193,7 @@ namespace engine
 		return scenePtr;
 	}
 
-	Scene * Engine::getScene(std::string ID) const
+	Scene * Engine::getScene(const std::string& ID) const
 	{
 		auto sc = Scenes.find(ID);
 
@@ -196,14 +203,14 @@ namespace engine
 		return sc->second;
 	}
 
-	void Engine::setActiveScene(std::string sceneID)
+	void Engine::setActiveScene(const std::string& sceneID)
 	{
 		if(Scenes.find(sceneID) == Scenes.end())
 
 		activeScene = sceneID;
 	}
 
-	EntityManager* Engine::getEntityManager(std::string sceneID) const
+	EntityManager* Engine::getEntityManager(const std::string& sceneID) const
 	{
 		auto sc = Scenes.find(sceneID);
 
@@ -213,7 +220,7 @@ namespace engine
 		return sc->second->getEntityManager();
 	}
 
-	EventManager* Engine::getEventManager(std::string sceneID) const
+	EventManager* Engine::getEventManager(const std::string& sceneID) const
 	{
 		auto sc = Scenes.find(sceneID);
 

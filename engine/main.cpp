@@ -1,3 +1,10 @@
+/**
+ * @file	main.cpp
+ * @Author	Joakim Bertils
+ * @date	2017-05-21
+ * @brief	Main Function Definition
+ */
+
 #include "Engine.h"
 #include "UILabel.h"
 #include "UIProgressBar.h"
@@ -7,6 +14,7 @@
 #include "MaterialComponent.h"
 #include "TerrainComponent.h"
 #include <filesystem>
+
 void createSomeTrees(EntityManager* entityManager);
 
 int main()

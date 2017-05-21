@@ -1,3 +1,5 @@
+// This file is modified to run with MSVC C++ compiler. No change in functionality.
+
 // LoadOBJ
 // by Ingemar Ragnemalm 2005, 2008
 // Developed with CodeWarrior and Lightweight IDE on Mac OS/Mac OSX
