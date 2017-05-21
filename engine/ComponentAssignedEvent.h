@@ -4,6 +4,10 @@
 
 typedef uint32_t EntityHandle;
 
+/**
+ * \brief Component assignment event
+ * \tparam T Type of component that got assigned
+ */
 template <typename T>
 class ComponentAssignedEvent : public Event
 {
@@ -16,6 +20,9 @@ public:
 
 	~ComponentAssignedEvent() = default;
 
+	/**
+	 * \brief Handle to entity that was assigned the component
+	 */
 	EntityHandle entHandle;
 };
 
