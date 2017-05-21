@@ -12,10 +12,13 @@ class ProjectileMovement : public System, public Subscriber<KeyEvent>, public Su
 {
 	friend class CameraController;
 public:
+	/**
+	* @brief Constructor
+	*/
 	ProjectileMovement() {}
 
 	/**
-	* @brief Mouse Event Handler
+	* @brief Key Event Handler
 	* @param ev Mouse Event
 	*/
 	void handleEvent(const KeyEvent& ev) override;
